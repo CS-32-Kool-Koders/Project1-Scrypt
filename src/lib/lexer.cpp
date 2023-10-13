@@ -19,9 +19,9 @@ lexer::lexer() {
     //making tokens out of them
 }
 
-void lexer::tokenize(int row, std::string line) {
+int lexer::tokenize(int row, std::string line) {
     //takes a line as input and 
-
+    int offset = 0;
     
     //call isDigit method
     //regarding tokenList.push_back(Tokens(row, (int)i, std::to_string(line[i])));
@@ -31,53 +31,61 @@ void lexer::tokenize(int row, std::string line) {
         //case - plus
         if(line[i] == '+') {
             tokenList.push_back(Tokens((int)row, (int)i+1, std::string(1, line[i])));
-            break;
+            //break;
         }
         //case - minus
         else if(line[i] == '-') {
             tokenList.push_back(Tokens((int)row, (int)i+1, std::string(1, line[i])));
-            break;
+            //break;
         }
         //case - multiply
         else if(line[i] == '*'){
             tokenList.push_back(Tokens((int)row, (int)i+1, std::string(1, line[i])));
-            break;
+            //break;
         }
         //case - divide
         else if(line[i] == '/'){
             tokenList.push_back(Tokens((int)row, (int)i+1, std::string(1, line[i])));
-            break;
+            //break;
         }
         //case - left_paren
         else if(line[i] == '('){
             tokenList.push_back(Tokens((int)row, (int)i+1, std::string(1, line[i])));
-            break;
+            //break;
         }
         //case - right_paren
         else if(line[i] == ')'){
             tokenList.push_back(Tokens((int)row, (int)i+1, std::string(1, line[i])));
-            break;
+            //break;
         }
         else if(line[i] == ' '){
-            break;
+            //std::cout << "space";
+            //break;
         }
         else if (isdigit(line[i]) || line[i] == '.') {
             checkIsDigit(line, (int)row, (int)i);
+            //i = i+1;
             //obtaining last item in tokenList
-            i = tokenList.back().col;
-            break;
+            i = tokenList.back().col+tokenList.back().text.size()-2;
+            //break;
+        }
+        else {
+            std::cout << "Syntax error on line " << row << " column " << i+1 << ".";
+            return 1;
         }
     }
 
-
+    return 0;
     //gets token 
 }
 
 int lexer::checkIsDigit(std::string line, int row, int col) {
     int decimal = 0;
+    int offset = 0;
     //type string in case digit has a decimal
     std::string digit;
     if(isdigit(line[col])) {
+        digit += line[col];
         while(isdigit(line[col+1]) || line[col+1] == '.') {
             //std::string next_line = std::string(1, line[col+1]);
             if(line[col+1] == '.' && decimal > 0) {
@@ -89,10 +97,12 @@ int lexer::checkIsDigit(std::string line, int row, int col) {
                 decimal++;
                 digit += line[col+1];
                 col++;
+                offset +=1;
             }
             else {
                 digit += line[col+1];
                 col++;
+                offset +=1;
             }
         }
     }
@@ -102,7 +112,7 @@ int lexer::checkIsDigit(std::string line, int row, int col) {
         return 1; 
     }
 
-    tokenList.push_back(Tokens(row, col-1, digit));
+    tokenList.push_back(Tokens(row, col-offset+1, digit));
     return 0;
 }
 
