@@ -1,5 +1,6 @@
 #include "lexer.h"
 #include <ctype.h>
+#include <string>
 
 //Our constructor
 //Goal: take user input (as a stream) & make an input string
@@ -26,39 +27,45 @@ void lexer::tokenize(int row, std::string line) {
     //regarding tokenList.push_back(Tokens(row, (int)i, std::to_string(line[i])));
     //-> using to_string method on line[i], because 3rd arg is being read as a char
     //-> using (int) method on i,           because 2nd arg is being read as size(t) (which compiler doesn't like)
-    for(size_t i=1; i <= line.size(); i++) {
-        switch(line[i]){
-            //case - plus
-            case '+':
-                tokenList.push_back(Tokens((int)row, (int)i, std::to_string(line[i])));
-                break;
-            //case - minus
-            case '-':
-                tokenList.push_back(Tokens((int)row, (int)i, std::to_string(line[i])));
-                break;
-            //case - multiply
-            case '*':
-                tokenList.push_back(Tokens((int)row, (int)i, std::to_string(line[i])));
-                break;
-            //case - divide
-            case '/':
-                tokenList.push_back(Tokens((int)row, (int)i, std::to_string(line[i])));
-                break;
-            //case - left_paren
-            case '(':
-                tokenList.push_back(Tokens((int)row, (int)i, std::to_string(line[i])));
-                break;
-            //case - right_paren
-            case ')':
-                tokenList.push_back(Tokens((int)row, (int)i, std::to_string(line[i])));
-                break;
-            case ' ':
-                continue;
-            default:
-                checkIsDigit(line, (int)row, (int)i);
-                //obtaining last item in tokenList
-                i = tokenList.back().col;
-                break;
+    for(size_t i=0; i < line.size(); i++) {
+        //case - plus
+        if(line[i] == '+') {
+            tokenList.push_back(Tokens((int)row, (int)i+1, std::string(1, line[i])));
+            break;
+        }
+        //case - minus
+        else if(line[i] == '-') {
+            tokenList.push_back(Tokens((int)row, (int)i+1, std::string(1, line[i])));
+            break;
+        }
+        //case - multiply
+        else if(line[i] == '*'){
+            tokenList.push_back(Tokens((int)row, (int)i+1, std::string(1, line[i])));
+            break;
+        }
+        //case - divide
+        else if(line[i] == '/'){
+            tokenList.push_back(Tokens((int)row, (int)i+1, std::string(1, line[i])));
+            break;
+        }
+        //case - left_paren
+        else if(line[i] == '('){
+            tokenList.push_back(Tokens((int)row, (int)i+1, std::string(1, line[i])));
+            break;
+        }
+        //case - right_paren
+        else if(line[i] == ')'){
+            tokenList.push_back(Tokens((int)row, (int)i+1, std::string(1, line[i])));
+            break;
+        }
+        else if(line[i] == ' '){
+            break;
+        }
+        else if (isdigit(line[i]) || line[i] == '.') {
+            checkIsDigit(line, (int)row, (int)i);
+            //obtaining last item in tokenList
+            i = tokenList.back().col;
+            break;
         }
     }
 
@@ -72,7 +79,9 @@ int lexer::checkIsDigit(std::string line, int row, int col) {
     std::string digit;
     if(isdigit(line[col])) {
         while(isdigit(line[col+1]) || line[col+1] == '.') {
-            if(std::to_string(line[col+1]) == "." && decimal > 0) {
+            //std::string next_line = std::string(1, line[col+1]);
+            if(line[col+1] == '.' && decimal > 0) {
+                    std::cout <<"OMG";
                     std::cout << "Syntax error on line " << row << " column " << col << ".";
                     return 1;
             }
@@ -88,6 +97,7 @@ int lexer::checkIsDigit(std::string line, int row, int col) {
         }
     }
     else {
+        std::cout << "HOHOHOHOHOHO";
         std::cout << "Syntax error on line " << row << " column " << col << ".";
         return 1; 
     }
