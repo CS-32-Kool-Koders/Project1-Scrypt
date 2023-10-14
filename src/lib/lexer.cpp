@@ -21,7 +21,6 @@ lexer::lexer() {
 
 int lexer::tokenize(int row, std::string line) {
     //takes a line as input and 
-    int offset = 0;
     
     //call isDigit method
     //regarding tokenList.push_back(Tokens(row, (int)i, std::to_string(line[i])));
@@ -58,7 +57,7 @@ int lexer::tokenize(int row, std::string line) {
             tokenList.push_back(Tokens((int)row, (int)i+1, std::string(1, line[i])));
             //break;
         }
-        else if(line[i] == ' '){
+        else if(isspace(line[i])){
             //std::cout << "space";
             //break;
         }
@@ -70,8 +69,8 @@ int lexer::tokenize(int row, std::string line) {
             //break;
         }
         else {
-            std::cout << "Syntax error on line " << row << " column " << i+1 << ".";
-            return 1;
+            std::cout << "Syntax error on line " << row << " column " << i+1 << "." << std::endl;
+            exit(1);
         }
     }
 
@@ -89,9 +88,8 @@ int lexer::checkIsDigit(std::string line, int row, int col) {
         while(isdigit(line[col+1]) || line[col+1] == '.') {
             //std::string next_line = std::string(1, line[col+1]);
             if(line[col+1] == '.' && decimal > 0) {
-                    std::cout <<"OMG";
-                    std::cout << "Syntax error on line " << row << " column " << col << ".";
-                    return 1;
+                    std::cout << "Syntax error on line " << row << " column " << col+2 << "." << std::endl;
+                    exit(1);
             }
             else if(line[col+1] == '.') {
                 decimal++;
@@ -107,9 +105,8 @@ int lexer::checkIsDigit(std::string line, int row, int col) {
         }
     }
     else {
-        std::cout << "HOHOHOHOHOHO";
-        std::cout << "Syntax error on line " << row << " column " << col << ".";
-        return 1; 
+        std::cout << "Syntax error on line " << row << " column " << col+2 << "." << std::endl;
+        exit(1); 
     }
 
     tokenList.push_back(Tokens(row, col-offset+1, digit));
