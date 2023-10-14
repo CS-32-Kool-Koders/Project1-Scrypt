@@ -1,6 +1,6 @@
 #include "lexer.h"
 #include <ctype.h>
-#include <string>
+#include <iostream>
 
 //Our constructor
 //Goal: take user input (as a stream) & make an input string
@@ -10,12 +10,14 @@
 //     input = std::string(std::istreambuf_iterator<char>(in), {})
 
 //going char by char, add to the token
+/*lexer::lexer() {
     //input = std::string(std::istreambuf_iterator<char>(in), {})
     
 
     //in lex.cpp in src, we'll have a while loop that goes thru input line-by-line
     //add goes thu each char
     //making tokens out of them
+}*/
 
 int lexer::tokenize(int row, std::string line) {
     //takes a line as input and 
