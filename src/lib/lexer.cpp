@@ -92,6 +92,10 @@ int lexer::checkIsDigit(std::string line, int row, int col) {
                     exit(1);
             }
             else if(line[col+1] == '.') {
+                if(!isdigit(line[col+2])) {
+                    std::cout << "Syntax error on line " << row << " column " << col+2 << "." << std::endl;
+                    exit(1);
+                }
                 decimal++;
                 digit += line[col+1];
                 col++;

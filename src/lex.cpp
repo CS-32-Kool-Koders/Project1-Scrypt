@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "./lib/lexer.cpp"
+#include "./lib/parser.h"
 #include <iomanip>
 //g++ -std=c++17 -Wall -Wextra -Werror lex.cpp
 int main() {
