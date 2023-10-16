@@ -215,7 +215,7 @@ int main()
     //         exit(2);
     //     }
     // }
-    if (Lexer.tokenList.back().text != "END") {
+    if (Lexer.tokenList.back().text == "END") {
     std::cerr << "Unexpected token at line " << Lexer.tokenList.back().line
               << " column " << Lexer.tokenList.back().col << ": "
               << Lexer.tokenList.back().text << std::endl;
