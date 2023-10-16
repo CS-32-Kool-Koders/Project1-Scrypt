@@ -11,7 +11,7 @@ Parser::~Parser(){
     
 }
 
-Node::Node(char data){
+Node::Node(std::string data){
     this->data = data;
     treeVec = std::vector<Node*>();
     for (Node* &node: treeVec){
@@ -25,60 +25,58 @@ Node::~Node(){
     treeVec.clear();
 }
 
-bool Parser::isOperator(char c){
-    return (c == '+')|| (c == '-') || (c == '*') || (c == '/');
+bool Parser::isOperator(std::string c){
+    return (c == "+")|| (c == "-") || (c == "*") || (c == "/");
 }
 
-bool Parser::isNumber(std::string num){
-    if (num.length() > 1){
-        int dec = 0;
-        for (char c: num){
-            if (!(isdigit(c) || c == '.')){
-                return false;
-            if (c == '.'){
-                dec ++;
-            }
-            }
-        }
-    if (dec > 1){
-        return false;
+
+bool Parser::isNumber(std::string num) {
+    int dec = 0;
+    for (char c : num) {
+        if (!isdigit(c) && c != '.') return false;
+        if (c == '.') dec++;
     }
-    }
-    return true;
+    return dec <= 1;
 }
 
 Node* Parser::parse(std::string token){
-    
-    for (char i: token){
-        if (isOperator(i)){
-            Node* oper = new Node(i);
-            parseStack.push(oper);
-        }
-        else if (i == ')'){
-            std::vector<Node*> tempVec;
-            Node* temp = nullptr;
-            while (parseStack.top() != nullptr && !parseStack.empty()){
-                temp = parseStack.top(); 
-                parseStack.pop();
-                if (isOperator(temp->data)){
-                    if (temp->treeVec.empty()){
-                        temp->treeVec = tempVec;
-                        continue;
-                    }
-                }
-                tempVec.push_back(temp);
-                }
-            parseStack.pop();
-            parseStack.push(temp);
-            }
+    std::string s;
+    std::stringstream ss(token);
+    std::vector<std::string> tokens;
 
-        else if (isdigit(i)){
-            Node* digit = new Node(i);
-            parseStack.push(digit);
-        }
-        else if (i == '('){
-            parseStack.push(nullptr);
-        }
+    while (getline(ss, s, ' ')){
+        tokens.push_back(s);
+    }
+    for (auto i: tokens){
+            if (isOperator(std::string(i))){
+                Node* oper = new Node(std::string(i));
+                parseStack.push(oper);
+            }
+            else if (i == ")"){
+                std::vector<Node*> tempVec;
+                Node* temp = nullptr;
+                while (parseStack.top() != nullptr && !parseStack.empty()){
+                    temp = parseStack.top(); 
+                    parseStack.pop();
+                    if (isOperator(temp->data)){
+                        if (temp->treeVec.empty()){
+                            temp->treeVec = tempVec;
+                            continue;
+                        }
+                    }
+                    tempVec.push_back(temp);
+                    }
+                parseStack.pop();
+                parseStack.push(temp);
+                }
+
+            else if (isNumber(i)){
+               Node* digit = new Node(std::string(i));
+                parseStack.push(digit);
+            }
+            else if (i== "("){
+                parseStack.push(nullptr);
+            }
 
     }
     return parseStack.top();
@@ -98,21 +96,27 @@ void printTreeInfix(Node* node) {
 
 double Parser::evaluate(Node* root) {
     if (root->treeVec.empty()) {
-        if (isdigit(root->data)) {
-            return std::stod(std::string(1, root->data));
+    if (root->data.size() == 1){
+        if (isdigit(root->data[0])){
+            return std::stod(std::string(1, root->data[0]));
         }
+    } else{
+        if (isNumber(root->data)) {
+            return std::stod(std::string(root->data));
+        }
+    }
     }
 
     double result = evaluate(root->treeVec.back());  // Start from the last element
     for (int i = root->treeVec.size() - 2; i >= 0; --i) { // Traverse in reverse
         double operand = evaluate(root->treeVec[i]);
-        if (root->data == '+') {
+        if (root->data == "+") {
             result += operand;
-        } else if (root->data == '-') {
+        } else if (root->data == "-") {
             result -= operand;
-        } else if (root->data == '*') {
+        } else if (root->data == "*") {
             result *= operand;
-        } else if (root->data == '/') {
+        } else if (root->data == "/") {
             if (operand == 0) {
                 std::cout << "Runtime error: division by zero." << std::endl;
                 exit(3);
@@ -156,7 +160,7 @@ int main()
 
     std::string str;
     for (auto i : Lexer.tokenList){
-        str += i.text + ' ';
+        str += i.text + " ";
     }
     Parser parser(str);
 

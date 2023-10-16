@@ -13,9 +13,9 @@
 // #include "./lib/lexer.h"
 
 struct Node {
-    char data;
+    std::string data;
     std::vector<Node*> treeVec;
-    Node(char data);
+    Node(std::string data);
     ~Node();
 };
 
@@ -27,7 +27,7 @@ struct Parser {
     Parser(std::string token);
     Node* parse(std::string tokenStr);
     ~Parser();
-    bool isOperator(char c);
+    bool isOperator(std::string c);
     void printTreeInfix(Node* node);
     double evaluate(Node* root);
     bool isNumber(std::string num);
