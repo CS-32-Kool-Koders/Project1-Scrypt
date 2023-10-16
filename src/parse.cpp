@@ -100,6 +100,7 @@ Node* Parser::parse(std::string token){
         std::cerr << "Unexpected token at line 1 column 1: END" << std::endl;
         exit(2);
     }
+    
     if (parseStack.top()){
         return parseStack.top();
     }
@@ -153,24 +154,14 @@ double Parser::evaluate(Node* root) {
 
 int main()
 {
-    // std::string str = "(* (+ 1 2) 3 (/ 4 5 (-6 7) ) )";
-    // std::string str = "(+ 1 (* (* 2 3) 4))";
-    // std::string str = "(+ 1 (* 2 (* 3 4)))";
-    // std::string str = "(- 5 6 (+ 8 9.17 8)";
-    // std::string str = "(+1(*234))";
-
-    std::string line; // o store input
+    std::string line; 
     int row = 0; 
     lexer Lexer;
-    int new_line = 0; // 
+    int new_line = 0; 
     while(!std::cin.eof()) {
-        //stores every instance of a new line
         new_line += 1;
-        //goes through each line of input
         if(getline(std::cin, line)) { 
             row += 1;
-            //makes tokens out of the line given
-            //then puts them in tokenList
             Lexer.tokenize(row, line);
         }
     }
@@ -205,36 +196,16 @@ int main()
     
 
     if (open != close) {
-        std::cerr << "Parse error: Input should have exactly one top-level S expression." << std::endl;
+        std::cerr << "Parse error: Unmatched parentheses." << std::endl;
         exit(2);
     }
-    // if (str.empty()){
-    //     std::cerr <<"No expression" << std::endl;
-    //     exit(2);
-    // }
-    Parser parser(str);
-    // for (auto i : Lexer.tokenList){
-    //     if (i.text !=  ")" || i.text != "(" || !parser.isNumber(i.text) || !parser.isOperator(i.text)){
-    //         std::cout<<"Invalid Operation"<<std::endl;
-    //         exit(2);
-    //     }
-    // }
-    // int parenthesisDepth = 0;
-    // for (const auto& token : Lexer.tokenList) {
-    //     if (token.text == "(") {
-    //         parenthesisDepth++;
-    //         if (parenthesisDepth > 1) {
-    //             std::cerr << "Parse error: Multiple top-level S expressions detected." << std::endl;
-    //             exit(2);
-    //         }
-    //     } else if (token.text == ")") {
-    //         parenthesisDepth--;
-    //     } else if (!parser.isOperator(token.text) && !parser.isNumber(token.text) && token.text != "END") {
-    //         std::cerr << "Parse error: Invalid operation at line " << token.line << " column " << token.col << "." << std::endl;
-    //         exit(2);
-    //     }
-    // }
 
+    if (str.empty() || str == "END ") {
+        std::cerr << "Unexpected token at line 1 column 1: END" << std::endl;
+        exit(2);
+    }
+    Parser parser(str);
+ 
     if (Lexer.tokenList.back().text != "END") {
     std::cerr << "Unexpected token at line " << Lexer.tokenList.back().line
               << " column " << Lexer.tokenList.back().col << ": "
@@ -246,6 +217,10 @@ int main()
 
 
     Node* root = parser.parse(str);
+    // if (!parser.parseStack.empty()) {
+    //     std::cerr << "Parse error: Multiple top-level S expressions found." << std::endl;
+    //     exit(2);
+    // }
     if (root == nullptr){
         exit(2);
     }
