@@ -42,6 +42,7 @@ bool Parser::isNumber(std::string num){
         return false;
     }
     }
+    return true;
 }
 
 Node* Parser::parse(std::string token){
