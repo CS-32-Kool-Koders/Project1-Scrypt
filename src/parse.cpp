@@ -47,6 +47,23 @@ Node* Parser::parse(std::string token){
     while (getline(ss, s, ' ')){
         tokens.push_back(s);
     }
+    int open = 0;
+    int close = 0;
+    for (auto i :tokens){
+        if (i == "("){
+            open++;
+        }
+        else if (i == ")"){
+            close++;
+        }
+    }
+    if (open != close) {
+        std::cerr << "Parse error: Input should have exactly one top-level S expression." << std::endl;
+        exit(2);
+    }
+    if (token.empty()){
+        exit(2);
+    }
     for (auto i: tokens){
             if (isOperator(std::string(i))){
                 Node* oper = new Node(std::string(i));
@@ -172,14 +189,14 @@ int main()
     }
    
 
-    if (open != close) {
-        std::cerr << "Parse error: Input should have exactly one top-level S expression." << std::endl;
-        exit(2);
-    }
-    if (str.empty()){
-        std::cerr <<"No expression" << std::endl;
-        exit(2);
-    }
+    // if (open != close) {
+    //     std::cerr << "Parse error: Input should have exactly one top-level S expression." << std::endl;
+    //     exit(2);
+    // }
+    // if (str.empty()){
+    //     std::cerr <<"No expression" << std::endl;
+    //     exit(2);
+    // }
     Parser parser(str);
     // for (auto i : Lexer.tokenList){
     //     if (i.text !=  ")" || i.text != "(" || !parser.isNumber(i.text) || !parser.isOperator(i.text)){
