@@ -181,23 +181,23 @@ int main()
         Lexer.tokenList.push_back(Tokens(row, Lexer.tokenList.back().col+1, "END"));
     }
     if (Lexer.tokenList.empty()) {
-        std::cerr << "Error: No valid tokens found in input." << std::endl;
-        exit(1);
+        std::cerr << "Unexpected token at line 1 column 1: END" << std::endl;
+        exit(2);
     }
     
-    int open = 0;
-    int close = 0;
+    // int open = 0;
+    // int close = 0;
     // int inv = 0;
     std::string str;
-    for (auto i : Lexer.tokenList){
-        str += i.text + " ";
-        if (i.text == "("){
-            open++;
-        }
-        else if (i.text == ")"){
-            close++;
-        }
-    }
+    // for (auto i : Lexer.tokenList){
+    //     str += i.text + " ";
+    //     if (i.text == "("){
+    //         open++;
+    //     }
+    //     else if (i.text == ")"){
+    //         close++;
+    //     }
+    // }
    
 
     // if (open != close) {
