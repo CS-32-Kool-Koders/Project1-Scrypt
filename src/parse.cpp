@@ -166,10 +166,10 @@ int main()
     else {
         Lexer.tokenList.push_back(Tokens(row, Lexer.tokenList.back().col+1, "END"));
     }
-    if (Lexer.tokenList.empty()) {
-        std::cerr << "Error: No valid tokens found in input." << std::endl;
-        exit(1);
-    }
+    // if (Lexer.tokenList.empty()) {
+    //     std::cerr << "Error: No valid tokens found in input." << std::endl;
+    //     exit(1);
+    // }
     
     int open = 0;
     int close = 0;
@@ -205,7 +205,7 @@ int main()
     // }
  
     if (Lexer.tokenList.back().text != "END") {
-        std::cout <<std::endl << "Unexpected token at line " << Lexer.tokenList.back().line
+        std::cout << "Unexpected token at line " << Lexer.tokenList.back().line
                 << " column " << Lexer.tokenList.back().col << ": "
                 << Lexer.tokenList.back().text << std::endl;
         exit(2);
