@@ -1,5 +1,7 @@
 #include "./lib/parser.h"
-
+#include "./lib/lexer.h"
+// g++ -std=c++17 parse.cpp ./lib/lexer.cpp -Wall -Wextra -Werror
+// ./a.out
 
 Parser::Parser(std::string token){
     this->token = token;
@@ -128,13 +130,39 @@ int main()
     // std::string str = "(+ 1 (* 2 (* 3 4)))";
     // std::string str = "(- 5 6 (+ 8 9.17 8)";
     // std::string str = "(+1(*234))";
+
+    std::string line; // o store input
+    int row = 0; 
+    lexer Lexer;
+    int new_line = 0; // 
+    while(!std::cin.eof()) {
+        //stores every instance of a new line
+        new_line += 1;
+        //goes through each line of input
+        if(getline(std::cin, line)) { 
+            row += 1;
+            //makes tokens out of the line given
+            //then puts them in tokenList
+            Lexer.tokenize(row, line);
+        }
+    }
+    if(new_line > row) {
+        Lexer.tokenList.push_back(Tokens(new_line, 1, "END"));
+    }
+    else {
+        Lexer.tokenList.push_back(Tokens(row, Lexer.tokenList.back().col+1, "END"));
+    }
+    
+
     std::string str;
-    std::getline (std::cin,str);
+    for (auto i : Lexer.tokenList){
+        str += i.text + ' ';
+    }
     Parser parser(str);
 
     Node* root = parser.parse(str);
     printTreeInfix(root);
-    std::cout<<std::endl<<parser.evaluate(root);
+    std::cout<<std::endl<<parser.evaluate(root) << std::endl;
 
 
     
