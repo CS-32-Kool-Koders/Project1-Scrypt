@@ -95,6 +95,16 @@ Node* Parser::parse(std::string token){
 }
 
 
+// void printTreeInfix(Node* node) {
+//     if (!node) return;
+//     if (node->treeVec.size() > 0) std::cout << "(";
+//     for (int i = node->treeVec.size() - 1; i >= 0; --i) {
+//         printTreeInfix(node->treeVec[i]);
+//         if (i != 0) std::cout << " " << node->data << " ";
+//     }
+//     if (node->treeVec.size() > 0) std::cout << ")";
+//     if (node->treeVec.empty()) std::cout << node->data;
+// }
 void printTreeInfix(Node* node) {
     if (!node) return;
     if (node->treeVec.size() > 0) std::cout << "(";
@@ -103,8 +113,21 @@ void printTreeInfix(Node* node) {
         if (i != 0) std::cout << " " << node->data << " ";
     }
     if (node->treeVec.size() > 0) std::cout << ")";
-    if (node->treeVec.empty()) std::cout << node->data;
+    if (node->treeVec.empty()) {
+        // Check for numbers that have .000 fractional part
+        if (node->data.find('.') != std::string::npos) {
+            double value = std::stod(node->data);
+            if (floor(value) == value) {
+                std::cout << static_cast<int>(value);
+            } else {
+                std::cout << node->data;
+            }
+        } else {
+            std::cout << node->data;
+        }
+    }
 }
+
 
 double Parser::evaluate(Node* root) {
     if (root->treeVec.empty()) {

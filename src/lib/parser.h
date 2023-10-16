@@ -8,6 +8,8 @@
 #include <algorithm>
 #include <string>
 #include <sstream>
+#include <cmath>
+
 //#include "lexer.h"
 
 // #include "./lib/lexer.h"
