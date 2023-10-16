@@ -198,7 +198,11 @@ int main()
             close++;
         }
     }
-   
+    if (Lexer.tokenList.size() == 1 && Lexer.tokenList.back().text == "END") {
+        std::cerr << "Parse error: No expression found." << std::endl;
+        exit(2);
+    }
+    
 
     if (open != close) {
         std::cerr << "Parse error: Input should have exactly one top-level S expression." << std::endl;
@@ -215,12 +219,31 @@ int main()
     //         exit(2);
     //     }
     // }
+    int parenthesisDepth = 0;
+    for (const auto& token : Lexer.tokenList) {
+        if (token.text == "(") {
+            parenthesisDepth++;
+            if (parenthesisDepth > 1) {
+                std::cerr << "Parse error: Multiple top-level S expressions detected." << std::endl;
+                exit(2);
+            }
+        } else if (token.text == ")") {
+            parenthesisDepth--;
+        } else if (!parser.isOperator(token.text) && !parser.isNumber(token.text) && token.text != "END") {
+            std::cerr << "Parse error: Invalid operation at line " << token.line << " column " << token.col << "." << std::endl;
+            exit(2);
+        }
+    }
+
     if (Lexer.tokenList.back().text != "END") {
     std::cerr << "Unexpected token at line " << Lexer.tokenList.back().line
               << " column " << Lexer.tokenList.back().col << ": "
               << Lexer.tokenList.back().text << std::endl;
     exit(2);
     }
+    
+   
+
 
     Node* root = parser.parse(str);
     if (root == nullptr){
