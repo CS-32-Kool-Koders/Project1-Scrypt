@@ -123,11 +123,13 @@ double Parser::evaluate(Node* root) {
 
 int main()
 {
-    std::string str = "(* (+ 1 2) 3 (/ 4 5 (-6 7) ) )";
+    // std::string str = "(* (+ 1 2) 3 (/ 4 5 (-6 7) ) )";
     // std::string str = "(+ 1 (* (* 2 3) 4))";
     // std::string str = "(+ 1 (* 2 (* 3 4)))";
     // std::string str = "(- 5 6 (+ 8 9.17 8)";
     // std::string str = "(+1(*234))";
+    std::string str;
+    std::getline (std::cin,str);
     Parser parser(str);
 
     Node* root = parser.parse(str);
