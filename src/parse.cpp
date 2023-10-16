@@ -40,6 +40,9 @@ bool Parser::isNumber(std::string num) {
 }
 
 Node* Parser::parse(std::string token){
+    if (token.empty()){
+        exit(2);
+    }
     std::string s;
     std::stringstream ss(token);
     std::vector<std::string> tokens;
@@ -61,9 +64,6 @@ Node* Parser::parse(std::string token){
         std::cerr << "Parse error: Input should have exactly one top-level S expression." << std::endl;
         exit(2);
     }
-    if (token.empty()){
-        exit(2);
-    }
     for (auto i: tokens){
             if (isOperator(std::string(i))){
                 Node* oper = new Node(std::string(i));
@@ -72,7 +72,7 @@ Node* Parser::parse(std::string token){
             else if (i == ")"){
                 std::vector<Node*> tempVec;
                 Node* temp = nullptr;
-                while (parseStack.top() != nullptr && !parseStack.empty()){
+                while (!parseStack.empty() && parseStack.top() != nullptr){
                     temp = parseStack.top(); 
                     parseStack.pop();
                     if (isOperator(temp->data)){
@@ -96,7 +96,14 @@ Node* Parser::parse(std::string token){
             }
 
     }
-    return parseStack.top();
+    if (parseStack.empty()) {
+        std::cerr << "Error: Stack is empty when it shouldn't be." << std::endl;
+        exit(2);
+    }
+    if (parseStack.top()){
+        return parseStack.top();
+    }
+    return nullptr;
 }
 
 
@@ -173,6 +180,10 @@ int main()
     else {
         Lexer.tokenList.push_back(Tokens(row, Lexer.tokenList.back().col+1, "END"));
     }
+    if (Lexer.tokenList.empty()) {
+        std::cerr << "Error: No valid tokens found in input." << std::endl;
+        exit(1);
+    }
     
     int open = 0;
     int close = 0;
@@ -205,6 +216,9 @@ int main()
     //     }
     // }
     Node* root = parser.parse(str);
+    if (root == nullptr){
+        exit(2);
+    }
     printTreeInfix(root);
     std::cout<<std::endl<<parser.evaluate(root) << std::endl;
 
