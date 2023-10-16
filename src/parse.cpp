@@ -50,20 +50,7 @@ Node* Parser::parse(std::string token){
     while (getline(ss, s, ' ')){
         tokens.push_back(s);
     }
-    int open = 0;
-    int close = 0;
-    for (auto i :tokens){
-        if (i == "("){
-            open++;
-        }
-        else if (i == ")"){
-            close++;
-        }
-    }
-    if (open != close) {
-        std::cerr << "Parse error: Input should have exactly one top-level S expression." << std::endl;
-        exit(2);
-    }
+
     for (auto i: tokens){
             if (isOperator(std::string(i))){
                 Node* oper = new Node(std::string(i));
@@ -96,10 +83,10 @@ Node* Parser::parse(std::string token){
             }
 
     }
-    if (parseStack.empty()) {
-        std::cerr << "Unexpected token at line 1 column 1: END" << std::endl;
-        exit(2);
-    }
+    // if (parseStack.empty()) {
+    //     std::cerr << "Unexpected token at line 1 column 1: END" << std::endl;
+    //     exit(2);
+    // }
     
     if (parseStack.top()){
         return parseStack.top();
@@ -195,7 +182,7 @@ int main()
     // }
     
 
-    if (open != close) {
+    if (open != close || open == 0 || close == 0) {
         std::cerr << "Parse error: Unmatched parentheses." << std::endl;
         exit(2);
     }
