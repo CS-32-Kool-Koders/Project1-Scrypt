@@ -194,7 +194,10 @@ int main()
     }
 
     if (str.empty() || str == "END ") {
-        std::cout << "Unexpected token at line 1 column 1: END"   << std::endl;
+        // std::cout << "Unexpected token at line 1 column 1: END"   << std::endl;
+        std::cout << "Unexpected token at line " << Lexer.tokenList.back().line
+                << " column " << Lexer.tokenList.back().col << ": "
+                << Lexer.tokenList.back().text << std::endl;
         exit(2);
     }
     Parser parser(str);
