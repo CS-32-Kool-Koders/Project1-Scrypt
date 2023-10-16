@@ -157,13 +157,33 @@ int main()
         Lexer.tokenList.push_back(Tokens(row, Lexer.tokenList.back().col+1, "END"));
     }
     
-
+    int open = 0;
+    int close = 0;
+    int inv = 0;
     std::string str;
     for (auto i : Lexer.tokenList){
         str += i.text + " ";
+        if (i.text == "("){
+            open++;
+        }
+        else if (i.text == ")"){
+            close++;
+        }
     }
-    Parser parser(str);
+   
 
+    if (open != close) {
+        std::cerr << "Parse error: Input should have exactly one top-level S expression." << std::endl;
+        exit(2);
+    }
+
+    Parser parser(str);
+    // for (auto i : Lexer.tokenList){
+    //     if (i.text !=  ")" || i.text != "(" || !parser.isNumber(i.text) || !parser.isOperator(i.text)){
+    //         std::cout<<"Invalid Operation"<<std::endl;
+    //         exit(2);
+    //     }
+    // }
     Node* root = parser.parse(str);
     printTreeInfix(root);
     std::cout<<std::endl<<parser.evaluate(root) << std::endl;
