@@ -200,10 +200,10 @@ int main()
     }
    
 
-    // if (open != close) {
-    //     std::cerr << "Parse error: Input should have exactly one top-level S expression." << std::endl;
-    //     exit(2);
-    // }
+    if (open != close) {
+        std::cerr << "Parse error: Input should have exactly one top-level S expression." << std::endl;
+        exit(2);
+    }
     // if (str.empty()){
     //     std::cerr <<"No expression" << std::endl;
     //     exit(2);
