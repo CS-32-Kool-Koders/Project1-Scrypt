@@ -189,10 +189,10 @@ int main()
             close++;
         }
     }
-    if (Lexer.tokenList.size() == 1 && Lexer.tokenList.back().text == "END") {
-        std::cerr << "Parse error: No expression found." << std::endl;
-        exit(2);
-    }
+    // if (Lexer.tokenList.size() == 1 && Lexer.tokenList.back().text == "END") {
+    //     std::cerr << "Parse error: No expression found." << std::endl;
+    //     exit(2);
+    // }
     
 
     if (open != close) {
