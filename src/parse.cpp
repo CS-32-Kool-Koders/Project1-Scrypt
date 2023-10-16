@@ -39,56 +39,122 @@ bool Parser::isNumber(std::string num) {
     return dec <= 1;
 }
 
+// Node* Parser::parse(std::string token){
+//     if (token.empty()){
+//         exit(2);
+//     }
+//     std::string s;
+//     std::stringstream ss(token);
+//     std::vector<std::string> tokens;
+
+//     while (getline(ss, s, ' ')){
+//         tokens.push_back(s);
+//     }
+    
+//     for (auto i: tokens){
+//             if (isOperator(std::string(i))){
+//                 Node* oper = new Node(std::string(i));
+//                 parseStack.push(oper);
+//             }
+//             else if (i == ")"){
+//                 std::vector<Node*> tempVec;
+//                 Node* temp = nullptr;
+//                 while (!parseStack.empty() && parseStack.top() != nullptr){
+//                     temp = parseStack.top(); 
+//                     parseStack.pop();
+//                     if (isOperator(temp->data)){
+//                         if (temp->treeVec.empty()){
+//                             temp->treeVec = tempVec;
+//                             continue;
+//                         }
+//                     }
+//                     tempVec.push_back(temp);
+//                     }
+//                 parseStack.pop();
+//                 parseStack.push(temp);
+//                 }
+
+//             else if (isNumber(i)){
+//                Node* digit = new Node(std::string(i));
+//                 parseStack.push(digit);
+//             }
+//             else if (i== "("){
+//                 parseStack.push(nullptr);
+//             }
+
+//     }
+    
+//     if (parseStack.top()){
+//         return parseStack.top();
+//     }
+//     return nullptr;
+// }
 Node* Parser::parse(std::string token){
     if (token.empty()){
         exit(2);
     }
+
     std::string s;
     std::stringstream ss(token);
     std::vector<std::string> tokens;
+    int parenthesesCounter = 0; // To track opened and closed parentheses
 
     while (getline(ss, s, ' ')){
         tokens.push_back(s);
     }
-    
+
     for (auto i: tokens){
-            if (isOperator(std::string(i))){
-                Node* oper = new Node(std::string(i));
-                parseStack.push(oper);
+        if (isOperator(std::string(i))){
+            Node* oper = new Node(std::string(i));
+            parseStack.push(oper);
+        }
+        else if (i == "("){
+            parenthesesCounter++;
+            parseStack.push(nullptr);
+        }
+        else if (i == ")"){
+            parenthesesCounter--;
+
+            // Misplaced closing parenthesis
+            if (parenthesesCounter < 0) {
+                std::cerr << "Error: Misplaced closing parenthesis." << std::endl;
+                exit(2);
             }
-            else if (i == ")"){
-                std::vector<Node*> tempVec;
-                Node* temp = nullptr;
-                while (!parseStack.empty() && parseStack.top() != nullptr){
-                    temp = parseStack.top(); 
-                    parseStack.pop();
-                    if (isOperator(temp->data)){
-                        if (temp->treeVec.empty()){
-                            temp->treeVec = tempVec;
-                            continue;
-                        }
-                    }
-                    tempVec.push_back(temp);
-                    }
+
+            std::vector<Node*> tempVec;
+            Node* temp = nullptr;
+            while (!parseStack.empty() && parseStack.top() != nullptr){
+                temp = parseStack.top(); 
                 parseStack.pop();
-                parseStack.push(temp);
+                if (isOperator(temp->data)){
+                    if (temp->treeVec.empty()){
+                        temp->treeVec = tempVec;
+                        continue;
+                    }
                 }
-
-            else if (isNumber(i)){
-               Node* digit = new Node(std::string(i));
-                parseStack.push(digit);
+                tempVec.push_back(temp);
             }
-            else if (i== "("){
-                parseStack.push(nullptr);
-            }
-
+            parseStack.pop();
+            parseStack.push(temp);
+        }
+        else if (isNumber(i)){
+            Node* digit = new Node(std::string(i));
+            parseStack.push(digit);
+        }
     }
-    
+
+    // Mismatched parentheses
+    if (parenthesesCounter != 0) {
+        std::cerr << "Error: Mismatched parentheses." << std::endl;
+        exit(2);
+    }
+
     if (parseStack.top()){
         return parseStack.top();
     }
     return nullptr;
 }
+
 
 void printTreeInfix(Node* node) {
     if (!node) return;
