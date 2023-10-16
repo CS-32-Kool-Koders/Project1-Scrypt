@@ -216,6 +216,6 @@ int main()
     printTreeInfix(root);
     std::cout<<std::endl<<parser.evaluate(root) << std::endl;
 
-
+    delete root;
     
 }
