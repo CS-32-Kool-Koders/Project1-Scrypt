@@ -217,5 +217,5 @@ int main()
     std::cout<<std::endl<<parser.evaluate(root) << std::endl;
 
     delete root;
-    
+    return 0;
 }
