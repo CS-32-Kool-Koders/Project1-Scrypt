@@ -117,7 +117,7 @@ Node* Parser::parse(std::string token){
 
             // Misplaced closing parenthesis
             if (parenthesesCounter < 0) {
-                std::cerr << "Error: Misplaced closing parenthesis." << std::endl;
+                std::cout << "Error: Misplaced closing parenthesis." << std::endl;
                 exit(2);
             }
 
@@ -145,7 +145,7 @@ Node* Parser::parse(std::string token){
 
     // Mismatched parentheses
     if (parenthesesCounter != 0) {
-        std::cerr << "Error: Mismatched parentheses." << std::endl;
+        std::cout << "Error: Mismatched parentheses." << std::endl;
         exit(2);
     }
 
@@ -232,10 +232,7 @@ int main()
     else {
         Lexer.tokenList.push_back(Tokens(row, Lexer.tokenList.back().col+1, "END"));
     }
-    // if (Lexer.tokenList.empty()) {
-    //     std::cerr << "Error: No valid tokens found in input." << std::endl;
-    //     exit(1);
-    // }
+  
     
     int open = 0;
     int close = 0;
