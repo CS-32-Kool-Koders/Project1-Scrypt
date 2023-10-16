@@ -83,10 +83,6 @@ Node* Parser::parse(std::string token){
             }
 
     }
-    // if (parseStack.empty()) {
-    //     std::cerr << "Unexpected token at line 1 column 1: END" << std::endl;
-    //     exit(2);
-    // }
     
     if (parseStack.top()){
         return parseStack.top();
@@ -94,17 +90,6 @@ Node* Parser::parse(std::string token){
     return nullptr;
 }
 
-
-// void printTreeInfix(Node* node) {
-//     if (!node) return;
-//     if (node->treeVec.size() > 0) std::cout << "(";
-//     for (int i = node->treeVec.size() - 1; i >= 0; --i) {
-//         printTreeInfix(node->treeVec[i]);
-//         if (i != 0) std::cout << " " << node->data << " ";
-//     }
-//     if (node->treeVec.size() > 0) std::cout << ")";
-//     if (node->treeVec.empty()) std::cout << node->data;
-// }
 void printTreeInfix(Node* node) {
     if (!node) return;
     if (node->treeVec.size() > 0) std::cout << "(";
@@ -199,11 +184,7 @@ int main()
             close++;
         }
     }
-    // if (Lexer.tokenList.size() == 1 && Lexer.tokenList.back().text == "END") {
-    //     std::cerr << "Parse error: No expression found." << std::endl;
-    //     exit(2);
-    // }
-    
+   
 
     if (open != close) {
             std::cerr << "Unexpected token at line " << Lexer.tokenList.back().line
@@ -217,9 +198,14 @@ int main()
         exit(2);
     }
     Parser parser(str);
+    // for (auto i : Lexer.tokenList){
+    //     if (!parser.isOperator(i.text) || !parser.isNumber(i.text) || i.text != "(" || i.text != ")"){
+    //         exit(2);
+    //     }
+    // }
  
     if (Lexer.tokenList.back().text != "END") {
-        std::cerr << "Unexpected token at line " << Lexer.tokenList.back().line
+        std::cerr << std::endl << "Unexpected token at line " << Lexer.tokenList.back().line
                 << " column " << Lexer.tokenList.back().col << ": "
                 << Lexer.tokenList.back().text << std::endl;
         exit(2);
@@ -229,10 +215,7 @@ int main()
 
 
     Node* root = parser.parse(str);
-    // if (!parser.parseStack.empty()) {
-    //     std::cerr << "Parse error: Multiple top-level S expressions found." << std::endl;
-    //     exit(2);
-    // }
+
     if (root == nullptr){
         exit(2);
     }
