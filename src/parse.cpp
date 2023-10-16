@@ -176,7 +176,10 @@ int main()
         std::cerr << "Parse error: Input should have exactly one top-level S expression." << std::endl;
         exit(2);
     }
-
+    if (str.empty()){
+        std::cerr <<"No expression" << std::endl;
+        exit(2);
+    }
     Parser parser(str);
     // for (auto i : Lexer.tokenList){
     //     if (i.text !=  ")" || i.text != "(" || !parser.isNumber(i.text) || !parser.isOperator(i.text)){
