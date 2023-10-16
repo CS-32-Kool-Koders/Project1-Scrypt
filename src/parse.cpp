@@ -159,7 +159,7 @@ int main()
     
     int open = 0;
     int close = 0;
-    int inv = 0;
+    // int inv = 0;
     std::string str;
     for (auto i : Lexer.tokenList){
         str += i.text + " ";
