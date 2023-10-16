@@ -59,6 +59,10 @@ int lexer::tokenize(int row, std::string line) {
     return 0;
 }
 
+std::vector<Tokens> lexer::printTokenList() {
+    return tokenList;
+}
+
 int lexer::checkIsDigit(std::string line, int row, int col) {
     //takes a line, the row its on, and the colummn
     int decimal = 0; // number of decimals in number
