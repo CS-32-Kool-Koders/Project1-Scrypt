@@ -219,21 +219,21 @@ int main()
     //         exit(2);
     //     }
     // }
-    int parenthesisDepth = 0;
-    for (const auto& token : Lexer.tokenList) {
-        if (token.text == "(") {
-            parenthesisDepth++;
-            if (parenthesisDepth > 1) {
-                std::cerr << "Parse error: Multiple top-level S expressions detected." << std::endl;
-                exit(2);
-            }
-        } else if (token.text == ")") {
-            parenthesisDepth--;
-        } else if (!parser.isOperator(token.text) && !parser.isNumber(token.text) && token.text != "END") {
-            std::cerr << "Parse error: Invalid operation at line " << token.line << " column " << token.col << "." << std::endl;
-            exit(2);
-        }
-    }
+    // int parenthesisDepth = 0;
+    // for (const auto& token : Lexer.tokenList) {
+    //     if (token.text == "(") {
+    //         parenthesisDepth++;
+    //         if (parenthesisDepth > 1) {
+    //             std::cerr << "Parse error: Multiple top-level S expressions detected." << std::endl;
+    //             exit(2);
+    //         }
+    //     } else if (token.text == ")") {
+    //         parenthesisDepth--;
+    //     } else if (!parser.isOperator(token.text) && !parser.isNumber(token.text) && token.text != "END") {
+    //         std::cerr << "Parse error: Invalid operation at line " << token.line << " column " << token.col << "." << std::endl;
+    //         exit(2);
+    //     }
+    // }
 
     if (Lexer.tokenList.back().text != "END") {
     std::cerr << "Unexpected token at line " << Lexer.tokenList.back().line
