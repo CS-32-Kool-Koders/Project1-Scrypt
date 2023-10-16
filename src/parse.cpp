@@ -50,7 +50,7 @@ Node* Parser::parse(std::string token){
     while (getline(ss, s, ' ')){
         tokens.push_back(s);
     }
-
+    
     for (auto i: tokens){
             if (isOperator(std::string(i))){
                 Node* oper = new Node(std::string(i));
@@ -182,22 +182,24 @@ int main()
     // }
     
 
-    if (open != close || open == 0 || close == 0) {
-        std::cerr << "Parse error: Unmatched parentheses." << std::endl;
+    if (open != close) {
+            std::cerr << "Unexpected token at line " << Lexer.tokenList.back().line
+                << " column " << Lexer.tokenList.back().col << ": "
+                << Lexer.tokenList.back().text << std::endl;
         exit(2);
     }
 
     if (str.empty() || str == "END ") {
-        std::cerr << "Unexpected token at line 1 column 1: END" << std::endl;
+        std::cerr << "Unexpected token at line 1 column 1: END";
         exit(2);
     }
     Parser parser(str);
  
     if (Lexer.tokenList.back().text != "END") {
-    std::cerr << "Unexpected token at line " << Lexer.tokenList.back().line
-              << " column " << Lexer.tokenList.back().col << ": "
-              << Lexer.tokenList.back().text << std::endl;
-    exit(2);
+        std::cerr << "Unexpected token at line " << Lexer.tokenList.back().line
+                << " column " << Lexer.tokenList.back().col << ": "
+                << Lexer.tokenList.back().text << std::endl;
+        exit(2);
     }
     
    
