@@ -267,11 +267,11 @@ int main()
         exit(2);
     }
     Parser parser(str);
-    for (auto i : Lexer.tokenList){
-        if (!parser.isOperator(i.text) || !parser.isNumber(i.text) || i.text != "(" || i.text != ")"){
-            exit(2);
-        }
-    }
+    // for (auto i : Lexer.tokenList){
+    //     if (!parser.isOperator(i.text) && !parser.isNumber(i.text) && i.text != "(" && i.text != ")"){
+    //         exit(2);
+    //     }
+    // }
  
     if (Lexer.tokenList.back().text != "END") {
         std::cout << "Unexpected token at line " << Lexer.tokenList.back().line
