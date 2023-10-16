@@ -97,7 +97,7 @@ Node* Parser::parse(std::string token){
 
     }
     if (parseStack.empty()) {
-        std::cerr << "Error: Stack is empty when it shouldn't be." << std::endl;
+        std::cerr << "Unexpected token at line 1 column 1: END" << std::endl;
         exit(2);
     }
     if (parseStack.top()){
