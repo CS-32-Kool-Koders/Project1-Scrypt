@@ -232,7 +232,10 @@ int main()
     else {
         Lexer.tokenList.push_back(Tokens(row, Lexer.tokenList.back().col+1, "END"));
     }
-  
+    // if (Lexer.tokenList.empty()) {
+    //     std::cerr << "Error: No valid tokens found in input." << std::endl;
+    //     exit(1);
+    // }
     
     int open = 0;
     int close = 0;
@@ -248,7 +251,7 @@ int main()
         }
     }
    
-
+    
     if (open != close) {
             std::cout << "Unexpected token at line " << Lexer.tokenList.back().line
                 << " column " << Lexer.tokenList.back().col << ": "
@@ -281,6 +284,48 @@ int main()
 
 
     Node* root = parser.parse(str);
+    
+    bool foundOperatorWithoutParentheses = false;
+    bool insideParentheses = false;
+
+    for (auto i : Lexer.tokenList) {
+        if (i.text == "(") {
+            insideParentheses = true;
+        } else if (i.text == ")") {
+            insideParentheses = false;
+        } else if (parser.isOperator(i.text) && !insideParentheses) {
+            foundOperatorWithoutParentheses = true;
+            break;
+        }
+    }
+
+    if (foundOperatorWithoutParentheses) {
+        std::cout << "Unexpected token at line " << Lexer.tokenList.back().line
+                << " column " << Lexer.tokenList.back().col << ": "
+                << Lexer.tokenList.back().text << std::endl;
+        exit(2);
+    }
+    for (size_t i = 0; i < Lexer.tokenList.size(); i++) {
+    if (Lexer.tokenList[i].text == "(") {
+        if (i == Lexer.tokenList.size() - 1 || 
+            (Lexer.tokenList[i+1].text != "(" && !parser.isNumber(Lexer.tokenList[i+1].text) && !parser.isOperator(Lexer.tokenList[i+1].text))) {
+            std::cout << "Unexpected token at line " << Lexer.tokenList.back().line
+                << " column " << Lexer.tokenList.back().col << ": "
+                << Lexer.tokenList.back().text << std::endl;
+            exit(2);
+        }
+    }
+}
+    for (size_t i = 0; i < Lexer.tokenList.size() - 1; ++i) {
+        if (Lexer.tokenList[i].text == "(" &&
+            parser.isOperator(Lexer.tokenList[i+1].text) &&
+            Lexer.tokenList[i+2].text == ")") {
+           std::cout << "Unexpected token at line " << Lexer.tokenList.back().line
+                << " column " << Lexer.tokenList.back().col << ": "
+                << Lexer.tokenList.back().text << std::endl;
+            exit(2);
+        }
+    }
 
     if (root == nullptr){
         exit(2);
