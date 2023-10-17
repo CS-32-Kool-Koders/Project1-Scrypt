@@ -339,7 +339,7 @@ if (open != close) {
         }
     }
 
-    for (size_t i = 0; i < Lexer.tokenList.size() - 1; ++i) {
+    for (size_t i = 0; i < Lexer.tokenList.size() - 1; i++) {
         if (Lexer.tokenList[i].text == "(" &&
             parser.isOperator(Lexer.tokenList[i+1].text) &&
             Lexer.tokenList[i+2].text == ")") {
