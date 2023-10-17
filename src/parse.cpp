@@ -376,24 +376,20 @@ int main()
     }
 
     if (open != close) {
-        if (open > close) {
-            // Find the last unmatched opening parenthesis
-            for (int i = Lexer.tokenList.size() - 1; i >= 0; --i) {
-                if (Lexer.tokenList[i].text == "(") {
-                    reportUnexpectedToken(Lexer.tokenList[i]);
-                    break;
-                }
-            }
-        } else {
-            // Find the first unmatched closing parenthesis
-            for (const auto& token : Lexer.tokenList) {
-                if (token.text == ")") {
-                    reportUnexpectedToken(token);
-                    break;
-                }
+    if (open > close) {
+        // Unmatched opening parenthesis, point to END token
+        reportUnexpectedToken(Lexer.tokenList.back());
+    } else {
+        // Find the first unmatched closing parenthesis
+        for (const auto& token : Lexer.tokenList) {
+            if (token.text == ")") {
+                reportUnexpectedToken(token);
+                break;
             }
         }
     }
+}
+
 
     if (str.empty() || str == "END ") {
         reportUnexpectedToken(Lexer.tokenList.back());
