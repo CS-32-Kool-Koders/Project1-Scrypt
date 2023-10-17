@@ -310,7 +310,7 @@ int main()
         if (i == Lexer.tokenList.size() - 1 || 
             (Lexer.tokenList[i+1].text != "(" && !parser.isNumber(Lexer.tokenList[i+1].text) && !parser.isOperator(Lexer.tokenList[i+1].text))) {
             std::cout << "Unexpected token at line " << Lexer.tokenList.back().line
-                << " column " << Lexer.tokenList.back().col << ": "
+                << " column " << Lexer.tokenList.back().col-1 << ": "
                 << Lexer.tokenList.back().text << std::endl;
             exit(2);
         }
@@ -321,7 +321,7 @@ int main()
             parser.isOperator(Lexer.tokenList[i+1].text) &&
             Lexer.tokenList[i+2].text == ")") {
            std::cout << "Unexpected token at line " << Lexer.tokenList.back().line
-                << " column " << Lexer.tokenList.back().col << ": "
+                << " column " << Lexer.tokenList.back().col-1 << ": "
                 << Lexer.tokenList.back().text << std::endl;
             exit(2);
         }
