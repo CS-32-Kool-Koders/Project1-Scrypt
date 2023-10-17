@@ -238,7 +238,7 @@ int main()
         Lexer.tokenList.push_back(Tokens(new_line, 1, "END"));
     }
     else {
-        Lexer.tokenList.push_back(Tokens(row, Lexer.tokenList.back().col+1, "END"));
+        Lexer.tokenList.push_back(Tokens(row, Lexer.tokenList.back().col, "END"));
     }
 
     int open = 0;
@@ -346,7 +346,30 @@ if (open != close) {
             reportUnexpectedToken(Lexer.tokenList[i+1]);
         }
     }
-
+    int numOperators = 0;
+    int numNumbers = 0;
+     for (auto i : Lexer.tokenList) {
+        if (parser.isOperator(i.text)) {
+            numOperators++;
+        }
+        else if (parser.isNumber(i.text)) {
+            numNumbers++;
+        }
+    }
+    if (numNumbers == 0 && numOperators > 0) {
+        std::cout << "Unexpected token at line " << Lexer.tokenList.back().line
+                  << " column " << Lexer.tokenList.back().col << ": " <<Lexer.tokenList.back().text << std::endl;
+        exit(2);
+    }
+    for (size_t i = 0; i < Lexer.tokenList.size(); i++) {
+        if (parser.isOperator(Lexer.tokenList[i].text) && i != 0){
+            if(Lexer.tokenList[i-1].text != "("){
+                std::cout << "Unexpected token at line " << Lexer.tokenList[i].line
+                  << " column " << Lexer.tokenList[i].col << ": " <<Lexer.tokenList[i].text << std::endl;
+            exit(2);
+            }
+        }
+    }
     if (root == nullptr){
         exit(2);
     }
