@@ -356,7 +356,7 @@ if (open != close) {
             numNumbers++;
         }
     }
-    if ((numNumbers == 0 && numOperators > 0) ||(numNumbers > 0 && numOperators == 0)) {
+    if ((numNumbers == 0 && numOperators > 0) ||(numNumbers > 1 && numOperators == 0)) {
         std::cout << "Unexpected token at line " << Lexer.tokenList.back().line
                   << " column " << Lexer.tokenList.back().col << ": " <<Lexer.tokenList.back().text << std::endl;
         exit(2);
