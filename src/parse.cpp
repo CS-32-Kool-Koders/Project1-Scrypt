@@ -378,7 +378,9 @@ int main()
     if (open != close) {
     if (open > close) {
         // Unmatched opening parenthesis, point to END token
-        reportUnexpectedToken(Lexer.tokenList.back());
+        Tokens adjustedEndToken = Lexer.tokenList.back();
+        adjustedEndToken.col = Lexer.tokenList.back().col + 1; // Adjust the column for END token
+        reportUnexpectedToken(adjustedEndToken);
     } else {
         // Find the first unmatched closing parenthesis
         for (const auto& token : Lexer.tokenList) {
@@ -389,6 +391,7 @@ int main()
         }
     }
 }
+
 
 
     if (str.empty() || str == "END ") {
