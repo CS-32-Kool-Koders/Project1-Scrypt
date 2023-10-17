@@ -277,6 +277,7 @@ int main()
         reportUnexpectedToken(Lexer.tokenList.back());
     }
     Parser parser(str);
+    
  
     if (Lexer.tokenList.back().text != "END") {
         reportUnexpectedToken(Lexer.tokenList.back());
@@ -284,6 +285,16 @@ int main()
 
     Node* root = parser.parse(str);
     
+    if (root != nullptr) {
+        parser.parseStack.pop();
+    }
+
+    // Check for multiple top-level s-expressions
+    if (!parser.parseStack.empty()) {
+        std::cout << "Unexpected token at line " << Lexer.tokenList.back().line
+                  << " column " << Lexer.tokenList.back().col << ": " << Lexer.tokenList.back().text << std::endl;
+        exit(2);
+    }
     bool insideParentheses = false;
 
     for (auto i : Lexer.tokenList) {
