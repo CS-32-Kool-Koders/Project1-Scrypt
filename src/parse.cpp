@@ -254,18 +254,40 @@ int main()
         }
     }
 
-    if (open != close) {
+//     if (open != close) {
+//     if (open > close) {
+//         // Unmatched opening parenthesis, point to END token
+//         Tokens adjustedEndToken = Lexer.tokenList.back();
+//         adjustedEndToken.col = Lexer.tokenList.back().col + 1; // Adjust the column for END token
+//         reportUnexpectedToken(adjustedEndToken);
+//     } else {
+//         // Find the first unmatched closing parenthesis
+//         for (const auto& token : Lexer.tokenList) {
+//             if (token.text == ")") {
+//                 reportUnexpectedToken(token);
+//                 break;
+//             }
+//         }
+//     }
+// }
+if (open != close) {
     if (open > close) {
         // Unmatched opening parenthesis, point to END token
         Tokens adjustedEndToken = Lexer.tokenList.back();
         adjustedEndToken.col = Lexer.tokenList.back().col + 1; // Adjust the column for END token
         reportUnexpectedToken(adjustedEndToken);
     } else {
-        // Find the first unmatched closing parenthesis
+        // Find the unmatched closing parenthesis
+        int balance = 0;
         for (const auto& token : Lexer.tokenList) {
-            if (token.text == ")") {
-                reportUnexpectedToken(token);
-                break;
+            if (token.text == "(") {
+                balance++;
+            } else if (token.text == ")") {
+                balance--;
+                if (balance < 0) {
+                    reportUnexpectedToken(token);
+                    break;
+                }
             }
         }
     }
