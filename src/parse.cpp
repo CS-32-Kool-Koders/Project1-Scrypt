@@ -300,8 +300,8 @@ int main()
     }
 
     if (foundOperatorWithoutParentheses) {
-        std::cout << "Unexpected token at line " << Lexer.tokenList.back().line
-                << " column " << Lexer.tokenList.back().col << ": "
+        std::cout << "Unexpected token at line " << 1
+                << " column " << 1 << ": "
                 << Lexer.tokenList.back().text << std::endl;
         exit(2);
     }
