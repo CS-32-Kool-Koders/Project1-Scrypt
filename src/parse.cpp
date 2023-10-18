@@ -242,9 +242,9 @@ if (open != close) {
 
     Node* root = parser.parse(str);
     
-    if (root != nullptr) {
-        parser.parseStack.pop();
-    }
+    // if (root != nullptr) {
+    //     parser.parseStack.pop();
+    // }
 
     // Check for multiple top-level s-expressions
    
@@ -313,9 +313,9 @@ if (open != close) {
             }
     }
   
-    if (root == nullptr){
-        exit(2);
-    }
+    // if (root == nullptr){
+    //     exit(2);
+    // }
     printTreeInfix(root);
     std::cout << std::endl << parser.evaluate(root) << std::endl;
 
