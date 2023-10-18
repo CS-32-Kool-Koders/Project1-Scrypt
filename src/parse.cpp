@@ -276,12 +276,25 @@ if (open != close) {
 
     int numOperators = 0;
     int numNumbers = 0;
+    int op = 0;
+    int cl = 0; 
     for (size_t i = 0; i < Lexer.tokenList.size(); i++) {
         if (Lexer.tokenList[i].text == "(") {
             if (i == Lexer.tokenList.size() - 1 || 
                 (Lexer.tokenList[i+1].text != "(" && !parser.isNumber(Lexer.tokenList[i+1].text) && !parser.isOperator(Lexer.tokenList[i+1].text))) {
                 reportUnexpectedToken(Lexer.tokenList[i]);
             }
+        }
+        if (Lexer.tokenList[i].text == "("){
+            op++;
+        }
+        if (Lexer.tokenList[i].text == ")"){
+            cl++;
+        }
+        if (Lexer.tokenList[i].text == ")" && op == cl && Lexer.tokenList[i+1] .text!= "END"){
+             std::cout << "Unexpected token at line " << Lexer.tokenList[i+1].line
+                  << " column " << Lexer.tokenList[i+1].col << ": " <<Lexer.tokenList[i+1].text << std::endl;
+            exit(2);
         }
         // if (topLevelParsed && i < Lexer.tokenList.size() - 1 && Lexer.tokenList[i + 1].text != "END") {
         //     reportUnexpectedToken(Lexer.tokenList[i + 1]);
