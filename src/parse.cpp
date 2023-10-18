@@ -209,7 +209,7 @@ if (open != close) {
     if (open > close) {
         // Unmatched opening parenthesis, point to END token
         Tokens adjustedEndToken = Lexer.tokenList.back();
-        adjustedEndToken.col = Lexer.tokenList.back().col ; // Adjust the column for END token
+        adjustedEndToken.col = Lexer.tokenList.back().col+2 ; // Adjust the column for END token
         reportUnexpectedToken(adjustedEndToken);
     } else {
         // Find the unmatched closing parenthesis
