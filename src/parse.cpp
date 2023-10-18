@@ -283,9 +283,9 @@ if (open != close) {
                 reportUnexpectedToken(Lexer.tokenList[i]);
             }
         }
-        if (topLevelParsed && i < Lexer.tokenList.size() - 1 && Lexer.tokenList[i + 1].text != "END") {
-            reportUnexpectedToken(Lexer.tokenList[i + 1]);
-        }
+        // if (topLevelParsed && i < Lexer.tokenList.size() - 1 && Lexer.tokenList[i + 1].text != "END") {
+        //     reportUnexpectedToken(Lexer.tokenList[i + 1]);
+        // }
         if (i == Lexer.tokenList.size() - 1) {
             if (!parser.parseStack.empty()) {
                 std::cout << "Unexpected token at line " << Lexer.tokenList[i].line
