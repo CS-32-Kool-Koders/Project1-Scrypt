@@ -250,7 +250,7 @@ if (open != close) {
     Node* root = parser.parse(str);
     
     if (root != nullptr) {
-        delete parser.parseStack.top();
+        // delete parser.parseStack.top();
         parser.parseStack.pop();
     }
 
@@ -258,11 +258,16 @@ if (open != close) {
    
     bool insideParentheses = false;
 
+    bool topLevelParsed = false;
+
     for (auto i : Lexer.tokenList) {
         if (i.text == "(") {
             insideParentheses = true;
         } else if (i.text == ")") {
             insideParentheses = false;
+            if (!insideParentheses) {
+                topLevelParsed = true;
+            }
         } else if (parser.isOperator(i.text) && !insideParentheses) {
             reportUnexpectedToken(i);
             break;
@@ -277,6 +282,9 @@ if (open != close) {
                 (Lexer.tokenList[i+1].text != "(" && !parser.isNumber(Lexer.tokenList[i+1].text) && !parser.isOperator(Lexer.tokenList[i+1].text))) {
                 reportUnexpectedToken(Lexer.tokenList[i]);
             }
+        }
+        if (topLevelParsed && i < Lexer.tokenList.size() - 1 && Lexer.tokenList[i + 1].text != "END") {
+            reportUnexpectedToken(Lexer.tokenList[i + 1]);
         }
         if (i == Lexer.tokenList.size() - 1) {
             if (!parser.parseStack.empty()) {
