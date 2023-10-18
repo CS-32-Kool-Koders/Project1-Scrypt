@@ -12,6 +12,11 @@ Parser::~Parser(){
     // for (Node* node: parseStack){
     //     delete node;
     // }
+    while (!parseStack.empty()){
+            Node * temp = parseStack.top();
+            parseStack.pop();
+            delete temp;
+        }
 }
 
 Node::Node(std::string data){
@@ -245,11 +250,7 @@ if (open != close) {
     Node* root = parser.parse(str);
     
     if (root != nullptr) {
-        while (parser.parseStack.empty()){
-            Node * temp = parser.parseStack.top();
-            parser.parseStack.pop();
-            delete temp;
-        }
+        parser.parseStack.pop();
     }
 
     // Check for multiple top-level s-expressions
