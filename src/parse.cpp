@@ -258,7 +258,7 @@ if (open != close) {
    
     bool insideParentheses = false;
 
-    bool topLevelParsed = false;
+    // bool topLevelParsed = false;
 
     for (auto i : Lexer.tokenList) {
         if (i.text == "(") {
@@ -266,7 +266,7 @@ if (open != close) {
         } else if (i.text == ")") {
             insideParentheses = false;
             if (!insideParentheses) {
-                topLevelParsed = true;
+                // topLevelParsed = true;
             }
         } else if (parser.isOperator(i.text) && !insideParentheses) {
             reportUnexpectedToken(i);
