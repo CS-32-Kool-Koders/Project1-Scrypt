@@ -78,55 +78,36 @@ Node* Parser::parse(std::string token){
             // parenthesesCounter++;
             parseStack.push(nullptr);
         }
-        else if (i == ")") {
+        else if (i == ")"){
             std::vector<Node*> tempVec;
             Node* temp = nullptr;
-
-            while (!parseStack.empty() && parseStack.top() != nullptr) {
-                temp = parseStack.top();
+            try{
+            while (!parseStack.empty() && parseStack.top() != nullptr){
+                temp = parseStack.top(); 
                 parseStack.pop();
-                if (isOperator(temp->data) && temp->treeVec.empty()) {
-                    temp->treeVec = tempVec;
-                } else {
-                    tempVec.push_back(temp);
+                if (isOperator(temp->data)){
+                    if (temp->treeVec.empty()){
+                        temp->treeVec = tempVec;
+                        continue;
+                    }
+                }
+                tempVec.push_back(temp);
+            }
+            } catch(...){
+                for (auto i: tempVec){
+                    delete i;
+                }
+                delete temp;
+            }
+            //new code
+            if (temp->treeVec != tempVec){
+                for (auto i: tempVec){
+                    delete i;
                 }
             }
-
-            if (parseStack.empty() || parseStack.top() == nullptr) {
-                // This is the case for the top-level expression
-                for (auto node : tempVec) {
-                    delete node;
-                }
-            }
-
             parseStack.pop();
-            if (!parseStack.empty()) {
-                parseStack.push(temp);
-            }
-}
-        // else if (i == ")"){
-        //     std::vector<Node*> tempVec;
-        //     Node* temp = nullptr;
-        //     while (!parseStack.empty() && parseStack.top() != nullptr){
-        //         temp = parseStack.top(); 
-        //         parseStack.pop();
-        //         if (isOperator(temp->data)){
-        //             if (temp->treeVec.empty()){
-        //                 temp->treeVec = tempVec;
-        //                 continue;
-        //             }
-        //         }
-        //         tempVec.push_back(temp);
-        //     }
-        //     //new code
-        //     if (temp->treeVec != tempVec){
-        //         for (auto i: tempVec){
-        //             delete i;
-        //         }
-        //     }
-        //     parseStack.pop();
-        //     parseStack.push(temp);
-        // }
+            parseStack.push(temp);
+        }
         else if (isNumber(i)){
             Node* digit = new Node(std::string(i));
             parseStack.push(digit);
