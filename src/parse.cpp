@@ -261,6 +261,8 @@ if (open != close) {
         }
     }
 
+    int numOperators = 0;
+    int numNumbers = 0;
     for (size_t i = 0; i < Lexer.tokenList.size(); i++) {
         if (Lexer.tokenList[i].text == "(") {
             if (i == Lexer.tokenList.size() - 1 || 
@@ -271,35 +273,20 @@ if (open != close) {
         if (i == Lexer.tokenList.size() -1){
             if (!parser.parseStack.empty()) {
             std::cout << "Unexpected token at line " << Lexer.tokenList[i-1].line
-                    << " column " << Lexer.tokenList[i-1].col << ": " << Lexer.tokenList[i-1].text << std::endl;
+                    << " column " << Lexer.tokenList.front().col << ": " << Lexer.tokenList.front().text << std::endl;
             exit(2);
          }
-    }
-    }
-
-    for (size_t i = 0; i < Lexer.tokenList.size() - 1; i++) {
-        if (Lexer.tokenList[i].text == "(" &&
-            parser.isOperator(Lexer.tokenList[i+1].text) &&
-            Lexer.tokenList[i+2].text == ")") {
-            reportUnexpectedToken(Lexer.tokenList[i+1]);
-        }
-    }
-    int numOperators = 0;
-    int numNumbers = 0;
-     for (auto i : Lexer.tokenList) {
-        if (parser.isOperator(i.text)) {
+         if (parser.isOperator(Lexer.tokenList[i].text)) {
             numOperators++;
         }
-        else if (parser.isNumber(i.text)) {
+        else if (parser.isNumber(Lexer.tokenList[i].text)) {
             numNumbers++;
+
         }
-    }
-    if ((numNumbers == 0 && numOperators > 0) ||(numNumbers > 1 && numOperators == 0)) {
-        std::cout << "Unexpected token at line " << Lexer.tokenList.back().line
-                  << " column " << Lexer.tokenList.back().col << ": " <<Lexer.tokenList.back().text << std::endl;
+        if (i == Lexer.tokenList.size()-1 && ((numNumbers == 0 && numOperators > 0) ||(numNumbers > 1 && numOperators == 0))) {
+        std::cout << "Unexpected token at line " << Lexer.tokenList[i-1].line
+                  << " column " << Lexer.tokenList[i-1].col << ": " <<Lexer.tokenList[i-1].text << std::endl;
         exit(2);
-    }
-    for (size_t i = 0; i < Lexer.tokenList.size(); i++) {
         if (parser.isOperator(Lexer.tokenList[i].text) && i != 0){
             if(Lexer.tokenList[i-1].text != "("){
                 std::cout << "Unexpected token at line " << Lexer.tokenList[i].line
@@ -308,6 +295,14 @@ if (open != close) {
             }
         }
     }
+    }
+        if (Lexer.tokenList[i].text == "(" &&
+                parser.isOperator(Lexer.tokenList[i].text) &&
+                Lexer.tokenList[i+2].text == ")") {
+                reportUnexpectedToken(Lexer.tokenList[i]);
+            }
+    }
+  
     if (root == nullptr){
         exit(2);
     }
