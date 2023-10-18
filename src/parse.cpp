@@ -273,7 +273,7 @@ if (open != close) {
         if (i == Lexer.tokenList.size() -1){
             if (!parser.parseStack.empty()) {
             std::cout << "Unexpected token at line " << Lexer.tokenList[i-1].line
-                    << " column " << Lexer.tokenList.front().col << ": " << Lexer.tokenList.front().text << std::endl;
+                    << " column " << Lexer.tokenList[i-1].col << ": " << Lexer.tokenList[i-1].text << std::endl;
             exit(2);
          }
          if (parser.isOperator(Lexer.tokenList[i].text)) {
