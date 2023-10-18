@@ -63,22 +63,22 @@ Node* Parser::parse(std::string token){
 
     for (auto i: tokens){
         if (isOperator(std::string(i))){
-            Node* oper = new Node(std::string(i));
+            Node* oper = nullptr;
+        try {
+            oper = new Node(std::string(i));
             parseStack.push(oper);
+
+        } catch(...) {
+            delete oper;  
+            oper = nullptr;
+            throw;  // Re-throw the caught exception so it can be handled upstream or cause the program to terminate.
+        }
         }
         else if (i == "("){
             // parenthesesCounter++;
             parseStack.push(nullptr);
         }
         else if (i == ")"){
-            // parenthesesCounter--;
-
-            // Misplaced closing parenthesis
-            // if (parenthesesCounter < 0) {
-            //     std::cout << "Error: Misplaced closing parenthesis." << std::endl;
-            //     exit(2);
-            // }
-
             std::vector<Node*> tempVec;
             Node* temp = nullptr;
             while (!parseStack.empty() && parseStack.top() != nullptr){
