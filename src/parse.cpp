@@ -93,11 +93,11 @@ Node* Parser::parse(std::string token){
                 tempVec.push_back(temp);
             }
             //new code
-            if (temp->treeVec != tempVec){
+            // if (temp->treeVec != tempVec){
                 for (auto i: tempVec){
                     delete i;
                 }
-            }
+            // }
             parseStack.pop();
             parseStack.push(temp);
         }
