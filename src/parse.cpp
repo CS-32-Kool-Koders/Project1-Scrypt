@@ -9,7 +9,9 @@ Parser::Parser(std::string token){
 }
 
 Parser::~Parser(){
-    
+    // for (Node* node: parseStack){
+    //     delete node;
+    // }
 }
 
 Node::Node(std::string data){
@@ -243,7 +245,11 @@ if (open != close) {
     Node* root = parser.parse(str);
     
     if (root != nullptr) {
-        parser.parseStack.pop();
+        while (parser.parseStack.empty()){
+            Node * temp = parser.parseStack.top();
+            parser.parseStack.pop();
+            delete temp;
+        }
     }
 
     // Check for multiple top-level s-expressions
@@ -277,20 +283,6 @@ if (open != close) {
                 exit(2);
             }
         }
-        bool completed_s_expression;
-        if (Lexer.tokenList[i].text == ")") {
-            bool completed_s_expression = true;
-                } else if (Lexer.tokenList[i].text == "(" && completed_s_expression == true) {
-                    if (i == Lexer.tokenList.size() - 1) {
-                        std::cout << "Unexpected start of a new S-expression at line " << Lexer.tokenList[i].line
-                                << " column " << Lexer.tokenList[i].col << ": " << Lexer.tokenList[i].text << std::endl;
-                        exit(2);
-                    }
-                    completed_s_expression = false;  // Reset the flag as we've started a new S-expression
-                } else {
-                    completed_s_expression = false;  // Any other token resets the flag
-                }
-            }
          if (parser.isOperator(Lexer.tokenList[i].text)) {
             numOperators++;
         }
