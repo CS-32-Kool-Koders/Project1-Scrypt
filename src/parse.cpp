@@ -300,6 +300,11 @@ if (open != close) {
                   << " column " << Lexer.tokenList[i+1].col << ": " <<Lexer.tokenList[i+1].text << std::endl;
             exit(2);
         }
+        if (Lexer.tokenList[i].text == "(" && parser.isNumber(Lexer.tokenList[i+1].text)){
+            std::cout << "Unexpected token at line " << Lexer.tokenList[i+1].line
+                  << " column " << Lexer.tokenList[i+1].col << ": " <<Lexer.tokenList[i+1].text << std::endl;
+            exit(2);
+        }
     
         if (Lexer.tokenList[i].text == "(" &&
                 parser.isOperator(Lexer.tokenList[i].text) &&
