@@ -40,56 +40,6 @@ bool Parser::isNumber(std::string num) {
     return dec <= 1;
 }
 
-// Node* Parser::parse(std::string token){
-//     if (token.empty()){
-//         exit(2);
-//     }
-//     std::string s;
-//     std::stringstream ss(token);
-//     std::vector<std::string> tokens;
-
-//     while (getline(ss, s, ' ')){
-//         tokens.push_back(s);
-//     }
-    
-//     for (auto i: tokens){
-//             if (isOperator(std::string(i))){
-//                 Node* oper = new Node(std::string(i));
-//                 parseStack.push(oper);
-//             }
-//             else if (i == ")"){
-//                 std::vector<Node*> tempVec;
-//                 Node* temp = nullptr;
-//                 while (!parseStack.empty() && parseStack.top() != nullptr){
-//                     temp = parseStack.top(); 
-//                     parseStack.pop();
-//                     if (isOperator(temp->data)){
-//                         if (temp->treeVec.empty()){
-//                             temp->treeVec = tempVec;
-//                             continue;
-//                         }
-//                     }
-//                     tempVec.push_back(temp);
-//                     }
-//                 parseStack.pop();
-//                 parseStack.push(temp);
-//                 }
-
-//             else if (isNumber(i)){
-//                Node* digit = new Node(std::string(i));
-//                 parseStack.push(digit);
-//             }
-//             else if (i== "("){
-//                 parseStack.push(nullptr);
-//             }
-
-//     }
-    
-//     if (parseStack.top()){
-//         return parseStack.top();
-//     }
-//     return nullptr;
-// }
 Node* Parser::parse(std::string token){
     if (token.empty()){
         exit(2);
@@ -98,7 +48,7 @@ Node* Parser::parse(std::string token){
     std::string s;
     std::stringstream ss(token);
     std::vector<std::string> tokens;
-    int parenthesesCounter = 0; // To track opened and closed parentheses
+    // int parenthesesCounter = 0; // To track opened and closed parentheses
 
     while (getline(ss, s, ' ')){
         tokens.push_back(s);
@@ -110,17 +60,17 @@ Node* Parser::parse(std::string token){
             parseStack.push(oper);
         }
         else if (i == "("){
-            parenthesesCounter++;
+            // parenthesesCounter++;
             parseStack.push(nullptr);
         }
         else if (i == ")"){
-            parenthesesCounter--;
+            // parenthesesCounter--;
 
             // Misplaced closing parenthesis
-            if (parenthesesCounter < 0) {
-                std::cout << "Error: Misplaced closing parenthesis." << std::endl;
-                exit(2);
-            }
+            // if (parenthesesCounter < 0) {
+            //     std::cout << "Error: Misplaced closing parenthesis." << std::endl;
+            //     exit(2);
+            // }
 
             std::vector<Node*> tempVec;
             Node* temp = nullptr;
@@ -145,10 +95,10 @@ Node* Parser::parse(std::string token){
     }
 
     // Mismatched parentheses
-    if (parenthesesCounter != 0) {
-        std::cout << "Error: Mismatched parentheses." << std::endl;
-        exit(2);
-    }
+    // if (parenthesesCounter != 0) {
+    //     std::cout << "Error: Mismatched parentheses." << std::endl;
+    //     exit(2);
+    // }
 
     if (parseStack.top()){
         return parseStack.top();
@@ -254,27 +204,12 @@ int main()
         }
     }
 
-//     if (open != close) {
-//     if (open > close) {
-//         // Unmatched opening parenthesis, point to END token
-//         Tokens adjustedEndToken = Lexer.tokenList.back();
-//         adjustedEndToken.col = Lexer.tokenList.back().col + 1; // Adjust the column for END token
-//         reportUnexpectedToken(adjustedEndToken);
-//     } else {
-//         // Find the first unmatched closing parenthesis
-//         for (const auto& token : Lexer.tokenList) {
-//             if (token.text == ")") {
-//                 reportUnexpectedToken(token);
-//                 break;
-//             }
-//         }
-//     }
-// }
+
 if (open != close) {
     if (open > close) {
         // Unmatched opening parenthesis, point to END token
         Tokens adjustedEndToken = Lexer.tokenList.back();
-        adjustedEndToken.col = Lexer.tokenList.back().col + 1; // Adjust the column for END token
+        adjustedEndToken.col = Lexer.tokenList.back().col ; // Adjust the column for END token
         reportUnexpectedToken(adjustedEndToken);
     } else {
         // Find the unmatched closing parenthesis
@@ -312,11 +247,7 @@ if (open != close) {
     }
 
     // Check for multiple top-level s-expressions
-    if (!parser.parseStack.empty()) {
-        std::cout << "Unexpected token at line " << Lexer.tokenList.back().line
-                  << " column " << Lexer.tokenList.back().col << ": " << Lexer.tokenList.back().text << std::endl;
-        exit(2);
-    }
+   
     bool insideParentheses = false;
 
     for (auto i : Lexer.tokenList) {
@@ -337,6 +268,13 @@ if (open != close) {
                 reportUnexpectedToken(Lexer.tokenList[i]);
             }
         }
+        if (i == Lexer.tokenList.size() -1){
+            if (!parser.parseStack.empty()) {
+            std::cout << "Unexpected token at line " << Lexer.tokenList[i-1].line
+                    << " column " << Lexer.tokenList[i-1].col << ": " << Lexer.tokenList[i-1].text << std::endl;
+            exit(2);
+         }
+    }
     }
 
     for (size_t i = 0; i < Lexer.tokenList.size() - 1; i++) {
