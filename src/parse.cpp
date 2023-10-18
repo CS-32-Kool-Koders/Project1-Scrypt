@@ -47,86 +47,151 @@ bool Parser::isNumber(std::string num) {
     return dec <= 1;
 }
 
-Node* Parser::parse(std::string token){
-    if (token.empty()){
+// Node* Parser::parse(std::string token){
+//     if (token.empty()){
+//         exit(2);
+//     }
+
+//     std::string s;
+//     std::stringstream ss(token);
+//     std::vector<std::string> tokens;
+//     // int parenthesesCounter = 0; // To track opened and closed parentheses
+
+//     while (getline(ss, s, ' ')){
+//         tokens.push_back(s);
+//     }
+
+//     for (auto i: tokens){
+//         if (isOperator(std::string(i))){
+//             Node* oper = nullptr;
+//         try {
+//             oper = new Node(std::string(i));
+//             parseStack.push(oper);
+
+//         } catch(...) {
+//             delete oper;  
+//             oper = nullptr;
+//             throw;  
+//         }
+//         }
+//         else if (i == "("){
+//             // parenthesesCounter++;
+//             parseStack.push(nullptr);
+//         }
+//         else if (i == ")"){
+//             std::vector<Node*> tempVec;
+//             Node* temp = nullptr;
+//             while (!parseStack.empty() && parseStack.top() != nullptr){
+//                 temp = parseStack.top(); 
+//                 parseStack.pop();
+//                 if (isOperator(temp->data)){
+//                     if (temp->treeVec.empty()){
+//                         temp->treeVec = tempVec;
+//                         continue;
+//                     } else {
+                        
+//                     }
+//                 }
+//                 tempVec.push_back(temp);
+//             }
+//             //new code
+            
+//             parseStack.pop();
+//             parseStack.push(temp);
+//             if (temp->treeVec != tempVec){
+//                 for (auto i: tempVec){
+//                     delete i;
+//                 }
+//             }
+//         }
+//         else if (isNumber(i)){
+//             Node* digit = nullptr;
+//             try{ 
+//                 digit = new Node(std::string(i));
+//                 parseStack.push(digit);
+//             } catch(...){
+//                 delete digit;  
+//                 digit  = nullptr;
+//                 throw;
+//             }
+//         }
+//     }
+
+//     // Mismatched parentheses
+//     // if (parenthesesCounter != 0) {
+//     //     std::cout << "Error: Mismatched parentheses." << std::endl;
+//     //     exit(2);
+//     // }
+
+//     if (parseStack.top()){
+//         return parseStack.top();
+//     }
+//     return nullptr;
+// }
+Node* Parser::parse(std::string token) {
+    if (token.empty()) {
         exit(2);
     }
 
     std::string s;
     std::stringstream ss(token);
     std::vector<std::string> tokens;
-    // int parenthesesCounter = 0; // To track opened and closed parentheses
 
-    while (getline(ss, s, ' ')){
+    while (getline(ss, s, ' ')) {
         tokens.push_back(s);
     }
 
-    for (auto i: tokens){
-        if (isOperator(std::string(i))){
-            Node* oper = nullptr;
-        try {
-            oper = new Node(std::string(i));
-            parseStack.push(oper);
-
-        } catch(...) {
-            delete oper;  
-            oper = nullptr;
-            throw;  
-        }
-        }
-        else if (i == "("){
-            // parenthesesCounter++;
-            parseStack.push(nullptr);
-        }
-        else if (i == ")"){
-            std::vector<Node*> tempVec;
-            Node* temp = nullptr;
-            while (!parseStack.empty() && parseStack.top() != nullptr){
-                temp = parseStack.top(); 
-                parseStack.pop();
-                if (isOperator(temp->data)){
-                    if (temp->treeVec.empty()){
-                        temp->treeVec = tempVec;
-                        continue;
-                    } else {
-                        
+    Node* root = nullptr; // Store the root of the expression tree
+    try {
+        for (const auto& i : tokens) {
+            if (isOperator(std::string(i))) {
+                Node* oper = new Node(std::string(i));
+                parseStack.push(oper);
+            } else if (i == "(") {
+                parseStack.push(nullptr);
+            } else if (i == ")") {
+                std::vector<Node*> tempVec;
+                Node* temp = nullptr;
+                while (!parseStack.empty() && parseStack.top() != nullptr) {
+                    temp = parseStack.top();
+                    parseStack.pop();
+                    if (isOperator(temp->data)) {
+                        if (temp->treeVec.empty()) {
+                            temp->treeVec = tempVec;
+                            continue;
+                        }
+                    }
+                    tempVec.push_back(temp);
+                }
+                if (temp->treeVec != tempVec) {
+                    for (auto node : tempVec) {
+                        delete node;
                     }
                 }
-                tempVec.push_back(temp);
-            }
-            //new code
-            
-            parseStack.pop();
-            parseStack.push(temp);
-            if (temp->treeVec != tempVec){
-                for (auto i: tempVec){
-                    delete i;
-                }
-            }
-        }
-        else if (isNumber(i)){
-            Node* digit = nullptr;
-            try{ 
-                digit = new Node(std::string(i));
+                parseStack.pop();
+                parseStack.push(temp);
+            } else if (isNumber(i)) {
+                Node* digit = new Node(std::string(i));
                 parseStack.push(digit);
-            } catch(...){
-                delete digit;  
-                digit  = nullptr;
-                throw;
             }
         }
+
+        if (!parseStack.empty()) {
+            root = parseStack.top();
+        }
+    } catch (...) {
+        while (!parseStack.empty()) {
+            Node* temp = parseStack.top();
+            parseStack.pop();
+            delete temp;
+        }
+        if (root) {
+            delete root;
+        }
+        throw;
     }
 
-    // Mismatched parentheses
-    // if (parenthesesCounter != 0) {
-    //     std::cout << "Error: Mismatched parentheses." << std::endl;
-    //     exit(2);
-    // }
-
-    if (parseStack.top()){
-        return parseStack.top();
-    }
-    return nullptr;
+    return root;
 }
 
 
