@@ -249,9 +249,10 @@ if (open != close) {
 
     Node* root = parser.parse(str);
     
-    // if (root != nullptr) {
-    //     parser.parseStack.pop();
-    // }
+    if (root != nullptr) {
+        delete parser.parseStack.top();
+        parser.parseStack.pop();
+    }
 
     // Check for multiple top-level s-expressions
    
