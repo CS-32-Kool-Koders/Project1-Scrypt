@@ -270,13 +270,13 @@ if (open != close) {
                 reportUnexpectedToken(Lexer.tokenList[i]);
             }
         }
-        if (i == Lexer.tokenList.size() -1){
-            if (!parser.parseStack.empty()) {
-            std::cout << "Unexpected token at line " << Lexer.tokenList[i-1].line
-                    << " column " << Lexer.tokenList[i-1].col << ": " << Lexer.tokenList[i-1].text << std::endl;
-            exit(2);
+        if (i == Lexer.tokenList.size() - 1) {
+            if (!parser.parseStack.empty() || Lexer.tokenList[i].text == "(") {
+                std::cout << "Unexpected token at line " << Lexer.tokenList[i].line
+                        << " column " << Lexer.tokenList[i].col << ": " << Lexer.tokenList[i].text << std::endl;
+                exit(2);
             }
-         }
+        }
          if (parser.isOperator(Lexer.tokenList[i].text)) {
             numOperators++;
         }
