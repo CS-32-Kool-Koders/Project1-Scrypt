@@ -81,7 +81,6 @@ Node* Parser::parse(std::string token){
         else if (i == ")"){
             std::vector<Node*> tempVec;
             Node* temp = nullptr;
-            try{
             while (!parseStack.empty() && parseStack.top() != nullptr){
                 temp = parseStack.top(); 
                 parseStack.pop();
@@ -89,24 +88,21 @@ Node* Parser::parse(std::string token){
                     if (temp->treeVec.empty()){
                         temp->treeVec = tempVec;
                         continue;
+                    } else {
+                        
                     }
                 }
                 tempVec.push_back(temp);
             }
-            } catch(...){
-                for (auto i: tempVec){
-                    delete i;
-                }
-                delete temp;
-            }
             //new code
+            
+            parseStack.pop();
+            parseStack.push(temp);
             if (temp->treeVec != tempVec){
                 for (auto i: tempVec){
                     delete i;
                 }
             }
-            parseStack.pop();
-            parseStack.push(temp);
         }
         else if (isNumber(i)){
             Node* digit = new Node(std::string(i));
