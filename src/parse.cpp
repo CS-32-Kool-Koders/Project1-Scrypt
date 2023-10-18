@@ -87,7 +87,7 @@ Node* Parser::parse(std::string token){
                 if (isOperator(temp->data)){
                     if (temp->treeVec.empty()){
                         temp->treeVec = tempVec;
-                        continue;
+                        break;
                     } else {
                         
                     }
