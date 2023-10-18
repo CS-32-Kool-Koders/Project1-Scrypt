@@ -105,8 +105,15 @@ Node* Parser::parse(std::string token){
             }
         }
         else if (isNumber(i)){
-            Node* digit = new Node(std::string(i));
-            parseStack.push(digit);
+            Node* digit = nullptr;
+            try{ 
+                digit = new Node(std::string(i));
+                parseStack.push(digit);
+            } catch(...){
+                delete digit;  
+                digit  = nullptr;
+                throw;
+            }
         }
     }
 
