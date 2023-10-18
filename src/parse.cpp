@@ -71,7 +71,7 @@ Node* Parser::parse(std::string token){
         } catch(...) {
             delete oper;  
             oper = nullptr;
-            throw;  // Re-throw the caught exception so it can be handled upstream or cause the program to terminate.
+            throw;  
         }
         }
         else if (i == "("){
@@ -249,9 +249,9 @@ if (open != close) {
 
     Node* root = parser.parse(str);
     
-    if (root != nullptr) {
-        parser.parseStack.pop();
-    }
+    // if (root != nullptr) {
+    //     parser.parseStack.pop();
+    // }
 
     // Check for multiple top-level s-expressions
    
