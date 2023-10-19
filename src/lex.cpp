@@ -1,5 +1,5 @@
 #include "./lib/lexer.h"
-#include "./lib/parser.h"
+// #include "./lib/parser.h"
 #include <iomanip>
 #include <iostream>
 // To run just the lexer, make sure you are in the src directory,

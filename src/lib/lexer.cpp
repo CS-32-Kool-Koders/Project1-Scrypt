@@ -102,4 +102,3 @@ int lexer::checkIsDigit(std::string line, int row, int col) {
     tokenList.push_back(Tokens(row, col-offset+1, digit));
     return 0;
 }
-
