@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include "infix_parser.h"
+#include "tokens.h"
 
 void ExpressionNode::printInfix()
 {

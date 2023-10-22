@@ -2,7 +2,8 @@
 
 #include <string>
 #include <vector>
-#include "tokens.h"
+
+struct Tokens;
 
 class ExpressionNode
 {
