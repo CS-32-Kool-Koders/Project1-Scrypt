@@ -9,7 +9,12 @@ void ExpressionNode::printInfix()
     {
         std::cout << "(";
         left->printInfix();
-        std::cout << value;
+        if(value == "+" || value == "-" || value == "*" || value == "/") {
+            std::cout << " " << value << " ";
+        }
+        else {
+            std::cout << value;
+        }
         right->printInfix();
         std::cout << ")";
     }
