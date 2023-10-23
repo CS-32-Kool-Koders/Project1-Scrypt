@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <iomanip>
 
 struct Tokens;
 
@@ -31,7 +32,9 @@ public:
         }
     }
 
+    double computeResult();
     void printInfix();
+    void printResult();
 };
 
 class ExpressionParser

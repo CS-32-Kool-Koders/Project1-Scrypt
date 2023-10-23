@@ -32,14 +32,16 @@ int main()
                 ExpressionParser parser(lexer.tokenList);
                 ExpressionNode *root = parser.parseExpression();
                 root->printInfix();
+                std::cout << std::endl;
+                root->printResult();
+                std::cout << std::endl;
 
                 delete root;
-
-                std::cout << std::endl;
             }
-            catch (...)
+            catch (std::runtime_error &e)
             {
-                std::cout << "error";
+                std::cout << e.what() << std::endl;
+                return 1;
             }
         }
     }

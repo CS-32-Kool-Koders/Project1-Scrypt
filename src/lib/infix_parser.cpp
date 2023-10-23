@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <cmath>
 #include "infix_parser.h"
 #include "tokens.h"
 
@@ -100,4 +101,68 @@ ExpressionNode *ExpressionParser::parseOperand()
         }
     }
     return nullptr;
+}
+
+double ExpressionNode::computeResult()
+{
+    if (value == "+" || value == "-" || value == "*" || value == "/")
+    {
+        if (left == nullptr || right == nullptr)
+        {
+            throw std::runtime_error("Invalid expression");
+        }
+        double leftValue = left->computeResult();
+        double rightValue = right->computeResult();
+
+        if (value == "+")
+        {
+            return leftValue + rightValue;
+        }
+        else if (value == "-")
+        {
+            return leftValue - rightValue;
+        }
+        else if (value == "*")
+        {
+            return leftValue * rightValue;
+        }
+        else if (value == "/")
+        {
+            if (rightValue == 0)
+            {
+                throw std::runtime_error("Division by zero");
+            }
+            return leftValue / rightValue;
+        }
+    }
+    else
+    {
+        // Assuming value is a number (possibly with commas)
+        std::stringstream ss(value);
+        double number;
+        ss >> std::setprecision(15) >> number;
+
+        if (ss.fail())
+        {
+            throw std::runtime_error("Invalid number: " + value);
+        }
+        return number;
+    }
+
+    throw std::runtime_error("Invalid operator: " + value);
+}
+
+void ExpressionNode::printResult()
+{
+    double result = computeResult();
+    // if the number is an integer, print it without a decimal point
+    if (result == std::floor(result))
+    {
+        std::cout << std::floor(result);
+    }
+    else
+    {
+        // print with only enough precision to show the value (no trailing zeros)
+        std::cout << result; // not sure if std::precision is needed for that case
+    }
 }
