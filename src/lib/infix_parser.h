@@ -19,6 +19,18 @@ public:
         this->right = nullptr;
     }
 
+    ~ExpressionNode()
+    {
+        if (left != nullptr)
+        {
+            delete left;
+        }
+        if (right != nullptr)
+        {
+            delete right;
+        }
+    }
+
     void printInfix();
 };
 

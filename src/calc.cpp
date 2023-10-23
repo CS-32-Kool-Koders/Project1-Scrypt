@@ -15,86 +15,34 @@ int main()
 {
     std::vector<Tokens> tokens;
     std::string line;
-    int new_line = 0; // 
-    while(!std::cin.eof()) {
-        new_line +=1;
-        while(std::getline(std::cin, line)) {
-            try {
+    int new_line = 0;
+
+    while (!std::cin.eof())
+    {
+        new_line += 1;
+        while (std::getline(std::cin, line))
+        {
+            try
+            {
                 lexer lexer;
                 std::istringstream stream(line);
                 lexer.tokenize(1, stream.str());
-                lexer.tokenList.push_back(Tokens(1, lexer.tokenList.back().col+1, "END"));
+                lexer.tokenList.push_back(Tokens(1, lexer.tokenList.back().col + 1, "END"));
 
                 ExpressionParser parser(lexer.tokenList);
                 ExpressionNode *root = parser.parseExpression();
                 root->printInfix();
 
-                std::cout << std::endl;
+                delete root;
 
+                std::cout << std::endl;
             }
-            catch(...) {
+            catch (...)
+            {
                 std::cout << "error";
             }
         }
     }
-
-    // ...
-
-
-
-
-
-
-
-/**#ifndef USE_DUMMY_INPUT
-    // CODE FROM LEX.CPP
-    std::string line; // o store input
-    int row = 0;
-    lexer Lexer;
-    int new_line = 0; //
-    while (!std::cin.eof())
-    {
-        // stores every instance of a new line
-        new_line += 1;
-        // goes through each line of input
-        if (getline(std::cin, line))
-        {
-            row += 1;
-            // makes tokens out of the line given
-            // then puts them in tokenList
-            Lexer.tokenize(row, line);
-        }
-    }
-    if (new_line > row)
-    {
-        Lexer.tokenList.push_back(Tokens(new_line, 1, "END"));
-    }
-    else
-    {
-        Lexer.tokenList.push_back(Tokens(row, Lexer.tokenList.back().col + 1, "END"));
-    }
-    // END OF CODE FROM LEX.CPP
-    tokens = Lexer.tokenList;
-#else
-    tokens = {
-        Tokens(1, 1, "x"), Tokens(1, 3, "="), Tokens(1, 5, "y"), Tokens(1, 7, "="),
-        Tokens(1, 9, "0"), Tokens(1, 11, "+"), Tokens(1, 13, "1"), Tokens(1, 15, "+"),
-        Tokens(1, 17, "2"), Tokens(1, 19, "*"), Tokens(1, 21, "3"), Tokens(1, 23, "-"),
-        Tokens(1, 25, "4"), Tokens(1, 27, "/"), Tokens(1, 29, "("), Tokens(1, 30, "5"),
-        Tokens(1, 32, "+"), Tokens(1, 34, "6"), Tokens(1, 35, ")")};
-#endif
-
-    // print out the tokens
-    for (Tokens token : tokens)
-    {
-        std::cout << token.line << " " << token.col << " " << token.text << std::endl;
-    }
-
-    ExpressionParser parser(tokens);
-    ExpressionNode *root = parser.parseExpression();
-    root->printInfix();
-
-    std::cout << std::endl;**/
 
     return 0;
 }
