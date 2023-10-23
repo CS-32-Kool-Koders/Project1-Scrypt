@@ -128,7 +128,7 @@ double ExpressionNode::computeResult()
 
         if (value == "+")
         {
-            if(leftValue == NULL || rightValue == NULL) {
+            if(leftValue == nullptr || rightValue == nullptr) {
                 throw std::runtime_error("Invalid expression PLACEHOLDER");
             }
             return leftValue + rightValue;
