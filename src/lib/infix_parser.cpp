@@ -103,7 +103,7 @@ ExpressionNode *ExpressionParser::parseOperand()
     return nullptr;
 }
 
-bool isVariable(std::string var) {
+bool ExpressionNode::isVariable(std::string var) {
     if(!isdigit(var[0])) {
         for(char c : var) {
             if(c != '_' || !isalnum(c)) {
