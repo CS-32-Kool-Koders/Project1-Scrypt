@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <iomanip>
+#include <map>
 
 struct Tokens;
 
@@ -12,6 +13,7 @@ public:
     std::string value;
     ExpressionNode *left;
     ExpressionNode *right;
+    std::map<std::string, double> variables;
 
     ExpressionNode(std::string value)
     {
@@ -33,6 +35,7 @@ public:
     }
 
     double computeResult();
+    bool isVariable(std::string value);
     void printInfix();
     void printResult();
 };

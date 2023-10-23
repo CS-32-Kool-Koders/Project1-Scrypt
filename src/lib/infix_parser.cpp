@@ -103,6 +103,18 @@ ExpressionNode *ExpressionParser::parseOperand()
     return nullptr;
 }
 
+bool isVariable(std::string var) {
+    if(isdigit(var[0])) {
+        for(char c : var) {
+            if(c != '_' || !isalnum(c)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    return false;
+}
+
 double ExpressionNode::computeResult()
 {
     if (value == "+" || value == "-" || value == "*" || value == "/")
@@ -116,6 +128,9 @@ double ExpressionNode::computeResult()
 
         if (value == "+")
         {
+            if(leftValue == NULL || rightValue == NULL) {
+                std::cout << "Invalid Operation" << " PLACEHOLDER";
+            }
             return leftValue + rightValue;
         }
         else if (value == "-")
@@ -134,7 +149,13 @@ double ExpressionNode::computeResult()
             }
             return leftValue / rightValue;
         }
+        // else if(value == "=") {
+        //     variables[leftValue] = rightValue;
+        // }
     }
+    // else if(isVariable(value)) {
+    //     if(value !)
+    // }
     else
     {
         // Assuming value is a number (possibly with commas)
