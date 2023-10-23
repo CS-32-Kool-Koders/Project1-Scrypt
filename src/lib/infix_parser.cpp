@@ -104,7 +104,7 @@ ExpressionNode *ExpressionParser::parseOperand()
 }
 
 bool isVariable(std::string var) {
-    if(isdigit(var[0])) {
+    if(!isdigit(var[0])) {
         for(char c : var) {
             if(c != '_' || !isalnum(c)) {
                 return false;
@@ -146,9 +146,19 @@ double ExpressionNode::computeResult()
             }
             return leftValue / rightValue;
         }
-        // else if(value == "=") {
-        //     variables[leftValue] = rightValue;
-        // }
+        else if(value == "=") {
+            std::stringstream ss(value);
+            variables[ss.str()] = rightValue;
+            return rightValue;
+        }
+        else if(isVariable(value)) {
+            if(variables.find(value) != variables.end()) {
+                return variables[value];
+            }
+            else {
+                variables.insert({value, 0});
+            }
+        }
     }
     // else if(isVariable(value)) {
     //     if(value !)
@@ -162,6 +172,14 @@ double ExpressionNode::computeResult()
 
         if (ss.fail())
         {
+            // if((value[0] >= 'a' && value[0] <= 'z') || (value[0] >= 'A' && value[0] <= 'Z') || value[0] == '_') {
+            //     for(char c : value) {
+            //         if(!(c >= 'a' && c <= 'z') && !(c >= 'A' && c <= 'Z') && c != '_' && !isdigit(c)) {
+            //                 throw("Invalid operand: " + value);
+            //         }
+                    
+            //     }
+            //}
             throw std::runtime_error("Invalid number: " + value);
         }
         return number;
