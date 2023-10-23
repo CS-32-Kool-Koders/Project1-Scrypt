@@ -41,7 +41,7 @@ int main()
             catch (std::runtime_error &e)
             {
                 std::cout << e.what() << std::endl;
-                return 1;
+                //return 1;
             }
         }
     }
