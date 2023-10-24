@@ -32,9 +32,11 @@ Node::~Node(){
     }
     treeVec.clear();
 }
+void errorHelper(std::vector<Tokens> tokenlist){
 
+}
 bool Parser::isOperator(std::string c){
-    return (c == "+")|| (c == "-") || (c == "*") || (c == "/");
+    return (c == "+")|| (c == "-") || (c == "*") || (c == "/") || (c == "=");
 }
 
 
@@ -47,6 +49,20 @@ bool Parser::isNumber(std::string num) {
     return dec <= 1;
 }
 
+bool Parser::isIdentifier(std::string i){
+    if (i == "END"){
+        return false;
+    }
+    if (!isalpha(i[0]) && i[0] != '_'){
+        return false;
+    }
+    for (auto c: i){
+        if (!isalnum(c) && c != '_'){
+            return false;
+        }
+    }
+    return true;
+}
 Node* Parser::parse(std::string token){
     if (token.empty()){
         exit(2);
@@ -114,14 +130,13 @@ Node* Parser::parse(std::string token){
                 digit  = nullptr;
                 throw;
             }
+        } 
+        else if (isIdentifier(i)){
+            Node* id = nullptr;
+            id = new Node(std::string(i));
+            parseStack.push(id);
         }
     }
-
-    // Mismatched parentheses
-    // if (parenthesesCounter != 0) {
-    //     std::cout << "Error: Mismatched parentheses." << std::endl;
-    //     exit(2);
-    // }
 
     if (parseStack.top()){
         return parseStack.top();
@@ -160,15 +175,16 @@ double Parser::evaluate(Node* root) {
         if (isdigit(root->data[0])){
             return std::stod(std::string(1, root->data[0]));
         }
-    } else{
-        if (isNumber(root->data)) {
+    } else if (isNumber(root->data)) {
             return std::stod(std::string(root->data));
-        }
+    } else if (isIdentifier(root->data)){
+
     }
+    
     }
 
     double result = evaluate(root->treeVec.back());  // Start from the last element
-    for (int i = root->treeVec.size() - 2; i >= 0; --i) { // Traverse in reverse
+    for (int i = root->treeVec.size() - 2; i >= 0; --i) { // modify to account for =; assign operator
         double operand = evaluate(root->treeVec[i]);
         if (root->data == "+") {
             result += operand;
@@ -182,7 +198,7 @@ double Parser::evaluate(Node* root) {
                 exit(3);
             }
             result /= operand;
-        }
+        } //add condition for equal
     }
     return result;
 }
@@ -213,11 +229,14 @@ int main()
     else {
         Lexer.tokenList.push_back(Tokens(row, Lexer.tokenList.back().col, "END"));
     }
-
+    // std::cout<<tokenList<<std::endl;
     int open = 0;
     int close = 0;
     std::string str;
+    // std::vector<std::string> mult;
+    // maybe add checks for multiple here, so they can be added to a vector
     for (auto i : Lexer.tokenList){
+        // std::cout<<i.text<<std::endl;
         str += i.text + " ";
         if (i.text == "("){
             open++;
@@ -259,10 +278,10 @@ if (open != close) {
     Parser parser(str);
     
  
-    if (Lexer.tokenList.back().text != "END") {
+    if (Lexer.tokenList.back().text != "END") { //check for multiple 
         reportUnexpectedToken(Lexer.tokenList.back());
     }
-
+ 
     Node* root = parser.parse(str);
     
     if (root != nullptr) {
@@ -270,12 +289,11 @@ if (open != close) {
         parser.parseStack.pop();
     }
 
-    // Check for multiple top-level s-expressions
    
     bool insideParentheses = false;
 
     // bool topLevelParsed = false;
-
+    
     for (auto i : Lexer.tokenList) {
         if (i.text == "(") {
             insideParentheses = true;
@@ -297,7 +315,7 @@ if (open != close) {
     for (size_t i = 0; i < Lexer.tokenList.size(); i++) {
         if (Lexer.tokenList[i].text == "(") {
             if (i == Lexer.tokenList.size() - 1 || 
-                (Lexer.tokenList[i+1].text != "(" && !parser.isNumber(Lexer.tokenList[i+1].text) && !parser.isOperator(Lexer.tokenList[i+1].text))) {
+                (Lexer.tokenList[i+1].text != "(" && !parser.isNumber(Lexer.tokenList[i+1].text) && !parser.isOperator(Lexer.tokenList[i+1].text) && !parser.isIdentifier(Lexer.tokenList[i+1].text))) {
                 reportUnexpectedToken(Lexer.tokenList[i]);
             }
         }
@@ -307,18 +325,16 @@ if (open != close) {
         if (Lexer.tokenList[i].text == ")"){
             cl++;
         }
-        if (Lexer.tokenList[i].text == ")" && op == cl && Lexer.tokenList[i+1] .text!= "END"){
+        if (Lexer.tokenList[i].text == ")" && op == cl && Lexer.tokenList[i+1] .text!= "END"){ //check for multiple
              std::cout << "Unexpected token at line " << Lexer.tokenList[i+1].line
                   << " column " << Lexer.tokenList[i+1].col << ": " <<Lexer.tokenList[i+1].text << std::endl;
             exit(2);
         }
-        // if (topLevelParsed && i < Lexer.tokenList.size() - 1 && Lexer.tokenList[i + 1].text != "END") {
-        //     reportUnexpectedToken(Lexer.tokenList[i + 1]);
-        // }
+
          if (parser.isOperator(Lexer.tokenList[i].text)) {
             numOperators++;
         }
-        else if (parser.isNumber(Lexer.tokenList[i].text)) {
+        else if (parser.isNumber(Lexer.tokenList[i].text) || parser.isIdentifier(Lexer.tokenList[i].text)) { //add identifier shit here
             numNumbers++;
         }
         if (i == Lexer.tokenList.size()-1 && ((numNumbers == 0 && numOperators > 0) ||(numNumbers > 1 && numOperators == 0))) {
@@ -326,7 +342,7 @@ if (open != close) {
                   << " column " << Lexer.tokenList[i-1].col << ": " <<Lexer.tokenList[i-1].text << std::endl;
         exit(2);
         }
-        if (i == Lexer.tokenList.size() - 1) {
+        if (i == Lexer.tokenList.size() - 1) { //one of the checks for multiple
             if (!parser.parseStack.empty()) {
                 std::cout << "Unexpected token at line " << Lexer.tokenList[i].line
                         << " column " << Lexer.tokenList[i].col << ": " << Lexer.tokenList[i].text << std::endl;
@@ -359,11 +375,9 @@ if (open != close) {
             }
     }
   
-    // if (root == nullptr){
-    //     exit(2);
-    // }
+  
     printTreeInfix(root);
-    std::cout << std::endl << parser.evaluate(root) << std::endl;
+    // std::cout << std::endl << parser.evaluate(root) << std::endl;
 
     delete root;
     return 0;

@@ -11,6 +11,7 @@ class lexer {
         int tokenize(int row, std::string line);
     private:
         //handles numbers and decimals
-        int checkIsDigit(std::string line, int row, int col);   
+        int checkIsDigit(std::string line, int row, int col); 
+        void checkIsIdentifier(std::string line, int row, int col) ;  
 
 };

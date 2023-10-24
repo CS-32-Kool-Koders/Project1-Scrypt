@@ -10,6 +10,7 @@
 #include <string>
 #include <sstream>
 #include <cmath>
+#include <unordered_map>
 
 //#include "lexer.h"
 
@@ -34,4 +35,6 @@ struct Parser {
     void printTreeInfix(Node* node);
     double evaluate(Node* root);
     bool isNumber(std::string num);
+    bool isIdentifier(std::string i);
+    void errorHelper(std::vector<Tokens> tokenlist);
 };
