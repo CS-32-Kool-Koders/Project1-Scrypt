@@ -250,7 +250,7 @@ void ExpressionNode::printResult()
         //     std::cout << result; // not sure if std::precision is needed for that case
         // }
     std::cout << strstrm.str() << std::endl;
-    std::cout << result << std::endl;
+    //std::cout << computeResult() << std::endl;
     strstrm.str("");
     strstrm.clear();
 }
