@@ -246,4 +246,5 @@ void ExpressionNode::printResult()
         // }
     std::cout << strstrm.str() << std::endl;
     std::cout << result << std::endl;
+    strstrm.clear();
 }
