@@ -166,7 +166,7 @@ double ExpressionNode::computeResult()
         {
             if (rightValue == 0)
             {
-                throw std::runtime_error("Division by zero");
+                throw std::runtime_error("Runtime error: division by zero.");
             }
             return leftValue / rightValue;
         }
@@ -185,7 +185,7 @@ double ExpressionNode::computeResult()
                 return variables[value];
             }
         }
-        throw std::runtime_error("Unknown variable: " + value);
+        throw std::runtime_error("Runtime error: unknown identifier " + value);
     }
     else
     {
