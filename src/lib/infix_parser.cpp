@@ -168,6 +168,7 @@ double ExpressionNode::computeResult()
         else if (value == "*")
         {
             column+=2;
+            std::cout << column << " is multiply " << std::endl;
             return leftValue * rightValue;
         }
         else if (value == "/")
@@ -218,6 +219,7 @@ double ExpressionNode::computeResult()
             throw std::runtime_error("Invalid number: " + value);
         }
         column+= value.length();
+        std::cout << column << " is number " <<std::endl;
         return number;
     }
 
@@ -227,6 +229,7 @@ double ExpressionNode::computeResult()
 void ExpressionNode::printResult()
 {
     getVariablesNames();
+    column = 1;
     double result = computeResult();
     // knowsVariables.clear();
     // if the number is an integer, print it without a decimal point
