@@ -141,18 +141,19 @@ void ExpressionNode::getVariablesNames()
 
     right->getVariablesNames();
 }
-
+int column = 0;
 double ExpressionNode::computeResult()
 {
     if (value == "+" || value == "-" || value == "*" || value == "/" || value == "=")
     {
         if (left == nullptr || right == nullptr)
         {
-            throw std::runtime_error("Invalid expression");
+            throw std::runtime_error("Unexpected token at line 1 column " + column + ": " + value);
         }
         double leftValue = left->computeResult();
+        column++;
         double rightValue = right->computeResult();
-
+        column++;
         if (value == "+")
         {
             return leftValue + rightValue;
