@@ -54,8 +54,8 @@ int lexer::tokenize(int row, std::string line) {
         }
 
         else if(isalpha(line[i]) || line[i] == '_') {
-             checkIsIdentifier(line, (int)row, (int)i);
- }
+            i = checkIsIdentifier(line, (int)row, (int)i);
+}
 
         else {
             //case - invalid character
@@ -110,14 +110,13 @@ int lexer::checkIsDigit(std::string line, int row, int col) {
     tokenList.push_back(Tokens(row, col-offset+1, digit));
     return 0;
 }
-void lexer::checkIsIdentifier(std::string line, int row, int col) {
+int lexer::checkIsIdentifier(std::string line, int row, int col) {
     std::string identifier;
     identifier += line[col];
     while(isalnum(line[col+1]) || line[col+1] == '_') {
         identifier += line[col+1];
         col++;
     }
-    tokenList.push_back(Tokens(row, col-identifier.size()+1, identifier));
-    // return 0;
+    tokenList.push_back(Tokens(row, col-identifier.size()+2, identifier));
+    return col;
 }
-
