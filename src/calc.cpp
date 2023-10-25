@@ -33,22 +33,21 @@ int main()
                 lexer.tokenList.push_back(Tokens(1, lexer.tokenList.back().col + 1, "END"));
                 int paren_count;
                 for(size_t i =0; i < lexer.tokenList.size(); i++) {
-                    if(paren_count > 0) {
-                        if(lexer.tokenList[i].text == "(") {
-                            paren_count++;
-                        }
-                        else if(lexer.tokenList[i].text == ")") {
-                            paren_count--;
-                        }
+                    if(lexer.tokenList[i].text == "(") {
+                        paren_count++;
                     }
-                    else if(paren_count == 0 && i != lexer.tokenList.size()-1){
+                    else if(lexer.tokenList[i].text == ")") {
+                        paren_count--;
+                    }
+                    
+                    if((paren_count < 0) || (paren_count == 0 && i != lexer.tokenList.size()-1) || paren_count > lexer.tokenList.size()-i){
                         std::string throw_message = "Unexpected token at line 1 column " + std::to_string(lexer.tokenList[i].col) + ": " + lexer.tokenList[i].text;
                         throw std::logic_error(throw_message);
                     }
-                    else {
-                        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(lexer.tokenList[i].col) + ": " + lexer.tokenList[i].text;
-                        throw std::logic_error(throw_message);
-                    }
+                    // else {
+                    //     std::string throw_message = "Unexpected token at line 1 column " + std::to_string(lexer.tokenList[i].col) + ": " + lexer.tokenList[i].text;
+                    //     throw std::logic_error(throw_message);
+                    // }
                 }
                 // if(paren_count != 0) {
                 //     std::string throw_message = "Unexpected token at line 1 column " + std::to_string(lexer.tokenList.back().col) + ": " + lexer.tokenList.back().text;
