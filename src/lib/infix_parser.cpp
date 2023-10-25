@@ -157,17 +157,17 @@ double ExpressionNode::computeResult()
         //column++;
         if (value == "+")
         {
-            column+=2;
+            column-=2;
             return leftValue + rightValue;
         }
         else if (value == "-")
         {
-            column+=2;
+            column-=2;
             return leftValue - rightValue;
         }
         else if (value == "*")
         {
-            column+=2;
+            column-=2;
             //std::cout << column << " is multiply " << std::endl;
             return leftValue * rightValue;
         }
@@ -177,13 +177,13 @@ double ExpressionNode::computeResult()
             {
                 throw std::runtime_error("Runtime error: division by zero.");
             }
-            column+=2;
+            column-=2;
             return leftValue / rightValue;
         }
         else if (value == "=")
         {
             ExpressionParser::variables[left->value] = rightValue;
-            column+=2;
+            column-=2;
             return rightValue;
         }
     }
@@ -193,7 +193,7 @@ double ExpressionNode::computeResult()
         {
             if (var == value)
             {
-                column += value.length();
+                column += value.length() + 3;
                 return ExpressionParser::variables[value];
             }
         }
@@ -218,7 +218,7 @@ double ExpressionNode::computeResult()
             //}
             throw std::runtime_error("Invalid number: " + value);
         }
-        column+= value.length();
+        column+= value.length() + 3;
         //std::cout << column << " is number " <<std::endl;
         return number;
     }
