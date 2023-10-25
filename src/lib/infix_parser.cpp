@@ -187,7 +187,7 @@ double ExpressionNode::computeResult()
         {
             if (var == value)
             {
-                column++;
+                column += value.length();
                 return ExpressionParser::variables[value];
             }
         }
