@@ -187,7 +187,7 @@ double ExpressionNode::computeResult()
         {
             if (var == value)
             {
-                i++;
+                column++;
                 return ExpressionParser::variables[value];
             }
         }
@@ -212,6 +212,7 @@ double ExpressionNode::computeResult()
             //}
             throw std::runtime_error("Invalid number: " + value);
         }
+        column++;
         return number;
     }
 
