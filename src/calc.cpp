@@ -32,7 +32,7 @@ int main()
                 lexer.tokenize(1, stream.str());
                 lexer.tokenList.push_back(Tokens(1, lexer.tokenList.back().col + 1, "END"));
                 int paren_count;
-                for(int i =0; i < lexer.tokenList.size(); i++) {
+                for(size_t i =0; i < lexer.tokenList.size(); i++) {
                     if(paren_count > 0) {
                         if(lexer.tokenList[i].text == "(") {
                             paren_count++;
