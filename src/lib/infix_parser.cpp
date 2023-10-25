@@ -212,7 +212,7 @@ double ExpressionNode::computeResult()
             //}
             throw std::runtime_error("Invalid number: " + value);
         }
-        column+= std::to_string(number).length()-3;
+        column+= value.length();
         return number;
     }
 
