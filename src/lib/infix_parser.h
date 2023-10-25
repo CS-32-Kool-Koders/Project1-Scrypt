@@ -5,6 +5,8 @@
 #include <iomanip>
 #include <map>
 
+static std::vector<std::string> knowsVariables = {};
+
 struct Tokens;
 
 class ExpressionNode
@@ -36,6 +38,7 @@ public:
 
     double computeResult();
     bool isVariable(std::string value);
+    void getVariablesNames();
     void printInfix();
     void printResult();
 };

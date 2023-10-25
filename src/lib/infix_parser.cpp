@@ -103,10 +103,14 @@ ExpressionNode *ExpressionParser::parseOperand()
     return nullptr;
 }
 
-bool ExpressionNode::isVariable(std::string var) {
-    if(!isdigit(var[0])) {
-        for(char c : var) {
-            if(c != '_' || !isalnum(c)) {
+bool ExpressionNode::isVariable(std::string var)
+{
+    if (!isdigit(var[0]))
+    {
+        for (char c : var)
+        {
+            if (c != '_' && !isalnum(c))
+            {
                 return false;
             }
         }
@@ -115,9 +119,29 @@ bool ExpressionNode::isVariable(std::string var) {
     return false;
 }
 
+void ExpressionNode::getVariablesNames()
+{
+    if (right == nullptr)
+        return;
+
+    if (value == "=")
+    {
+        if (isVariable(left->value))
+        {
+            knowsVariables.push_back(left->value);
+        }
+        else
+        {
+            throw std::runtime_error("Invalid variable name");
+        }
+    }
+
+    right->getVariablesNames();
+}
+
 double ExpressionNode::computeResult()
 {
-    if (value == "+" || value == "-" || value == "*" || value == "/")
+    if (value == "+" || value == "-" || value == "*" || value == "/" || value == "=")
     {
         if (left == nullptr || right == nullptr)
         {
@@ -146,23 +170,23 @@ double ExpressionNode::computeResult()
             }
             return leftValue / rightValue;
         }
-        else if(value == "=") {
-            std::stringstream ss(value);
-            variables[ss.str()] = rightValue;
+        else if (value == "=")
+        {
+            variables[left->value] = rightValue;
             return rightValue;
         }
-        else if(isVariable(value)) {
-            if(variables.find(value) != variables.end()) {
+    }
+    else if (isVariable(value))
+    {
+        for (std::string var : knowsVariables)
+        {
+            if (var == value)
+            {
                 return variables[value];
             }
-            else {
-                variables.insert({value, 0});
-            }
         }
+        throw std::runtime_error("Unknown variable: " + value);
     }
-    // else if(isVariable(value)) {
-    //     if(value !)
-    // }
     else
     {
         // Assuming value is a number (possibly with commas)
@@ -177,7 +201,7 @@ double ExpressionNode::computeResult()
             //         if(!(c >= 'a' && c <= 'z') && !(c >= 'A' && c <= 'Z') && c != '_' && !isdigit(c)) {
             //                 throw("Invalid operand: " + value);
             //         }
-                    
+
             //     }
             //}
             throw std::runtime_error("Invalid number: " + value);
@@ -190,7 +214,9 @@ double ExpressionNode::computeResult()
 
 void ExpressionNode::printResult()
 {
+    getVariablesNames();
     double result = computeResult();
+    knowsVariables.clear();
     // if the number is an integer, print it without a decimal point
     if (result == std::floor(result))
     {
