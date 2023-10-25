@@ -230,7 +230,7 @@ double ExpressionNode::computeResult()
 
 void ExpressionNode::printResult()
 {
-    getVariablesNames();
+        // getVariablesNames();
     column = 1;
         // double result = computeResult();
     // knowsVariables.clear();

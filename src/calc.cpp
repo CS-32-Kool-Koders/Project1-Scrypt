@@ -37,6 +37,7 @@ int main()
                 if(root == nullptr) {
                     throw std::runtime_error("Invalid Parenthesis");
                 }
+                root->getVariablesNames();
                 root->printInfix();
                 root->printResult();
 
