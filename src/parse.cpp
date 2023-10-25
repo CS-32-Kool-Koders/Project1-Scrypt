@@ -1,4 +1,3 @@
-
 #include "./lib/parser.h"
 #include "./lib/lexer.h"
 // g++ -std=c++17 parse.cpp ./lib/lexer.cpp -Wall -Wextra -Werror
@@ -32,9 +31,9 @@ Node::~Node(){
     }
     treeVec.clear();
 }
-void errorHelper(std::vector<Tokens> tokenlist){
+// void errorHelper(std::vector<Tokens> tokenlist){
 
-}
+// }
 bool Parser::isOperator(std::string c){
     return (c == "+")|| (c == "-") || (c == "*") || (c == "/") || (c == "=");
 }
@@ -233,11 +232,12 @@ int main()
     int open = 0;
     int close = 0;
     std::string str;
-    // std::vector<std::string> mult;
+    std::vector<std::string> mult;
     // maybe add checks for multiple here, so they can be added to a vector
     for (auto i : Lexer.tokenList){
         // std::cout<<i.text<<std::endl;
         str += i.text + " ";
+        // std::cout<<i.text<<std::endl;
         if (i.text == "("){
             open++;
         }
@@ -245,6 +245,21 @@ int main()
             close++;
         }
     }
+    // for (int i = 0; i < Lexer.tokenList.size(); i++){
+    //     str += tokenList[i].text + " ";
+    //     // std::cout<<i.text<<std::endl;
+    //     if (tokenList[i].text == "("){
+    //         open++;
+    //     }
+    //     else if (tokenList[i].text == ")"){
+    //         close++;
+    //     }
+    //     if ((i == Lexer.tokenList.size() - 1 && !parser.parseStack.empty())|| 
+    //         (Lexer.tokenList[i].text == ")" && op == cl && Lexer.tokenList[i+1] .text!= "END")){ //check for multiple
+             
+    //     }
+    
+    // }
 
 
 if (open != close) {
@@ -275,13 +290,25 @@ if (open != close) {
     if (str.empty() || str == "END ") {
         reportUnexpectedToken(Lexer.tokenList.back());
     }
-    Parser parser(str);
+    Parser parser(str); 
     
  
-    if (Lexer.tokenList.back().text != "END") { //check for multiple 
-        reportUnexpectedToken(Lexer.tokenList.back());
-    }
- 
+    // if (Lexer.tokenList.back().text != "END") { //check for multiple 
+    //     reportUnexpectedToken(Lexer.tokenList.back());
+    // }
+    // if (i == Lexer.tokenList.size() - 1) { //one of the checks for multiple
+    //         if (!parser.parseStack.empty()) {
+    //             std::cout << "Unexpected token at line " << Lexer.tokenList[i].line
+    //                     << " column " << Lexer.tokenList[i].col << ": " << Lexer.tokenList[i].text << std::endl;
+    //             exit(2);
+    //         }
+    //     }
+    // if (Lexer.tokenList[i].text == ")" && op == cl && Lexer.tokenList[i+1] .text!= "END"){ //check for multiple
+        //      std::cout << "Unexpected token at line " << Lexer.tokenList[i+1].line
+        //           << " column " << Lexer.tokenList[i+1].col << ": " <<Lexer.tokenList[i+1].text << std::endl;
+        //     exit(2);
+        // }
+    
     Node* root = parser.parse(str);
     
     if (root != nullptr) {
@@ -325,11 +352,11 @@ if (open != close) {
         if (Lexer.tokenList[i].text == ")"){
             cl++;
         }
-        if (Lexer.tokenList[i].text == ")" && op == cl && Lexer.tokenList[i+1] .text!= "END"){ //check for multiple
-             std::cout << "Unexpected token at line " << Lexer.tokenList[i+1].line
-                  << " column " << Lexer.tokenList[i+1].col << ": " <<Lexer.tokenList[i+1].text << std::endl;
-            exit(2);
-        }
+        // if (Lexer.tokenList[i].text == ")" && op == cl && Lexer.tokenList[i+1] .text!= "END"){ //check for multiple
+        //      std::cout << "Unexpected token at line " << Lexer.tokenList[i+1].line
+        //           << " column " << Lexer.tokenList[i+1].col << ": " <<Lexer.tokenList[i+1].text << std::endl;
+        //     exit(2);
+        // }
 
          if (parser.isOperator(Lexer.tokenList[i].text)) {
             numOperators++;
@@ -342,13 +369,13 @@ if (open != close) {
                   << " column " << Lexer.tokenList[i-1].col << ": " <<Lexer.tokenList[i-1].text << std::endl;
         exit(2);
         }
-        if (i == Lexer.tokenList.size() - 1) { //one of the checks for multiple
-            if (!parser.parseStack.empty()) {
-                std::cout << "Unexpected token at line " << Lexer.tokenList[i].line
-                        << " column " << Lexer.tokenList[i].col << ": " << Lexer.tokenList[i].text << std::endl;
-                exit(2);
-            }
-        }
+        // if (i == Lexer.tokenList.size() - 1) { //one of the checks for multiple
+        //     if (!parser.parseStack.empty()) {
+        //         std::cout << "Unexpected token at line " << Lexer.tokenList[i].line
+        //                 << " column " << Lexer.tokenList[i].col << ": " << Lexer.tokenList[i].text << std::endl;
+        //         exit(2);
+        //     }
+        // }
         
         if (parser.isOperator(Lexer.tokenList[i].text) && i != 0){
             if(Lexer.tokenList[i-1].text != "("){
@@ -377,7 +404,7 @@ if (open != close) {
   
   
     printTreeInfix(root);
-    // std::cout << std::endl << parser.evaluate(root) << std::endl;
+    std::cout << std::endl << parser.evaluate(root) << std::endl;
 
     delete root;
     return 0;
