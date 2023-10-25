@@ -45,11 +45,15 @@ int main()
                         std::string throw_message = "Unexpected token at line 1 column " + std::to_string(lexer.tokenList[i].col) + ": " + lexer.tokenList[i].text;
                         throw std::logic_error(throw_message);
                     }
+                    else {
+                        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(lexer.tokenList[i].col) + ": " + lexer.tokenList[i].text;
+                        throw std::logic_error(throw_message);
+                    }
                 }
-                if(paren_count != 0) {
-                    std::string throw_message = "Unexpected token at line 1 column " + std::to_string(lexer.tokenList.back().col) + ": " + lexer.tokenList.back().text;
-                    throw std::logic_error(throw_message);
-                }
+                // if(paren_count != 0) {
+                //     std::string throw_message = "Unexpected token at line 1 column " + std::to_string(lexer.tokenList.back().col) + ": " + lexer.tokenList.back().text;
+                //     throw std::logic_error(throw_message);
+                // }
 
                 ExpressionParser parser(lexer.tokenList);
                 root = parser.parseExpression();
