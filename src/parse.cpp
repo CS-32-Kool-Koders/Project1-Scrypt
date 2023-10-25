@@ -407,20 +407,34 @@ if (open != close) {
 
     std::vector<std::vector<Tokens>> separateExpressions;
     std::vector<Tokens> currentExpression;
+    int depth = 0;
 
     for (const auto& token : Lexer.tokenList) {
-        if (token.text != "END") {
-            currentExpression.push_back(token);
+        if (token.text == "(") {
+            depth++;
+        } else if (token.text == ")") {
+            depth--;
+            if (depth < 0) {
+                std::cerr << "Mismatched closing parenthesis." << std::endl;
+                exit(2);
+            }
         }
-        // Detect the end of an expression
-        if (token.text == ")" && !currentExpression.empty()) {
+
+        if (depth == 0 && token.text == ")") {
+            currentExpression.push_back(token);
             separateExpressions.push_back(currentExpression);
             currentExpression.clear();
+        } else if (token.text != "END") {
+            currentExpression.push_back(token);
         }
     }
 
+    if (depth != 0) {
+        std::cerr << "Mismatched opening parenthesis." << std::endl;
+        exit(2);
+    }
+
     for (const auto& expressionTokens : separateExpressions) {
-        // Convert tokens to a string expression
         std::string expressionStr;
         for (const auto& token : expressionTokens) {
             expressionStr += token.text + " ";
