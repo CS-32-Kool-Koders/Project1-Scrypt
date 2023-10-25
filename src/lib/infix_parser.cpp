@@ -155,7 +155,11 @@ double ExpressionNode::computeResult()
     {
         if (left == nullptr || right == nullptr)
         {
+            if(value == "END") {
+                column--;
+            }
             std::string throw_message = "Unexpected token at line 1 column " + std::to_string(column) + ": " + value;
+            column =1;
             throw std::logic_error(throw_message);
         }
         double leftValue = left->computeResult();
