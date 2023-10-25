@@ -37,6 +37,7 @@ public:
     bool isVariable(std::string value);
     void getVariablesNames();
     void printInfix();
+    void printTree();
     void printResult();
 };
 

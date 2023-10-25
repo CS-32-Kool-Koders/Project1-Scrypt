@@ -29,7 +29,12 @@ void ExpressionNode::printInfix()
     {
         strstrm << value;
     }
-    result = computeResult();
+}
+
+void ExpressionNode::printTree() {
+    std::cout << strstrm.str() << std::endl;
+    strstrm.str("");
+    strstrm.clear();
 }
 
 ExpressionNode *ExpressionParser::parseExpression()
@@ -137,7 +142,7 @@ void ExpressionNode::getVariablesNames()
         }
         else
         {
-            throw std::runtime_error("Invalid variable name");
+            throw ("Invalid variable name");
         }
     }
 
@@ -151,7 +156,7 @@ double ExpressionNode::computeResult()
         if (left == nullptr || right == nullptr)
         {
             std::string throw_message = "Unexpected token at line 1 column " + std::to_string(column) + ": " + value;
-            throw std::runtime_error(throw_message);
+            throw (throw_message);
         }
         double leftValue = left->computeResult();
         //column++;
@@ -177,7 +182,7 @@ double ExpressionNode::computeResult()
         {
             if (rightValue == 0)
             {
-                throw std::runtime_error("Runtime error: division by zero.");
+                throw ("Runtime error: division by zero.");
             }
             column-=2;
             return leftValue / rightValue;
@@ -218,14 +223,14 @@ double ExpressionNode::computeResult()
 
             //     }
             //}
-            throw std::runtime_error("Invalid number: " + value);
+            throw ("Invalid number: " + value);
         }
         column+= value.length() + 3;
         //std::cout << column << " is number " <<std::endl;
         return number;
     }
 
-    throw std::runtime_error("Invalid operator: " + value);
+    throw ("Invalid operator: " + value);
 }
 
 void ExpressionNode::printResult()

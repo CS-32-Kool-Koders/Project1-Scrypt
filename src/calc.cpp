@@ -39,18 +39,28 @@ int main()
                 }
                 root->getVariablesNames();
                 root->printInfix();
+                double result = root->computeResult();
                 root->printResult();
 
                 delete root;
             }
             catch (std::runtime_error &e)
             {
+                root->printTree();
                 std::cout << e.what() << std::endl;
                 if (root != nullptr)
                     delete root;
                 ExpressionParser::knowsVariables = varSave;
                 ExpressionParser::variables = varSave2;
                 // return 1;
+            }
+            catch (std::string &e)
+            {
+                std::cout << e << std::endl;
+                if (root != nullptr)
+                    delete root;
+                ExpressionParser::knowsVariables = varSave;
+                ExpressionParser::variables = varSave2;
             }
         }
     }
