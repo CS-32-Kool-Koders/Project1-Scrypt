@@ -40,7 +40,7 @@ int main()
                         paren_count--;
                     }
                     
-                    if((paren_count < 0) || (paren_count == 0 && i != lexer.tokenList.size()-1) || paren_count > lexer.tokenList.size()-i){
+                    if((paren_count < 0) || (paren_count == 0 && i != lexer.tokenList.size()-1) || paren_count > (int) lexer.tokenList.size()-i){
                         std::string throw_message = "Unexpected token at line 1 column " + std::to_string(lexer.tokenList[i].col) + ": " + lexer.tokenList[i].text;
                         throw std::logic_error(throw_message);
                     }
