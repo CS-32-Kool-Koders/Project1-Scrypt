@@ -41,7 +41,7 @@ int main()
                 root->printInfix();
                 double result = root->computeResult();
                 root->printResult();
-                std::cout << result;
+                std::cout << result << std::endl;
 
                 delete root;
             }
