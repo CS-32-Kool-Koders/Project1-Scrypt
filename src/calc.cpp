@@ -39,8 +39,8 @@ int main()
                     else if(lexer.tokenList[i].text == ")") {
                         paren_count--;
                     }
-                    
-                    if((paren_count < 0) || (paren_count == 0 && i != lexer.tokenList.size()-1) || paren_count > (int) lexer.tokenList.size()-i){
+                    int listSize = lexer.tokenList.size();
+                    if((paren_count < 0) || (paren_count == 0 && i != listSize-1) || paren_count > (int) listSize-i){
                         std::string throw_message = "Unexpected token at line 1 column " + std::to_string(lexer.tokenList[i].col) + ": " + lexer.tokenList[i].text;
                         throw std::logic_error(throw_message);
                     }
