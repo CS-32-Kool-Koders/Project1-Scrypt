@@ -31,7 +31,7 @@ int main()
                 std::istringstream stream(line);
                 lexer.tokenize(1, stream.str());
                 lexer.tokenList.push_back(Tokens(1, lexer.tokenList.back().col + 1, "END"));
-                int paren_count;
+                int paren_count = 0;
                 for(size_t i =0; i < lexer.tokenList.size(); i++) {
                     if(lexer.tokenList[i].text == "(") {
                         paren_count++;
