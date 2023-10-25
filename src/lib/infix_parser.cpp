@@ -4,6 +4,9 @@
 #include "infix_parser.h"
 #include "tokens.h"
 
+std::vector<std::string> ExpressionParser::knowsVariables;
+std::map<std::string, double> ExpressionParser::variables;
+
 void ExpressionNode::printInfix()
 {
     if (left != nullptr && right != nullptr)
@@ -128,7 +131,7 @@ void ExpressionNode::getVariablesNames()
     {
         if (isVariable(left->value))
         {
-            knowsVariables.push_back(left->value);
+            ExpressionParser::knowsVariables.push_back(left->value);
         }
         else
         {
@@ -172,17 +175,17 @@ double ExpressionNode::computeResult()
         }
         else if (value == "=")
         {
-            variables[left->value] = rightValue;
+            ExpressionParser::variables[left->value] = rightValue;
             return rightValue;
         }
     }
     else if (isVariable(value))
     {
-        for (std::string var : knowsVariables)
+        for (std::string var : ExpressionParser::knowsVariables)
         {
             if (var == value)
             {
-                return variables[value];
+                return ExpressionParser::variables[value];
             }
         }
         throw std::runtime_error("Runtime error: unknown identifier " + value);

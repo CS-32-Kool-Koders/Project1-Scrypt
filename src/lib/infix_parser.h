@@ -5,9 +5,6 @@
 #include <iomanip>
 #include <map>
 
-static std::vector<std::string> knowsVariables = {};
-static std::map<std::string, double> variables = {};
-
 struct Tokens;
 
 class ExpressionNode
@@ -45,6 +42,10 @@ public:
 
 class ExpressionParser
 {
+public:
+    static std::vector<std::string> knowsVariables;
+    static std::map<std::string, double> variables;
+
 private:
     std::vector<Tokens> tokens;
     std::size_t currentIndex;

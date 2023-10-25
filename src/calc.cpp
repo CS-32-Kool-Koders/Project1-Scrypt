@@ -22,6 +22,8 @@ int main()
         new_line += 1;
         while (std::getline(std::cin, line))
         {
+            auto varSave = ExpressionParser::knowsVariables;
+            auto varSave2 = ExpressionParser::variables;
             try
             {
                 lexer lexer;
@@ -41,7 +43,9 @@ int main()
             catch (std::runtime_error &e)
             {
                 std::cout << e.what() << std::endl;
-                //return 1;
+                ExpressionParser::knowsVariables = varSave;
+                ExpressionParser::variables = varSave2;
+                // return 1;
             }
         }
     }
