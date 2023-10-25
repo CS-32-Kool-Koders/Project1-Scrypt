@@ -24,6 +24,7 @@ int main()
         {
             auto varSave = ExpressionParser::knowsVariables;
             auto varSave2 = ExpressionParser::variables;
+            ExpressionNode *root = nullptr;
             try
             {
                 lexer lexer;
@@ -32,7 +33,7 @@ int main()
                 lexer.tokenList.push_back(Tokens(1, lexer.tokenList.back().col + 1, "END"));
 
                 ExpressionParser parser(lexer.tokenList);
-                ExpressionNode *root = parser.parseExpression();
+                root = parser.parseExpression();
                 root->printInfix();
                 std::cout << std::endl;
                 root->printResult();
@@ -43,6 +44,8 @@ int main()
             catch (std::runtime_error &e)
             {
                 std::cout << e.what() << std::endl;
+                if (root != nullptr)
+                    delete root;
                 ExpressionParser::knowsVariables = varSave;
                 ExpressionParser::variables = varSave2;
                 // return 1;
