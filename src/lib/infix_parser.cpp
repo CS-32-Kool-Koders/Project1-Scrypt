@@ -182,7 +182,7 @@ double ExpressionNode::computeResult()
         else if (value == "=")
         {
             ExpressionParser::variables[left->value] = rightValue;
-            column+=2
+            column+=2;
             return rightValue;
         }
     }
