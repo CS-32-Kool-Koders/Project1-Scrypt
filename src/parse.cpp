@@ -75,12 +75,12 @@ Node* Parser::parse(std::string token){
     while (getline(ss, s, ' ')){
         tokens.push_back(s);
     }
-
-    for (auto i: tokens){
-        if (isOperator(std::string(i))){
+    int x = tokens.size();
+    for (int i = 0; i < x; i++){
+        if (isOperator(tokens.at(i))){
             Node* oper = nullptr;
         try {
-            oper = new Node(std::string(i));
+            oper = new Node(tokens.at(i));
             parseStack.push(oper);
 
         } catch(...) {
@@ -89,11 +89,11 @@ Node* Parser::parse(std::string token){
             throw;  
         }
         }
-        else if (i == "("){
+        else if (tokens.at(i) == "("){
             // parenthesesCounter++;
             parseStack.push(nullptr);
         }
-        else if (i == ")"){
+        else if (tokens.at(i) == ")"){
             std::vector<Node*> tempVec;
             Node* temp = nullptr;
             while (!parseStack.empty() && parseStack.top() != nullptr){
@@ -119,10 +119,10 @@ Node* Parser::parse(std::string token){
                 }
             }
         }
-        else if (isNumber(i)){
+        else if (isNumber(tokens.at(i))){
             Node* digit = nullptr;
             try{ 
-                digit = new Node(std::string(i));
+                digit = new Node(tokens.at(i));
                 parseStack.push(digit);
             } catch(...){
                 delete digit;  
@@ -130,9 +130,10 @@ Node* Parser::parse(std::string token){
                 throw;
             }
         } 
-        else if (isIdentifier(i)){
+        else if (isIdentifier(tokens.at(i))){
+            // if (tokens.at(i-1) == "=" && tokens.at(i-2) == "(")
             Node* id = nullptr;
-            id = new Node(std::string(i));
+            id = new Node(tokens.at(i));
             parseStack.push(id);
         }
     }
@@ -232,7 +233,7 @@ int main()
     int open = 0;
     int close = 0;
     std::string str;
-    std::vector<std::string> mult;
+    // std::vector<std::string> mult;
     // maybe add checks for multiple here, so they can be added to a vector
     for (auto i : Lexer.tokenList){
         // std::cout<<i.text<<std::endl;
@@ -309,12 +310,12 @@ if (open != close) {
         //     exit(2);
         // }
     
-    Node* root = parser.parse(str);
+    // Node* root = parser.parse(str);
     
-    if (root != nullptr) {
-        // delete parser.parseStack.top();
-        parser.parseStack.pop();
-    }
+    // if (root != nullptr) {
+    //     // delete parser.parseStack.top();
+    //     parser.parseStack.pop();
+    // }
 
    
     bool insideParentheses = false;
@@ -402,10 +403,39 @@ if (open != close) {
             }
     }
   
-  
-    printTreeInfix(root);
-    std::cout << std::endl << parser.evaluate(root) << std::endl;
 
-    delete root;
+
+    std::vector<std::vector<Tokens>> separateExpressions;
+    std::vector<Tokens> currentExpression;
+
+    for (const auto& token : Lexer.tokenList) {
+        if (token.text != "END") {
+            currentExpression.push_back(token);
+        }
+        // Detect the end of an expression
+        if (token.text == ")" && !currentExpression.empty()) {
+            separateExpressions.push_back(currentExpression);
+            currentExpression.clear();
+        }
+    }
+
+    for (const auto& expressionTokens : separateExpressions) {
+        // Convert tokens to a string expression
+        std::string expressionStr;
+        for (const auto& token : expressionTokens) {
+            expressionStr += token.text + " ";
+        }
+
+        Parser parser(expressionStr);
+        Node* root = parser.parse(expressionStr);
+
+        if (root != nullptr) {
+            parser.parseStack.pop();
+        }
+
+        printTreeInfix(root);
+        std::cout << std::endl << parser.evaluate(root) << std::endl;
+        delete root;
+    }
     return 0;
 }
