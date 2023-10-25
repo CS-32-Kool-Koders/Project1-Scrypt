@@ -32,6 +32,7 @@ int main()
                 lexer.tokenize(1, stream.str());
                 lexer.tokenList.push_back(Tokens(1, lexer.tokenList.back().col + 1, "END"));
                 int paren_count = 0;
+                //int offset = 0;
                 for(size_t i =0; i < lexer.tokenList.size(); i++) {
                     if(lexer.tokenList[i].text == "(") {
                         paren_count++;
@@ -40,8 +41,17 @@ int main()
                         paren_count--;
                     }
                     int int_listSize = lexer.tokenList.size();
-                    if((paren_count < 0) || (paren_count == 0 && i != (size_t) int_listSize-1) || paren_count > int_listSize-(int)i){
-                        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(lexer.tokenList[i].col) + ": " + lexer.tokenList[i].text;
+                    if(lexer.tokenList[i].text == "END" && i != (size_t)int_listSize-1) {
+                        std::cout << "the end";
+                        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i) + ": " + lexer.tokenList[i].text;
+                        throw std::logic_error(throw_message);
+                    }
+                    else if((paren_count < 0) || (paren_count == 0 && i < (size_t) int_listSize-2) || paren_count > int_listSize-1-(int)i){
+                        std::cout << "Paren count " << paren_count <<std::endl;
+                        std::cout << "i " << i << std::endl;
+                        //std::cout << "offset " << offset << std::endl;
+                        std::cout << "int_listSize " << int_listSize << std::endl;
+                        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i) + ": " + lexer.tokenList[i].text;
                         throw std::logic_error(throw_message);
                     }
                     // else {
