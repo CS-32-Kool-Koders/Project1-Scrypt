@@ -237,7 +237,7 @@ int main()
     for (auto i : Lexer.tokenList){
         // std::cout<<i.text<<std::endl;
         str += i.text + " ";
-        std::cout<<i.text<<std::endl;
+        // std::cout<<i.text<<std::endl;
         if (i.text == "("){
             open++;
         }
@@ -404,7 +404,7 @@ if (open != close) {
   
   
     printTreeInfix(root);
-    // std::cout << std::endl << parser.evaluate(root) << std::endl;
+    std::cout << std::endl << parser.evaluate(root) << std::endl;
 
     delete root;
     return 0;
