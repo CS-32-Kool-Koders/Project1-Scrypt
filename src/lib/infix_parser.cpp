@@ -6,28 +6,30 @@
 
 std::vector<std::string> ExpressionParser::knowsVariables;
 std::map<std::string, double> ExpressionParser::variables;
-
+double result;
+std::stringstream strstrm;
 void ExpressionNode::printInfix()
 {
     if (left != nullptr && right != nullptr)
     {
-        std::cout << "(";
+        strstrm << "(";
         left->printInfix();
         if (value == "+" || value == "-" || value == "*" || value == "/" || value == "=")
         {
-            std::cout << " " << value << " ";
+            strstrm << " " << value << " ";
         }
         else
         {
-            std::cout << value;
+            strstrm << value;
         }
         right->printInfix();
-        std::cout << ")";
+        strstrm << ")";
     }
     else
     {
-        std::cout << value;
+        strstrm << value;
     }
+    result = computeResult();
 }
 
 ExpressionNode *ExpressionParser::parseExpression()
@@ -230,16 +232,18 @@ void ExpressionNode::printResult()
 {
     getVariablesNames();
     column = 1;
-    double result = computeResult();
+        // double result = computeResult();
     // knowsVariables.clear();
     // if the number is an integer, print it without a decimal point
-    if (result == std::floor(result))
-    {
-        std::cout << std::floor(result);
-    }
-    else
-    {
-        // print with only enough precision to show the value (no trailing zeros)
-        std::cout << result; // not sure if std::precision is needed for that case
-    }
+        // if (result == std::floor(result))
+        // {
+        //     std::cout << std::floor(result);
+        // }
+        // else
+        // {
+        //     // print with only enough precision to show the value (no trailing zeros)
+        //     std::cout << result; // not sure if std::precision is needed for that case
+        // }
+    std::cout << strstrm.str() << std::endl;
+    std::cout << result << std::endl;
 }

@@ -38,9 +38,7 @@ int main()
                     throw std::runtime_error("Invalid Parenthesis");
                 }
                 root->printInfix();
-                std::cout << std::endl;
                 root->printResult();
-                std::cout << std::endl;
 
                 delete root;
             }
