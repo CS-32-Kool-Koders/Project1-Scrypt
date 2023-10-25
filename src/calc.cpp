@@ -55,9 +55,9 @@ int main()
                 ExpressionParser::variables = varSave2;
                 // return 1;
             }
-            catch (std::string &e)
+            catch (std::logic_error &e)
             {
-                std::cout << e << std::endl;
+                std::cout << e.what() << std::endl;
                 if (root != nullptr)
                     delete root;
                 ExpressionParser::knowsVariables = varSave;

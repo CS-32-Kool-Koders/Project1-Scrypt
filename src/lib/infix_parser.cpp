@@ -142,7 +142,7 @@ void ExpressionNode::getVariablesNames()
         }
         else
         {
-            throw ("Invalid variable name");
+            throw std::logic_error("Invalid variable name");
         }
     }
 
@@ -156,7 +156,7 @@ double ExpressionNode::computeResult()
         if (left == nullptr || right == nullptr)
         {
             std::string throw_message = "Unexpected token at line 1 column " + std::to_string(column) + ": " + value;
-            throw (throw_message);
+            throw std::logic_error(throw_message);
         }
         double leftValue = left->computeResult();
         //column++;
@@ -182,7 +182,7 @@ double ExpressionNode::computeResult()
         {
             if (rightValue == 0)
             {
-                throw ("Runtime error: division by zero.");
+                throw std::runtime_error("Runtime error: division by zero.");
             }
             column-=2;
             return leftValue / rightValue;
@@ -223,14 +223,14 @@ double ExpressionNode::computeResult()
 
             //     }
             //}
-            throw ("Invalid number: " + value);
+            throw std::logic_error("Invalid number: " + value);
         }
         column+= value.length() + 3;
         //std::cout << column << " is number " <<std::endl;
         return number;
     }
 
-    throw ("Invalid operator: " + value);
+    throw std::logic_error("Invalid operator: " + value);
 }
 
 void ExpressionNode::printResult()
