@@ -168,7 +168,7 @@ double ExpressionNode::computeResult()
         else if (value == "*")
         {
             column+=2;
-            std::cout << column << " is multiply " << std::endl;
+            //std::cout << column << " is multiply " << std::endl;
             return leftValue * rightValue;
         }
         else if (value == "/")
@@ -219,7 +219,7 @@ double ExpressionNode::computeResult()
             throw std::runtime_error("Invalid number: " + value);
         }
         column+= value.length();
-        std::cout << column << " is number " <<std::endl;
+        //std::cout << column << " is number " <<std::endl;
         return number;
     }
 
