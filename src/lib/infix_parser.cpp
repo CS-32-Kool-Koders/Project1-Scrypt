@@ -155,30 +155,27 @@ double ExpressionNode::computeResult()
     {
         if (left == nullptr || right == nullptr)
         {
-            if(value == "END") {
-                column--;
-            }
+            // if(value == "END") {
+            //     column +=2;
+            // }
             std::string throw_message = "Unexpected token at line 1 column " + std::to_string(column) + ": " + value;
             column =1;
             throw std::logic_error(throw_message);
         }
         double leftValue = left->computeResult();
-        //column++;
+        column += 4;
         double rightValue = right->computeResult();
         //column++;
         if (value == "+")
         {
-            column-=2;
             return leftValue + rightValue;
         }
         else if (value == "-")
         {
-            column-=2;
             return leftValue - rightValue;
         }
         else if (value == "*")
         {
-            column-=2;
             //std::cout << column << " is multiply " << std::endl;
             return leftValue * rightValue;
         }
@@ -188,13 +185,11 @@ double ExpressionNode::computeResult()
             {
                 throw std::runtime_error("Runtime error: division by zero.");
             }
-            column-=2;
             return leftValue / rightValue;
         }
         else if (value == "=")
         {
             ExpressionParser::variables[left->value] = rightValue;
-            column-=2;
             return rightValue;
         }
     }
@@ -204,7 +199,7 @@ double ExpressionNode::computeResult()
         {
             if (var == value)
             {
-                column += value.length() + 3;
+                column += value.length()-1;
                 return ExpressionParser::variables[value];
             }
         }
@@ -229,7 +224,7 @@ double ExpressionNode::computeResult()
             //}
             throw std::logic_error("Invalid number: " + value);
         }
-        column+= value.length() + 3;
+        column+= value.length()-1;
         //std::cout << column << " is number " <<std::endl;
         return number;
     }
