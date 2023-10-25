@@ -141,7 +141,7 @@ void ExpressionNode::getVariablesNames()
 
     right->getVariablesNames();
 }
-int column = 0;
+int column = 1;
 double ExpressionNode::computeResult()
 {
     if (value == "+" || value == "-" || value == "*" || value == "/" || value == "=")
@@ -187,6 +187,7 @@ double ExpressionNode::computeResult()
         {
             if (var == value)
             {
+                i++;
                 return ExpressionParser::variables[value];
             }
         }
