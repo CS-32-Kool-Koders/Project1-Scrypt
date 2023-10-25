@@ -31,12 +31,31 @@ int main()
                 std::istringstream stream(line);
                 lexer.tokenize(1, stream.str());
                 lexer.tokenList.push_back(Tokens(1, lexer.tokenList.back().col + 1, "END"));
+                int paren_count;
+                for(int i =0; i < lexer.tokenList.size(); i++) {
+                    if(paren_count > 0) {
+                        if(lexer.tokenList[i].text == "(") {
+                            paren_count++;
+                        }
+                        else if(lexer.tokenList[i].text == ")") {
+                            paren_count--;
+                        }
+                    }
+                    else if(paren_count == 0 && i != lexer.tokenList.size()-1){
+                        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(lexer.tokenList[i].col) + ": " + lexer.tokenList[i].text;
+                        throw (throw_message);
+                    }
+                }
+                if(paren_count != 0) {
+                    std::string throw_message = "Unexpected token at line 1 column " + std::to_string(lexer.tokenList.back().col) + ": " + lexer.tokenList.back().text;
+                    throw std::logic_error(throw_message);
+                }
 
                 ExpressionParser parser(lexer.tokenList);
                 root = parser.parseExpression();
-                if(root == nullptr) {
-                    throw std::runtime_error("Invalid Parenthesis");
-                }
+                // if(root == nullptr) {
+                //     throw std::runtime_error("Unexpected token at line 1 column "+ +"");
+                // }
                 root->getVariablesNames();
                 root->printInfix();
                 double result = root->computeResult();
