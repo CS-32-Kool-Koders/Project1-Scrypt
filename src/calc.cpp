@@ -37,11 +37,9 @@ int main()
                 if(root == nullptr) {
                     throw std::runtime_error("Invalid Parenthesis");
                 }
-                double result = root->computeResult();
                 root->printInfix();
                 std::cout << std::endl;
-                std::cout << result;
-                //root->printResult();
+                root->printResult();
                 std::cout << std::endl;
 
                 delete root;
