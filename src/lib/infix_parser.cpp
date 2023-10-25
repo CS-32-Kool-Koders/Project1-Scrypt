@@ -152,19 +152,22 @@ double ExpressionNode::computeResult()
             throw std::runtime_error(throw_message);
         }
         double leftValue = left->computeResult();
-        column++;
+        //column++;
         double rightValue = right->computeResult();
-        column++;
+        //column++;
         if (value == "+")
         {
+            column++;
             return leftValue + rightValue;
         }
         else if (value == "-")
         {
+            column++;
             return leftValue - rightValue;
         }
         else if (value == "*")
         {
+            column++;
             return leftValue * rightValue;
         }
         else if (value == "/")
@@ -173,11 +176,13 @@ double ExpressionNode::computeResult()
             {
                 throw std::runtime_error("Runtime error: division by zero.");
             }
+            column++;
             return leftValue / rightValue;
         }
         else if (value == "=")
         {
             ExpressionParser::variables[left->value] = rightValue;
+            colunn++
             return rightValue;
         }
     }
