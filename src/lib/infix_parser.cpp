@@ -151,7 +151,7 @@ void ExpressionNode::getVariablesNames()
 int column = 1;
 double ExpressionNode::computeResult()
 {
-    if (value == "+" || value == "-" || value == "*" || value == "/" || value == "=")
+    if (value == "+" || value == "-" || value == "*" || value == "/" || value == "=" || value == "END")
     {
         if (left == nullptr || right == nullptr)
         {
