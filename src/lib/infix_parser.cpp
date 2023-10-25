@@ -216,7 +216,7 @@ void ExpressionNode::printResult()
 {
     getVariablesNames();
     double result = computeResult();
-    knowsVariables.clear();
+    // knowsVariables.clear();
     // if the number is an integer, print it without a decimal point
     if (result == std::floor(result))
     {

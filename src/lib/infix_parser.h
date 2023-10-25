@@ -6,6 +6,7 @@
 #include <map>
 
 static std::vector<std::string> knowsVariables = {};
+static std::map<std::string, double> variables = {};
 
 struct Tokens;
 
@@ -15,7 +16,6 @@ public:
     std::string value;
     ExpressionNode *left;
     ExpressionNode *right;
-    std::map<std::string, double> variables;
 
     ExpressionNode(std::string value)
     {
