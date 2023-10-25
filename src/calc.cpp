@@ -34,7 +34,7 @@ int main()
 
                 ExpressionParser parser(lexer.tokenList);
                 root = parser.parseExpression();
-                if(root == nulltptr) {
+                if(root == nullptr) {
                     throw std::runtime_error("Invalid Parenthesis");
                 }
                 root->printInfix();
