@@ -215,22 +215,20 @@ double Parser::evaluate(Node* root) {
             result /= operand;
         } 
         else if (root->data == "=") {
-            double num;
             for (auto& node : root->treeVec) {
-                if (isNumber(node->data)) {
-                    num = std::stod(node->data);
-                    break;
-                }
-            }
-            
-            for (auto& node : root->treeVec) {
+                double num;
+                int n = 0;
                 // int s = node->treeVec.size();
+                 if (isNumber(node->data)) {
+                    num = std::stod(node->data);
+                }
                 if (isIdentifier(node->data)) {
                     variables[node->data] = num;
                 } 
                 else if (isOperator(node->data)) {
-                    result = evaluate(node->treeVec[i]);
+                    result = evaluate(node->treeVec[n]);
                 }
+                n++;
             }
         }
     }
@@ -385,10 +383,31 @@ if (open != close) {
                 Lexer.tokenList[i+2].text == ")") {
                 reportUnexpectedToken(Lexer.tokenList[i]);
             }
+
+    //checks  problematic pattern (= 
+    if (Lexer.tokenList[i].text == "(") {
+        // Look ahead from this point to see if we have the problematic pattern
+        bool equalSignFound = false;
+        bool numberFound = false;
+        bool identifierFound = false;
+
+        for (size_t j = i + 1; j < Lexer.tokenList.size() && Lexer.tokenList[j].text != ")"; j++) {
+            if (Lexer.tokenList[j].text == "=") {
+                equalSignFound = true;
+            } else if (parser.isNumber(Lexer.tokenList[j].text)) {
+                numberFound = true;
+            } else if (parser.isIdentifier(Lexer.tokenList[j].text)) {
+                identifierFound = true;
+            }
+        }
+
+        if (equalSignFound && numberFound && !identifierFound) {
+            std::cout << "Error: Invalid expression with equals sign and numbers but no identifier." << std::endl;
+            exit(2);
+        }
+}
     }
   
-
-
     std::vector<std::vector<Tokens>> separateExpressions;
     std::vector<Tokens> currentExpression;
     int depth = 0;
