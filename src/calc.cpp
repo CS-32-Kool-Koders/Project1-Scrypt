@@ -50,7 +50,8 @@ int main()
                         std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i) + ": " + tokenlist.substr(i, i+2);
                         throw std::logic_error(throw_message);
                     }
-                    else if((paren_count < 0) || (paren_count == 0 && (i < (size_t) int_listSize-2) && (i >0)) || paren_count > int_listSize-1-(int)i){
+                    //(paren_count == 0 && (i < (size_t) int_listSize-2) && (i >0))
+                    else if((paren_count < 0) || paren_count > int_listSize-1-(int)i){
                         // std::cout << "Paren count " << paren_count <<std::endl;
                         // std::cout << "i " << i << std::endl;
                         // // //std::cout << "offset " << offset << std::endl;
