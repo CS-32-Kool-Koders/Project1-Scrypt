@@ -47,7 +47,8 @@ ExpressionNode *ExpressionParser::parseAssignment()
     ExpressionNode *left = parseAddSubtract();
     if (currentIndex < tokens.size() && tokens[currentIndex].text == "=")
     {
-        ExpressionNode *node = new ExpressionNode(tokens[currentIndex].text);
+        //creating new ExpressionNode requires tokens[currentIndex].text, lineNumber (currentLine), and columnNumber (current Index)
+        ExpressionNode *node = new ExpressionNode(tokens[currentIndex].text, currentLine, currentIndex);
         currentIndex++;
         node->left = left;
         node->right = parseAssignment();

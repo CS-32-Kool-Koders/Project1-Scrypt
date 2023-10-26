@@ -56,12 +56,16 @@ public:
 private:
     std::vector<Tokens> tokens;
     std::size_t currentIndex;
+    //Josh added currentLine initialization
+    std::size_t currentLine;
 
 public:
     ExpressionParser(std::vector<Tokens> tokens)
     {
         this->tokens = tokens;
         this->currentIndex = 0;
+        //Josh added currentLine and initialized to 0 
+        this->currentLine = 0;
     }
 
     ExpressionNode *parseExpression();
