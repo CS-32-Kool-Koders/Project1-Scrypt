@@ -34,6 +34,7 @@ int main()
                 int paren_count = 0;
                 //int offset = 0;
                 for(size_t i =0; i < lexer.tokenList.size(); i++) {
+                    std::cout << "Token at " << i << " " << lexer.tokenlist[i].text;
                     if(lexer.tokenList[i].text == "(") {
                         paren_count++;
                     }
