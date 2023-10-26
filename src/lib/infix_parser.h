@@ -14,6 +14,10 @@ public:
     ExpressionNode *left;
     ExpressionNode *right;
 
+    //Josh added lineNumber and colNumber to the data of the ExpressionNode object
+    int lineNumber;
+    int colNumber;
+
     ExpressionNode(std::string value)
     {
         this->value = value;
