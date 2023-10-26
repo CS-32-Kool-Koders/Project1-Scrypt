@@ -170,21 +170,90 @@ void printTreeInfix(Node* node) {
     }
 }
 
+void Parser::makeMap(Node* root){
+    for (auto i : root->treeVec){
+        if (isIdentifier(i->data)){
+            variables[i->data] = 0;
+        }
+    }
+}
+// double Parser::evaluate(Node* root) {
+//     // if (!root->treeVec.empty()) {
+//     if (root->data.size() == 1){
+//         if (isdigit(root->data[0])){
+//             return std::stod(std::string(1, root->data[0]));
+//         }
+//     } else if (isNumber(root->data)) {
+//             return std::stod(std::string(root->data));
+//     } else if (isIdentifier(root->data)){
+//         if (variables.find(root->data)!= variables.end()){
+//             return variables[root->data];
+//         } else{
+//             return 0.0;
+//         }
+//     // }
+//     }
+//     double result = evaluate(root->treeVec.back());  // Start from the last element
+//     for (int i = root->treeVec.size() - 2; i >= 0; --i) { // modify to account for =; assign operator
+//         double operand = evaluate(root->treeVec[i]);
+//         if (root->data == "+") {
+//             result += operand;
+//         } else if (root->data == "-") {
+//             result -= operand;
+//         } else if (root->data == "*") {
+//             result *= operand;
+//         } else if (root->data == "/") {
+//             if (operand == 0) {
+//                 std::cout << "Runtime error: division by zero." << std::endl;
+//                 exit(3);
+//             }
+//             result /= operand;
+//         } 
+//         else if (root->data == "="){//add condition for equal
+//             // std::string key;
+//             double num;
+//             for (auto i : root->treeVec){
+//                 if (isNumber(i->data)){
+//                     num = std::stod(root->data);
+//                     break;
+//                 }
+//             }
+//             for (auto x : root->treeVec){
+//                 if (isIdentifier(x->data)){
+//                     variables[x->data] = num;
+//                 }
+//                 else if (isOperator(x->data)){
+//                     result = double(evaluate(x->treeVec[i]));
+//                 }
+                
+//             }
+//             }
+//         } 
+//         return result;
+//     }
 
 double Parser::evaluate(Node* root) {
-    if (root->treeVec.empty()) {
-    if (root->data.size() == 1){
-        if (isdigit(root->data[0])){
-            return std::stod(std::string(1, root->data[0]));
-        }
-    } else if (isNumber(root->data)) {
-            return std::stod(std::string(root->data));
-    } 
+    if (!root) {
+        std::cout << "Error: Root is a nullptr" << std::endl;
+        exit(1);
+    }
     
+    if (root->treeVec.empty()) {
+        if (root->data.size() == 1 && isdigit(root->data[0])) {
+            return std::stod(root->data);
+        } 
+        else if (isNumber(root->data)) {
+            return std::stod(root->data);
+        } 
+        else if (isIdentifier(root->data)) {
+            // return variables.count(root->data) ? variables[root->data] : 0.0;
+            return variables[root->data];
+        }
     }
 
-    double result = evaluate(root->treeVec.back());  // Start from the last element
-    for (int i = root->treeVec.size() - 2; i >= 0; --i) { // modify to account for =; assign operator
+    double result = evaluate(root->treeVec.back());
+
+    for (int i = root->treeVec.size() - 2; i >= 0; --i) {
         double operand = evaluate(root->treeVec[i]);
         if (root->data == "+") {
             result += operand;
@@ -198,14 +267,30 @@ double Parser::evaluate(Node* root) {
                 exit(3);
             }
             result /= operand;
-        } else if (root->data == "="){//add condition for equal
-            
         } 
+        else if (root->data == "=") {
+            double num;
+            for (auto& node : root->treeVec) {
+                if (isNumber(node->data)) {
+                    num = std::stod(node->data);
+                    break;
+                }
+            }
+            
+            for (auto& node : root->treeVec) {
+                // int s = node->treeVec.size();
+                if (isIdentifier(node->data)) {
+                    variables[node->data] = num;
+                } 
+                else if (isOperator(node->data)) {
+                    result = evaluate(node->treeVec[i]);
+                }
+            }
+        }
     }
+
     return result;
 }
-
-
 
 
 
@@ -358,11 +443,6 @@ if (open != close) {
         if (Lexer.tokenList[i].text == ")"){
             cl++;
         }
-        // if (Lexer.tokenList[i].text == ")" && op == cl && Lexer.tokenList[i+1] .text!= "END"){ //check for multiple
-        //      std::cout << "Unexpected token at line " << Lexer.tokenList[i+1].line
-        //           << " column " << Lexer.tokenList[i+1].col << ": " <<Lexer.tokenList[i+1].text << std::endl;
-        //     exit(2);
-        // }
 
          if (parser.isOperator(Lexer.tokenList[i].text)) {
             numOperators++;
@@ -375,14 +455,7 @@ if (open != close) {
                   << " column " << Lexer.tokenList[i-1].col << ": " <<Lexer.tokenList[i-1].text << std::endl;
         exit(2);
         }
-        // if (i == Lexer.tokenList.size() - 1) { //one of the checks for multiple
-        //     if (!parser.parseStack.empty()) {
-        //         std::cout << "Unexpected token at line " << Lexer.tokenList[i].line
-        //                 << " column " << Lexer.tokenList[i].col << ": " << Lexer.tokenList[i].text << std::endl;
-        //         exit(2);
-        //     }
-        // }
-        
+
         if (parser.isOperator(Lexer.tokenList[i].text) && i != 0){
             if(Lexer.tokenList[i-1].text != "("){
                 std::cout << "Unexpected token at line " << Lexer.tokenList[i].line
@@ -454,6 +527,7 @@ if (open != close) {
 
         printTreeInfix(root);
         // std::cout<<std::endl;
+        // parser.makeMap(root);
         std::cout << std::endl << parser.evaluate(root) << std::endl;
         delete root;
     }
