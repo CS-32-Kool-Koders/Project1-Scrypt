@@ -132,10 +132,45 @@ Node* Parser::parse(std::string token){
             }
         } 
         else if (isIdentifier(tokens.at(i))){
-            // if (tokens.at(i-1) == "=" && tokens.at(i-2) == "(")
-            Node* id = nullptr;
-            id = new Node(tokens.at(i));
-            parseStack.push(id);
+            if (tokens.at(i-1) == "=" && tokens.at(i-2) == "("){
+                Node* id = nullptr;
+                id = new Node(tokens.at(i));
+                parseStack.push(id);
+                int last = 0;
+                int sz = tokens.size();
+                for (int j = i+1; j < sz; j++){
+                    if (isIdentifier(tokens.at(j))){
+                        Node* op = nullptr;
+                        op = new Node(tokens.at(j));
+                        parseStack.push(op);
+                    } else{
+                        last = j;
+                        break;
+                    }
+                }
+                if (tokens.at(last) != ")"){
+                    // std::string temp = " ";
+                    // int sc = tokens.size();
+                    // for (int k = last; k < sc; k++){
+                    //     if (tokens.at(k)==")"){
+                    //         break;
+                    //     }
+                    //     temp = temp + tokens.at(k);
+                    // }
+                    // Node * rec = nullptr;
+                    // rec = new Node(token.at(last));
+                    // parseStack.push(rec);
+                    // Node* id = nullptr;
+                    // id = new Node(tokens.at(last));
+                    // parseStack.push(id);
+                }
+                
+            } 
+            // else {
+            // Node* id = nullptr;
+            // id = new Node(tokens.at(i));
+            // parseStack.push(id);
+            // }
         }
     }
 
@@ -235,6 +270,7 @@ double Parser::evaluate(Node* root) {
 
     return result;
 }
+
 
 
 
