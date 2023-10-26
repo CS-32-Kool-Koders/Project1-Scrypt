@@ -449,6 +449,23 @@ if (open != close) {
                 std::cout << "Unexpected token at line " << Lexer.tokenList[i+1].line << " column " << Lexer.tokenList[i+1].col << ": " << Lexer.tokenList[i+1].text << std::endl;
                 exit(2);
             }
+            size_t idx = 0;
+            bool open = false;
+            size_t par = 0;
+            for (size_t j = i+1; j <Lexer.tokenList.size(); j++){
+                if (Lexer.tokenList[j].text == "("){
+                    open = true;
+                }
+                if (Lexer.tokenList[j].text == ")"){
+                    open = false;
+                    idx = j;
+                    par++;
+                }
+                if (parser.isNumber(Lexer.tokenList[j].text) && !open && j> idx){
+                    std::cout << "Unexpected token at line " << Lexer.tokenList[j].line << " column " << Lexer.tokenList[j].col << ": " << Lexer.tokenList[j].text << std::endl;
+                    exit(2);
+                }
+            }
         }
     }
   
