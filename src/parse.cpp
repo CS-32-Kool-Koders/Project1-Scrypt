@@ -412,6 +412,28 @@ if (open != close) {
         }
     }
     }
+    int o = 0;
+    int c = 0;
+    int id = 0;
+    int n_ = 0;
+    for (size_t i = 0; i < Lexer.tokenList.size(); i ++){
+        if (Lexer.tokenList[i].text == "("){
+            o++;
+        }
+        if (Lexer.tokenList[i].text == ")"){
+            c++;
+        }
+        if (parser.isIdentifier(Lexer.tokenList[i].text)){
+            id++;
+        }
+        if (parser.isNumber(Lexer.tokenList[i].text)){
+            n_++;
+        }
+        if (n_ == 0 && id !=0 && o == c){
+            std::cout << "Unexpected token at line " << Lexer.tokenList[i].line << " column " << Lexer.tokenList[i].col << ": " << Lexer.tokenList[i].text << std::endl;
+            exit(2);
+        }
+    }
   
     std::vector<std::vector<Tokens>> separateExpressions;
     std::vector<Tokens> currentExpression;
