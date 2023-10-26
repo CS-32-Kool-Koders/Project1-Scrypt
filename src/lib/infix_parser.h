@@ -19,6 +19,8 @@ public:
         this->value = value;
         this->left = nullptr;
         this->right = nullptr;
+        this->lineNumber = lineNumber;
+        this->colNumber = colNumber;
     }
 
     ~ExpressionNode()
