@@ -62,6 +62,7 @@ bool Parser::isIdentifier(std::string i){
     }
     return true;
 }
+// 
 Node* Parser::parse(std::string token){
     if (token.empty()){
         exit(2);
@@ -145,6 +146,7 @@ Node* Parser::parse(std::string token){
 }
 
 
+
 void printTreeInfix(Node* node) {
     if (!node) return;
     if (node->treeVec.size() > 0) std::cout << "(";
@@ -177,9 +179,7 @@ double Parser::evaluate(Node* root) {
         }
     } else if (isNumber(root->data)) {
             return std::stod(std::string(root->data));
-    } else if (isIdentifier(root->data)){
-
-    }
+    } 
     
     }
 
@@ -198,10 +198,15 @@ double Parser::evaluate(Node* root) {
                 exit(3);
             }
             result /= operand;
-        } //add condition for equal
+        } else if (root->data == "="){//add condition for equal
+            
+        } 
     }
     return result;
 }
+
+
+
 
 
 int main()
@@ -430,7 +435,7 @@ if (open != close) {
     }
 
     if (depth != 0) {
-        std::cerr << "Mismatched opening parenthesis." << std::endl;
+        std::cout << "Mismatched opening parenthesis." << std::endl;
         exit(2);
     }
 
@@ -448,6 +453,7 @@ if (open != close) {
         }
 
         printTreeInfix(root);
+        // std::cout<<std::endl;
         std::cout << std::endl << parser.evaluate(root) << std::endl;
         delete root;
     }
