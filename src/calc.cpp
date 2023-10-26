@@ -35,7 +35,7 @@ int main()
 
                 int paren_count = 0;
                 //int offset = 0;
-                std::string tokenlist = stream.str();
+                std::string tokenlist = line;
                 for(size_t i =0; i < tokenlist.length(); i++) {
                     std::cout << "Token at " << i << " " << tokenlist[i] << std::endl;
                     if(tokenlist[i] == '(') {
