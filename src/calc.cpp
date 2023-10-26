@@ -32,31 +32,45 @@ int main()
                 lexer.tokenize(1, stream.str());
                 lexer.tokenList.push_back(Tokens(1, lexer.tokenList.back().col + 1, "END"));
 
-
+                // int offset = 0;
+                std::string str;
+                size_t temp = 0;
+                for (size_t i = 0; i < lexer.tokenList.size(); i++)
+                {
+                    while (temp <= line.length() && line.substr(temp, temp + lexer.tokenList[i].text.length() - 1) != lexer.tokenList[i].text)
+                    {
+                        str += line[temp];
+                        temp++;
+                    }
+                }
                 int paren_count = 0;
-                //int offset = 0;
-                std::string tokenlist = line;
-                for(size_t i =0; i < tokenlist.length(); i++) {
-                    //std::cout << "Token at " << i << " " << tokenlist[i] << std::endl;
-                    if(tokenlist[i] == '(') {
+                std::string tokenString = str;
+                for (size_t i = 0; i < tokenString.length(); i++)
+                {
+                    // std::cout << "Token at " << i << " " << tokenlist[i] << std::endl;
+                    if (tokenString[i] == '(')
+                    {
                         paren_count++;
                     }
-                    else if(tokenlist[i] == ')') {
+                    else if (tokenString[i] == ')')
+                    {
                         paren_count--;
                     }
-                    int int_listSize = tokenlist.length();
-                    if(tokenlist.substr(i,i+2) == "END" && i != (size_t)int_listSize-1) {
-                        //std::cout << "the end";
-                        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i) + ": " + tokenlist.substr(i, i+2);
+                    int int_listSize = tokenString.length();
+                    if (tokenString.substr(i, i + 2) == "END" && i != (size_t)int_listSize - 1)
+                    {
+                        // std::cout << "the end";
+                        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i) + ": " + tokenString.substr(i, i + 2);
                         throw std::logic_error(throw_message);
                     }
                     //(paren_count == 0 && (i < (size_t) int_listSize-2) && (i >0))
-                    else if((paren_count < 0) || paren_count > int_listSize-1-(int)i){
+                    else if ((paren_count < 0) || paren_count > int_listSize - 1 - (int)i)
+                    {
                         // std::cout << "Paren count " << paren_count <<std::endl;
                         // std::cout << "i " << i << std::endl;
                         // // //std::cout << "offset " << offset << std::endl;
                         // std::cout << "int_listSize " << int_listSize << std::endl;
-                        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i) + ": " + tokenlist[i];
+                        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i) + ": " + tokenString[i];
                         throw std::logic_error(throw_message);
                     }
                     // else {
@@ -65,7 +79,6 @@ int main()
                     // }
                 }
 
-                
                 // if(paren_count != 0) {
                 //     std::string throw_message = "Unexpected token at line 1 column " + std::to_string(lexer.tokenList.back().col) + ": " + lexer.tokenList.back().text;
                 //     throw std::logic_error(throw_message);
@@ -76,7 +89,8 @@ int main()
                 // if(root == nullptr) {
                 //     throw std::runtime_error("Unexpected token at line 1 column "+ +"");
                 // }
-                if(root != nullptr) {
+                if (root != nullptr)
+                {
                     root->getVariablesNames();
                     root->printInfix();
                     double result = root->computeResult();
