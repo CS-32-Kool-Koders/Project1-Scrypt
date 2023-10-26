@@ -412,6 +412,7 @@ if (open != close) {
         }
     }
     }
+    //Invalid assignment/assignee
     int o = 0;
     int c = 0;
     int id = 0;
@@ -461,7 +462,7 @@ if (open != close) {
                     idx = j;
                     par++;
                 }
-                if (parser.isNumber(Lexer.tokenList[j].text) && !open && j> idx){
+                if (parser.isNumber(Lexer.tokenList[j].text) && !open && j> idx && par == 1){
                     std::cout << "Unexpected token at line " << Lexer.tokenList[j].line << " column " << Lexer.tokenList[j].col << ": " << Lexer.tokenList[j].text << std::endl;
                     exit(2);
                 }
