@@ -76,11 +76,13 @@ int main()
                 // if(root == nullptr) {
                 //     throw std::runtime_error("Unexpected token at line 1 column "+ +"");
                 // }
-                root->getVariablesNames();
-                root->printInfix();
-                double result = root->computeResult();
-                root->printResult();
-                std::cout << result << std::endl;
+                if(root != nullptr) {
+                    root->getVariablesNames();
+                    root->printInfix();
+                    double result = root->computeResult();
+                    root->printResult();
+                    std::cout << result << std::endl;
+                }
 
                 delete root;
             }
