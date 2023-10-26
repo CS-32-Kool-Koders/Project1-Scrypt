@@ -425,14 +425,6 @@ if (open != close) {
         }
         if (parser.isIdentifier(Lexer.tokenList[i].text)){
             id++;
-            // if (Lexer.tokenList[i-1].text == "="){
-            // for (size_t j = i+1; j< Lexer.tokenList.size(); j++){
-            //     if (Lexer.tokenList[j].text == ")" && !parser.isNumber(Lexer.tokenList[j+1].text)){
-            //         std::cout << "Unexpected token at line " << Lexer.tokenList[j-1].line << " column " << Lexer.tokenList[j-1].col << ": " << Lexer.tokenList[j-1].text << std::endl;
-            //         exit(2);
-            //     }
-            // }
-            // }
         }
         if (parser.isNumber(Lexer.tokenList[i].text)){
             n_++;
@@ -452,6 +444,10 @@ if (open != close) {
                         exit(2);
                     }
                 }
+            }
+            if (!parser.isIdentifier(Lexer.tokenList[i+1].text)){
+                std::cout << "Unexpected token at line " << Lexer.tokenList[i+1].line << " column " << Lexer.tokenList[i+1].col << ": " << Lexer.tokenList[i+1].text << std::endl;
+                exit(2);
             }
         }
     }
