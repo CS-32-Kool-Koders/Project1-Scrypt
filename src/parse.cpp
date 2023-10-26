@@ -387,24 +387,25 @@ if (open != close) {
     //checks  problematic pattern (= 
     if (Lexer.tokenList[i].text == "(") {
         // Look ahead from this point to see if we have the problematic pattern
+
+    if (Lexer.tokenList[i].text == "(") {
+        // Look ahead from this point to see if we have the problematic pattern
         bool equalSignFound = false;
-        bool numberFound = false;
-        bool identifierFound = false;
+        size_t numberPos = 0; // Use this to store the position of the number for error reporting
 
         for (size_t j = i + 1; j < Lexer.tokenList.size() && Lexer.tokenList[j].text != ")"; j++) {
             if (Lexer.tokenList[j].text == "=") {
                 equalSignFound = true;
-            } else if (parser.isNumber(Lexer.tokenList[j].text)) {
-                numberFound = true;
-            } else if (parser.isIdentifier(Lexer.tokenList[j].text)) {
-                identifierFound = true;
+            } else if (parser.isNumber(Lexer.tokenList[j].text) && !numberPos) {
+                numberPos = j;
             }
         }
 
-        if (equalSignFound && numberFound && !identifierFound) {
-            std::cout << "Error: Invalid expression with equals sign and numbers but no identifier." << std::endl;
+        if (equalSignFound && numberPos) {
+            std::cout << "Unexpected token at line " << Lexer.tokenList[numberPos].line << " column " << Lexer.tokenList[numberPos].col << ": " << Lexer.tokenList[numberPos].text << std::endl;
             exit(2);
         }
+    }
 }
     }
   
