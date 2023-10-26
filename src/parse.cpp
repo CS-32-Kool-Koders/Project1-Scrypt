@@ -170,67 +170,13 @@ void printTreeInfix(Node* node) {
     }
 }
 
-void Parser::makeMap(Node* root){
-    for (auto i : root->treeVec){
-        if (isIdentifier(i->data)){
-            variables[i->data] = 0;
-        }
-    }
-}
-// double Parser::evaluate(Node* root) {
-//     // if (!root->treeVec.empty()) {
-//     if (root->data.size() == 1){
-//         if (isdigit(root->data[0])){
-//             return std::stod(std::string(1, root->data[0]));
+// void Parser::makeMap(Node* root){
+//     for (auto i : root->treeVec){
+//         if (isIdentifier(i->data)){
+//             variables[i->data] = 0;
 //         }
-//     } else if (isNumber(root->data)) {
-//             return std::stod(std::string(root->data));
-//     } else if (isIdentifier(root->data)){
-//         if (variables.find(root->data)!= variables.end()){
-//             return variables[root->data];
-//         } else{
-//             return 0.0;
-//         }
-//     // }
 //     }
-//     double result = evaluate(root->treeVec.back());  // Start from the last element
-//     for (int i = root->treeVec.size() - 2; i >= 0; --i) { // modify to account for =; assign operator
-//         double operand = evaluate(root->treeVec[i]);
-//         if (root->data == "+") {
-//             result += operand;
-//         } else if (root->data == "-") {
-//             result -= operand;
-//         } else if (root->data == "*") {
-//             result *= operand;
-//         } else if (root->data == "/") {
-//             if (operand == 0) {
-//                 std::cout << "Runtime error: division by zero." << std::endl;
-//                 exit(3);
-//             }
-//             result /= operand;
-//         } 
-//         else if (root->data == "="){//add condition for equal
-//             // std::string key;
-//             double num;
-//             for (auto i : root->treeVec){
-//                 if (isNumber(i->data)){
-//                     num = std::stod(root->data);
-//                     break;
-//                 }
-//             }
-//             for (auto x : root->treeVec){
-//                 if (isIdentifier(x->data)){
-//                     variables[x->data] = num;
-//                 }
-//                 else if (isOperator(x->data)){
-//                     result = double(evaluate(x->treeVec[i]));
-//                 }
-                
-//             }
-//             }
-//         } 
-//         return result;
-//     }
+// }
 
 double Parser::evaluate(Node* root) {
     if (!root) {
@@ -336,21 +282,6 @@ int main()
             close++;
         }
     }
-    // for (int i = 0; i < Lexer.tokenList.size(); i++){
-    //     str += tokenList[i].text + " ";
-    //     // std::cout<<i.text<<std::endl;
-    //     if (tokenList[i].text == "("){
-    //         open++;
-    //     }
-    //     else if (tokenList[i].text == ")"){
-    //         close++;
-    //     }
-    //     if ((i == Lexer.tokenList.size() - 1 && !parser.parseStack.empty())|| 
-    //         (Lexer.tokenList[i].text == ")" && op == cl && Lexer.tokenList[i+1] .text!= "END")){ //check for multiple
-             
-    //     }
-    
-    // }
 
 
 if (open != close) {
@@ -382,32 +313,7 @@ if (open != close) {
         reportUnexpectedToken(Lexer.tokenList.back());
     }
     Parser parser(str); 
-    
- 
-    // if (Lexer.tokenList.back().text != "END") { //check for multiple 
-    //     reportUnexpectedToken(Lexer.tokenList.back());
-    // }
-    // if (i == Lexer.tokenList.size() - 1) { //one of the checks for multiple
-    //         if (!parser.parseStack.empty()) {
-    //             std::cout << "Unexpected token at line " << Lexer.tokenList[i].line
-    //                     << " column " << Lexer.tokenList[i].col << ": " << Lexer.tokenList[i].text << std::endl;
-    //             exit(2);
-    //         }
-    //     }
-    // if (Lexer.tokenList[i].text == ")" && op == cl && Lexer.tokenList[i+1] .text!= "END"){ //check for multiple
-        //      std::cout << "Unexpected token at line " << Lexer.tokenList[i+1].line
-        //           << " column " << Lexer.tokenList[i+1].col << ": " <<Lexer.tokenList[i+1].text << std::endl;
-        //     exit(2);
-        // }
-    
-    // Node* root = parser.parse(str);
-    
-    // if (root != nullptr) {
-    //     // delete parser.parseStack.top();
-    //     parser.parseStack.pop();
-    // }
 
-   
     bool insideParentheses = false;
 
     // bool topLevelParsed = false;
