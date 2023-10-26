@@ -219,7 +219,7 @@ double Parser::evaluate(Node* root, std::unordered_map<std::string, double>& var
             // int idx = root->treeVec.si
             double res = evaluate(root->treeVec.front(), variables);
             for (auto node : root->treeVec){
-                 std::cout<<"Node data"<<node->data<<std::endl;
+                //  std::cout<<"Node data"<<node->data<<std::endl;
                 if (isIdentifier(node->data)){
                     variables[node->data] = res;
                    
