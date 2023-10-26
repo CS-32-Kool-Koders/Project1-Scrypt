@@ -196,7 +196,6 @@ double Parser::evaluate(Node* root) {
             return variables[root->data];
         }
     }
-
     double result = evaluate(root->treeVec.back());
 
     for (int i = root->treeVec.size() - 2; i >= 0; --i) {
@@ -385,11 +384,12 @@ if (open != close) {
             }
 
     //checks  problematic pattern (= 
+
     if (Lexer.tokenList[i].text == "(") {
-        // Look ahead from this point to see if we have the problematic pattern
         bool equalSignFound = false;
         bool numberFound = false;
         bool identifierFound = false;
+        bool soloIdentifierInParens = false;
 
         for (size_t j = i + 1; j < Lexer.tokenList.size() && Lexer.tokenList[j].text != ")"; j++) {
             if (Lexer.tokenList[j].text == "=") {
@@ -398,13 +398,19 @@ if (open != close) {
                 numberFound = true;
             } else if (parser.isIdentifier(Lexer.tokenList[j].text)) {
                 identifierFound = true;
+
+                // Check for solo identifier in parentheses
+                if (Lexer.tokenList[j + 1].text == ")" && (j == i + 1 || !equalSignFound)) {
+                    soloIdentifierInParens = true;
+                }
             }
         }
 
-        if (equalSignFound && numberFound && !identifierFound) {
-            std::cout << "Unexpected token at line " << Lexer.tokenList[i+2].line << " column " << Lexer.tokenList[i+2].col<< ": " << Lexer.tokenList[i+2].text << std::endl;
+        if ((equalSignFound && numberFound && !identifierFound) || soloIdentifierInParens) {
+            std::cout << "Unexpected token at line " << Lexer.tokenList[i+2].line << " column " << Lexer.tokenList[i+2].col << ": " << Lexer.tokenList[i+2].text << std::endl;
             exit(2);
         }
+    
 }
     }
   
