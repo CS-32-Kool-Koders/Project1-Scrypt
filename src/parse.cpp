@@ -425,6 +425,13 @@ if (open != close) {
         }
         if (parser.isIdentifier(Lexer.tokenList[i].text)){
             id++;
+            if (Lexer.tokenList[i-1].text == "="){
+            for (size_t j = i+1; j< Lexer.tokenList.size(); j++){
+                if (Lexer.tokenList[j].text == ")" && !parser.isNumber(Lexer.tokenList[j+1].text)){
+                    std::cout << "Unexpected token at line " << Lexer.tokenList[j-1].line << " column " << Lexer.tokenList[j-1].col << ": " << Lexer.tokenList[j-1].text << std::endl;
+                    exit(2);
+                }
+            }}
         }
         if (parser.isNumber(Lexer.tokenList[i].text)){
             n_++;
@@ -432,6 +439,19 @@ if (open != close) {
         if (n_ == 0 && id !=0 && o == c){
             std::cout << "Unexpected token at line " << Lexer.tokenList[i].line << " column " << Lexer.tokenList[i].col << ": " << Lexer.tokenList[i].text << std::endl;
             exit(2);
+        }
+        if (Lexer.tokenList[i].text == "="){
+            for (size_t j = i+1; j < Lexer.tokenList.size(); j++){
+                if (parser.isNumber(Lexer.tokenList[j].text)){
+                    if (parser.isIdentifier(Lexer.tokenList[j+1].text) && Lexer.tokenList[j-1].text == "="){
+                        std::cout << "Unexpected token at line " << Lexer.tokenList[j].line << " column " << Lexer.tokenList[j].col << ": " << Lexer.tokenList[j].text << std::endl;
+                        exit(2);
+                    } else if (parser.isIdentifier(Lexer.tokenList[j+1].text) && parser.isIdentifier(Lexer.tokenList[j-1].text)){ 
+                        std::cout << "Unexpected token at line " << Lexer.tokenList[j+1].line << " column " << Lexer.tokenList[j+1].col << ": " << Lexer.tokenList[j+1].text << std::endl;
+                        exit(2);
+                    }
+                }
+            }
         }
     }
   
