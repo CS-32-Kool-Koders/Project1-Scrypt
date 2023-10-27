@@ -4,8 +4,8 @@
 // g++ -std=c++17 parse.cpp ./lib/lexer.cpp -Wall -Wextra -Werror
 // ./a.out
 
-Parser::Parser(std::string token){
-    this->token = token;
+Parser::Parser(){
+    // this->token = token;
 }
 
 Parser::~Parser(){
@@ -32,9 +32,11 @@ Node::~Node(){
     }
     treeVec.clear();
 }
+// void errorHelper(std::vector<Tokens> tokenlist){
 
+// }
 bool Parser::isOperator(std::string c){
-    return (c == "+")|| (c == "-") || (c == "*") || (c == "/");
+    return (c == "+")|| (c == "-") || (c == "*") || (c == "/") || (c == "=");
 }
 
 
@@ -47,6 +49,21 @@ bool Parser::isNumber(std::string num) {
     return dec <= 1;
 }
 
+bool Parser::isIdentifier(std::string i){
+    if (i == "END"){
+        return false;
+    }
+    if (!isalpha(i[0]) && i[0] != '_'){
+        return false;
+    }
+    for (auto c: i){
+        if (!isalnum(c) && c != '_'){
+            return false;
+        }
+    }
+    return true;
+}
+// 
 Node* Parser::parse(std::string token){
     if (token.empty()){
         exit(2);
@@ -60,12 +77,12 @@ Node* Parser::parse(std::string token){
     while (getline(ss, s, ' ')){
         tokens.push_back(s);
     }
-
-    for (auto i: tokens){
-        if (isOperator(std::string(i))){
+    int x = tokens.size();
+    for (int i = 0; i < x; i++){
+        if (isOperator(tokens.at(i))){
             Node* oper = nullptr;
         try {
-            oper = new Node(std::string(i));
+            oper = new Node(tokens.at(i));
             parseStack.push(oper);
 
         } catch(...) {
@@ -74,11 +91,11 @@ Node* Parser::parse(std::string token){
             throw;  
         }
         }
-        else if (i == "("){
+        else if (tokens.at(i) == "("){
             // parenthesesCounter++;
             parseStack.push(nullptr);
         }
-        else if (i == ")"){
+        else if (tokens.at(i) == ")"){
             std::vector<Node*> tempVec;
             Node* temp = nullptr;
             while (!parseStack.empty() && parseStack.top() != nullptr){
@@ -104,30 +121,31 @@ Node* Parser::parse(std::string token){
                 }
             }
         }
-        else if (isNumber(i)){
+        else if (isNumber(tokens.at(i))){
             Node* digit = nullptr;
             try{ 
-                digit = new Node(std::string(i));
+                digit = new Node(tokens.at(i));
                 parseStack.push(digit);
             } catch(...){
                 delete digit;  
                 digit  = nullptr;
                 throw;
             }
+        } 
+        else if (isIdentifier(tokens.at(i))){
+            // if (tokens.at(i-1) == "=" && tokens.at(i-2) == "(")
+            Node* id = nullptr;
+            id = new Node(tokens.at(i));
+            parseStack.push(id);
         }
     }
-
-    // Mismatched parentheses
-    // if (parenthesesCounter != 0) {
-    //     std::cout << "Error: Mismatched parentheses." << std::endl;
-    //     exit(2);
-    // }
 
     if (parseStack.top()){
         return parseStack.top();
     }
     return nullptr;
 }
+
 
 
 void printTreeInfix(Node* node) {
@@ -153,23 +171,41 @@ void printTreeInfix(Node* node) {
     }
 }
 
+// void Parser::makeMap(Node* root){
+//     for (auto i : root->treeVec){
+//         if (isIdentifier(i->data)){
+//             variables[i->data] = 0;
+//         }
+//     }
+// }
 
-double Parser::evaluate(Node* root) {
+double Parser::evaluate(Node* root, std::unordered_map<std::string, double>& variables) {
+    if (!root) {
+        std::cout << "Error: Root is a nullptr" << std::endl;
+        exit(1);
+    }
+    
     if (root->treeVec.empty()) {
-    if (root->data.size() == 1){
-        if (isdigit(root->data[0])){
-            return std::stod(std::string(1, root->data[0]));
+        if (root->data.size() == 1 && isdigit(root->data[0])) {
+            return std::stod(root->data);
+        } 
+        else if (isNumber(root->data)) {
+            return std::stod(root->data);
+        } 
+        else if (isIdentifier(root->data)) {
+            //  if(variables.find(root->data) == variables.end()) {
+            //     std::cout << "Runtime error: unknown identifier " << root->data << std::endl;
+            //     exit(3);
+            // }
+            return variables[root->data]; 
+            
         }
-    } else{
-        if (isNumber(root->data)) {
-            return std::stod(std::string(root->data));
-        }
-    }
     }
 
-    double result = evaluate(root->treeVec.back());  // Start from the last element
-    for (int i = root->treeVec.size() - 2; i >= 0; --i) { // Traverse in reverse
-        double operand = evaluate(root->treeVec[i]);
+    double result = evaluate(root->treeVec.back(), variables);
+
+    for (int i = root->treeVec.size() - 2; i >= 0; --i) {
+        double operand = evaluate(root->treeVec[i], variables);
         if (root->data == "+") {
             result += operand;
         } else if (root->data == "-") {
@@ -182,11 +218,26 @@ double Parser::evaluate(Node* root) {
                 exit(3);
             }
             result /= operand;
+        } 
+        else if (root->data == "=") {
+            // int idx = root->treeVec.si
+            double res = evaluate(root->treeVec.front(), variables);
+            for (auto node : root->treeVec){
+                //  std::cout<<"Node data"<<node->data<<std::endl;
+                if (isIdentifier(node->data)){
+                    variables[node->data] = res;
+                   
+                }
+                else{
+                    // break;
+                }
+            }
+            result = res;
         }
     }
+
     return result;
 }
-
 
 int main()
 {
@@ -213,12 +264,16 @@ int main()
     else {
         Lexer.tokenList.push_back(Tokens(row, Lexer.tokenList.back().col, "END"));
     }
-
+    // std::cout<<tokenList<<std::endl;
     int open = 0;
     int close = 0;
     std::string str;
+    // std::vector<std::string> mult;
+    // maybe add checks for multiple here, so they can be added to a vector
     for (auto i : Lexer.tokenList){
+        // std::cout<<i.text<<std::endl;
         str += i.text + " ";
+        // std::cout<<i.text<<std::endl;
         if (i.text == "("){
             open++;
         }
@@ -256,26 +311,12 @@ if (open != close) {
     if (str.empty() || str == "END ") {
         reportUnexpectedToken(Lexer.tokenList.back());
     }
-    Parser parser(str);
-    
- 
-    if (Lexer.tokenList.back().text != "END") {
-        reportUnexpectedToken(Lexer.tokenList.back());
-    }
+    Parser parser; 
 
-    Node* root = parser.parse(str);
-    
-    if (root != nullptr) {
-        // delete parser.parseStack.top();
-        parser.parseStack.pop();
-    }
-
-    // Check for multiple top-level s-expressions
-   
     bool insideParentheses = false;
 
     // bool topLevelParsed = false;
-
+    
     for (auto i : Lexer.tokenList) {
         if (i.text == "(") {
             insideParentheses = true;
@@ -297,7 +338,7 @@ if (open != close) {
     for (size_t i = 0; i < Lexer.tokenList.size(); i++) {
         if (Lexer.tokenList[i].text == "(") {
             if (i == Lexer.tokenList.size() - 1 || 
-                (Lexer.tokenList[i+1].text != "(" && !parser.isNumber(Lexer.tokenList[i+1].text) && !parser.isOperator(Lexer.tokenList[i+1].text))) {
+                (Lexer.tokenList[i+1].text != "(" && !parser.isNumber(Lexer.tokenList[i+1].text) && !parser.isOperator(Lexer.tokenList[i+1].text) && !parser.isIdentifier(Lexer.tokenList[i+1].text))) {
                 reportUnexpectedToken(Lexer.tokenList[i]);
             }
         }
@@ -307,18 +348,11 @@ if (open != close) {
         if (Lexer.tokenList[i].text == ")"){
             cl++;
         }
-        if (Lexer.tokenList[i].text == ")" && op == cl && Lexer.tokenList[i+1] .text!= "END"){
-             std::cout << "Unexpected token at line " << Lexer.tokenList[i+1].line
-                  << " column " << Lexer.tokenList[i+1].col << ": " <<Lexer.tokenList[i+1].text << std::endl;
-            exit(2);
-        }
-        // if (topLevelParsed && i < Lexer.tokenList.size() - 1 && Lexer.tokenList[i + 1].text != "END") {
-        //     reportUnexpectedToken(Lexer.tokenList[i + 1]);
-        // }
+
          if (parser.isOperator(Lexer.tokenList[i].text)) {
             numOperators++;
         }
-        else if (parser.isNumber(Lexer.tokenList[i].text)) {
+        else if (parser.isNumber(Lexer.tokenList[i].text) || parser.isIdentifier(Lexer.tokenList[i].text)) { //add identifier shit here
             numNumbers++;
         }
         if (i == Lexer.tokenList.size()-1 && ((numNumbers == 0 && numOperators > 0) ||(numNumbers > 1 && numOperators == 0))) {
@@ -326,14 +360,7 @@ if (open != close) {
                   << " column " << Lexer.tokenList[i-1].col << ": " <<Lexer.tokenList[i-1].text << std::endl;
         exit(2);
         }
-        if (i == Lexer.tokenList.size() - 1) {
-            if (!parser.parseStack.empty()) {
-                std::cout << "Unexpected token at line " << Lexer.tokenList[i].line
-                        << " column " << Lexer.tokenList[i].col << ": " << Lexer.tokenList[i].text << std::endl;
-                exit(2);
-            }
-        }
-        
+
         if (parser.isOperator(Lexer.tokenList[i].text) && i != 0){
             if(Lexer.tokenList[i-1].text != "("){
                 std::cout << "Unexpected token at line " << Lexer.tokenList[i].line
@@ -357,14 +384,170 @@ if (open != close) {
                 Lexer.tokenList[i+2].text == ")") {
                 reportUnexpectedToken(Lexer.tokenList[i]);
             }
-    }
-  
-    // if (root == nullptr){
-    //     exit(2);
-    // }
-    printTreeInfix(root);
-    std::cout << std::endl << parser.evaluate(root) << std::endl;
 
-    delete root;
+    //checks  problematic pattern (= 
+    if (Lexer.tokenList[i].text == "(") {
+        bool equalSignFound = false;
+        bool numberFound = false;
+        bool identifierFound = false;
+
+        // Check for problematic pattern (= ...
+        for (size_t j = i + 1; j < Lexer.tokenList.size() && Lexer.tokenList[j].text != ")"; j++) {
+            if (Lexer.tokenList[j].text == "=") {
+                equalSignFound = true;
+            } else if (parser.isNumber(Lexer.tokenList[j].text)) {
+                numberFound = true;
+            } else if (parser.isIdentifier(Lexer.tokenList[j].text)) {
+                identifierFound = true;
+            }
+        }
+
+        if (equalSignFound && numberFound && !identifierFound) {
+            std::cout << "Unexpected token at line " << Lexer.tokenList[i+2].line << " column " << Lexer.tokenList[i+2].col << ": " << Lexer.tokenList[i+2].text << std::endl;
+            exit(2);
+        }
+
+        // Check for solo identifier in parentheses
+        if (parser.isIdentifier(Lexer.tokenList[i+1].text) && Lexer.tokenList[i+2].text == ")") {
+            std::cout << "Unexpected token at line " << Lexer.tokenList[i+1].line << " column " << Lexer.tokenList[i+1].col << ": " << Lexer.tokenList[i+1].text << std::endl;
+            exit(2);
+        }
+    }
+    }
+    //Invalid assignment/assignee
+    int o = 0;
+    int c = 0;
+    int id = 0;
+    int n_ = 0;
+
+    if (Lexer.tokenList.size() == 1 && parser.isNumber(Lexer.tokenList[0].text)) {
+        std::cout << Lexer.tokenList[0].text << std::endl;  // print infix
+        std::cout << Lexer.tokenList[0].text << std::endl;  // evaluate
+        exit(0);
+}
+
+    for (size_t i = 0; i < Lexer.tokenList.size(); i ++){
+        if (Lexer.tokenList[i].text == "("){
+            o++;
+        }
+        if (Lexer.tokenList[i].text == ")"){
+            c++;
+        }
+        if (parser.isIdentifier(Lexer.tokenList[i].text)){
+            id++;
+        }
+        if (parser.isNumber(Lexer.tokenList[i].text)){
+            n_++;
+        }
+        if (n_ == 0 && id !=0 && o == c){
+            std::cout << "Unexpected token at line " << Lexer.tokenList[i].line << " column " << Lexer.tokenList[i].col << ": " << Lexer.tokenList[i].text << std::endl;
+            exit(2);
+        }
+        if (parser.isNumber(Lexer.tokenList[i].text) && Lexer.tokenList.size() == 1) {
+            std::cout << Lexer.tokenList[i].text << std::endl;  // print infix
+            std::cout << Lexer.tokenList[i].text << std::endl;  // evaluate
+            exit(0);  // exit the program since the processing for this input is complete
+            }
+            
+        if (Lexer.tokenList[i].text == "="){
+            for (size_t j = i+1; j < Lexer.tokenList.size(); j++){
+                if (parser.isNumber(Lexer.tokenList[j].text)){
+                    if (parser.isIdentifier(Lexer.tokenList[j+1].text) && Lexer.tokenList[j-1].text == "="){
+                        std::cout << "Unexpected token at line " << Lexer.tokenList[j].line << " column " << Lexer.tokenList[j].col << ": " << Lexer.tokenList[j].text << std::endl;
+                        exit(2);
+                    } else if (parser.isIdentifier(Lexer.tokenList[j+1].text) && parser.isIdentifier(Lexer.tokenList[j-1].text)){ 
+                        std::cout << "Unexpected token at line " << Lexer.tokenList[j+1].line << " column " << Lexer.tokenList[j+1].col << ": " << Lexer.tokenList[j+1].text << std::endl;
+                        exit(2);
+                    }
+                }
+            }
+            if (!parser.isIdentifier(Lexer.tokenList[i+1].text)){
+                std::cout << "Unexpected token at line " << Lexer.tokenList[i+1].line << " column " << Lexer.tokenList[i+1].col << ": " << Lexer.tokenList[i+1].text << std::endl;
+                exit(2);
+            }
+            size_t idx = 0;
+            bool open = false;
+            size_t par = 0;
+            for (size_t j = i+1; j <Lexer.tokenList.size(); j++){
+                if (Lexer.tokenList[j].text == "("){
+                    open = true;
+                }
+                if (Lexer.tokenList[j].text == ")"){
+                    open = false;
+                    idx = j;
+                    par++;
+                }
+                if (parser.isNumber(Lexer.tokenList[j].text) && !open && j> idx && par == 1){
+                    std::cout << "Unexpected token at line " << Lexer.tokenList[j].line << " column " << Lexer.tokenList[j].col << ": " << Lexer.tokenList[j].text << std::endl;
+                    exit(2);
+                }
+            }
+        }
+    }
+
+  
+  
+    std::vector<std::vector<Tokens>> separateExpressions;
+    std::vector<Tokens> currentExpression;
+    int depth = 0;
+    // for (size_t i = 0; i < Lexer.tokenList.size(); i++){
+    //         if (parser.isIdentifier(Lexer.tokenList[i].text)){
+    //             parser.vars[Lexer.tokenList[i].text] = -69.6969;
+    //         }
+    //     }
+
+    for (const auto& token : Lexer.tokenList) {
+        if (token.text == "(") {
+            depth++;
+        } else if (token.text == ")") {
+            depth--;
+            if (depth < 0) {
+                std::cerr << "Mismatched closing parenthesis." << std::endl;
+                exit(2);
+            }
+        }
+
+        if (depth == 0 && token.text == ")") {
+            currentExpression.push_back(token);
+            separateExpressions.push_back(currentExpression);
+            currentExpression.clear();
+        } else if (token.text != "END") {
+            currentExpression.push_back(token);
+        }
+    }
+
+    if (depth != 0) {
+        std::cout << "Mismatched opening parenthesis." << std::endl;
+        exit(2);
+    }
+
+    // Parser parser();
+    for (const auto& expressionTokens : separateExpressions) {
+        std::string expressionStr;
+        for (const auto& token : expressionTokens) {
+            expressionStr += token.text + " ";
+        }
+
+        // Parser parser(expressionStr);
+        Node* root = parser.parse(expressionStr);
+
+        if (root != nullptr) {
+            parser.parseStack.pop();
+        }
+
+        printTreeInfix(root);
+        // std::cout<<std::endl;
+        // parser.makeMap(root);
+        
+        // double eval = parser.evaluate(root, parser.vars);
+        // for (size_t i = 0; i < Lexer.tokenList.size(); i ++){
+        //     if (parser.isIdentifier(Lexer.tokenList[i].text) && (parser.vars[Lexer.tokenList[i].text] == -69.6969)){
+        //         std::cout<< "Runtime error: unknown identifier " << Lexer.tokenList[i].text << std::endl;
+        //         exit(3);
+        //     }
+        // }
+        std::cout << std::endl << parser.evaluate(root, parser.vars) << std::endl;
+        delete root;
+    }
     return 0;
 }

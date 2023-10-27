@@ -49,6 +49,14 @@ int lexer::tokenize(int row, std::string line) {
             //resetting i to the next character
             i = tokenList.back().col+tokenList.back().text.size()-2;
         }
+        else if(line[i] == '=') {
+            tokenList.push_back(Tokens((int)row, (int)i+1, std::string(1, line[i])));
+        }
+
+        else if(isalpha(line[i]) || line[i] == '_') {
+            i = checkIsIdentifier(line, (int)row, (int)i);
+}
+
         else {
             //case - invalid character
             std::cout << "Syntax error on line " << row << " column " << i+1 << "." << std::endl;
@@ -101,4 +109,14 @@ int lexer::checkIsDigit(std::string line, int row, int col) {
     //col-offset+1 to reset the coords of column of the number
     tokenList.push_back(Tokens(row, col-offset+1, digit));
     return 0;
+}
+int lexer::checkIsIdentifier(std::string line, int row, int col) {
+    std::string identifier;
+    identifier += line[col];
+    while(isalnum(line[col+1]) || line[col+1] == '_') {
+        identifier += line[col+1];
+        col++;
+    }
+    tokenList.push_back(Tokens(row, col-identifier.size()+2, identifier));
+    return col;
 }
