@@ -9,6 +9,7 @@ std::map<std::string, double> ExpressionParser::variables;
 std::string ExpressionParser::line;
 
 double result;
+int eqNb = 0;
 std::stringstream strstrm;
 void ExpressionNode::printInfix()
 {
@@ -139,13 +140,23 @@ void ExpressionNode::getVariablesNames()
 
     if (value == "=")
     {
+        eqNb++;
         if (isVariable(left->value))
         {
             ExpressionParser::knowsVariables.push_back(left->value);
         }
         else
         {
-            throw std::logic_error("Invalid variable name");
+            // use eqNb (which is incremented each time an = is found) to find the colum of the = from ExpressionParser::line
+            int eqColumn = 0;
+            for (std::size_t i = 0; i < ExpressionParser::line.length(); i++)
+            {
+                if (ExpressionParser::line[i] != '=')
+                    eqColumn++;
+                else
+                    break;
+            }
+            throw std::logic_error("Unexpected token at line 1 column " + std::to_string(eqColumn + 1) + ": " + value);
         }
     }
 
