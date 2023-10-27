@@ -193,13 +193,7 @@ double Parser::evaluate(Node* root, std::unordered_map<std::string, double>& var
             return std::stod(root->data);
         } 
         else if (isIdentifier(root->data)) {
-            // if (variables.find(root->data)==variables.end()){
-                return variables[root->data];
-            // } 
-            // else {
-            //     std::cout << "Runtime error: unknown identifier " <<root->data << std::endl;
-            //         exit(3);
-            // }
+            return variables[root->data];
             
         }
     }
@@ -229,6 +223,9 @@ double Parser::evaluate(Node* root, std::unordered_map<std::string, double>& var
                 if (isIdentifier(node->data)){
                     variables[node->data] = res;
                    
+                }
+                else{
+                    // break;
                 }
             }
             result = res;
@@ -313,9 +310,6 @@ if (open != close) {
         reportUnexpectedToken(Lexer.tokenList.back());
     }
     Parser parser; 
-        
-   
-
 
     bool insideParentheses = false;
 
@@ -491,7 +485,7 @@ if (open != close) {
             }
         }
 
-        if ((depth == 0 && token.text == ")")||parser.isNumber(token.text)) {
+        if (depth == 0 && token.text == ")") {
             currentExpression.push_back(token);
             separateExpressions.push_back(currentExpression);
             currentExpression.clear();
