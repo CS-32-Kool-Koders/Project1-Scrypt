@@ -238,8 +238,6 @@ double Parser::evaluate(Node* root, std::unordered_map<std::string, double>& var
     return result;
 }
 
-
-
 int main()
 {
     auto reportUnexpectedToken = [](const Tokens& token) {
@@ -485,6 +483,8 @@ if (open != close) {
             }
         }
     }
+
+  
   
     std::vector<std::vector<Tokens>> separateExpressions;
     std::vector<Tokens> currentExpression;
@@ -532,7 +532,14 @@ if (open != close) {
         printTreeInfix(root);
         // std::cout<<std::endl;
         // parser.makeMap(root);
-        std::cout << std::endl << parser.evaluate(root, parser.vars) << std::endl;
+        double eval = parser.evaluate(root, parser.vars);
+        for (size_t i = 0; i < Lexer.tokenList.size(); i ++){
+            if (parser.isIdentifier(Lexer.tokenList[i].text) && (parser.vars[Lexer.tokenList[i].text] == 0.0)){
+                std::cout<< "Runtime error: unknown identifier " << Lexer.tokenList[i].text << std::endl;
+                exit(3);
+            }
+        }
+        std::cout << std::endl << eval << std::endl;
         delete root;
     }
     return 0;
