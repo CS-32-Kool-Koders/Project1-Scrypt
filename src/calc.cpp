@@ -73,7 +73,7 @@ int main()
                     {
                         if (tokenString[i] == '=')
                         {
-                            std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString[i];
+                            std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 2) + ": " + tokenString[i + 1];
                             throw std::logic_error(throw_message);
                         }
 
