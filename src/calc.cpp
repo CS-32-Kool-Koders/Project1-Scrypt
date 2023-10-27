@@ -65,7 +65,7 @@ int main()
                     if (tokenString.substr(i, i + 2) == "END" && (i != (size_t)int_listSize - 3 || paren_count != 0))
                     {
                         // std::cout << "the end";
-                        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i) + ": " + tokenString.substr(i, i + 2);
+                        std::string throw_message = "part 1 Unexpected token at line 1 column " + std::to_string(i) + ": " + tokenString.substr(i, i + 2) + tokenString;
                         throw std::logic_error(throw_message);
                     }
                     else if (tokenString.substr(i, i + 2) == "END" && i + 2 == (size_t)int_listSize - 1 && paren_count == 0)
@@ -79,7 +79,7 @@ int main()
                         // std::cout << "i " << i << std::endl;
                         // // //std::cout << "offset " << offset << std::endl;
                         // std::cout << "int_listSize " << int_listSize << std::endl;
-                        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString[i];
+                        std::string throw_message = "part 2 Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString[i] + tokenString;
                         throw std::logic_error(throw_message);
                     }
                     // else {
