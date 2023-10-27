@@ -47,6 +47,9 @@ int main()
                     }
                 }
 
+                std::cout << "Input: " << str << std::endl;
+                std::cout << "Input: " << line << std::endl;
+
                 ExpressionParser parser(lexer.tokenList);
                 root = parser.parseExpression();
                 std::string tokenString = str;
