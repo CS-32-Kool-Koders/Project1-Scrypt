@@ -39,6 +39,7 @@ public:
     void printInfix();
     void printTree();
     void printResult();
+    void checkParentheses(std::string tokenString);
 };
 
 class ExpressionParser
