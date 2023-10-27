@@ -33,7 +33,7 @@ int main()
                 lexer.tokenList.push_back(Tokens(1, lexer.tokenList.back().col + 1, "END"));
 
                 // int offset = 0;
-                std::string str;
+                std::string str = "";
                 size_t temp = 0;
                 for (size_t i = 0; i < lexer.tokenList.size(); i++)
                 {
@@ -100,11 +100,68 @@ int main()
                 // }
                 if (root != nullptr)
                 {
+                    // std::cout << "root is not null" << std::endl;
                     root->getVariablesNames();
                     root->printInfix();
+                    // std::cout << "part 1" << std::endl;
                     double result = root->computeResult();
+                    // std::cout << "part 2" << std::endl;
                     root->printResult();
+                    // std::cout << "part 3" << std::endl;
                     std::cout << result << std::endl;
+                }
+                else
+                {
+                    for (size_t i = 0; i < tokenString.length(); i++)
+                    {
+                        if (tokenString[i] == '+' || tokenString[i] == '-' || tokenString[i] == '/' || tokenString[i] == '*')
+                        {
+                            if (i == 0)
+                            {
+                                std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i) + ": " + tokenString[i];
+                                throw std::logic_error(throw_message);
+                            }
+                            else if (i == tokenString.length() - 3)
+                            {
+                                std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString.substr(i);
+                                throw std::logic_error(throw_message);
+                            }
+                            else
+                            {
+                                size_t temp = i;
+                                i--;
+                                while (std::isspace(tokenString[i]))
+                                {
+                                    i--;
+                                }
+                                if (!isdigit(tokenString[i]))
+                                {
+                                    std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString[i];
+                                    throw std::logic_error(throw_message);
+                                }
+                                i = temp;
+                                i++;
+                                while (std::isspace(tokenString[i]))
+                                {
+                                    i++;
+                                }
+                                if (i == temp)
+                                {
+                                    std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 2) + ": " + tokenString[i + 1];
+                                    throw std::logic_error(throw_message);
+                                }
+                                else if (!isdigit(tokenString[i]))
+                                {
+                                    std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString[i];
+                                    throw std::logic_error(throw_message);
+                                }
+                            }
+                        }
+                    }
+                    // std::cout << "root is null lolollol, root value: " << line << std::endl;
+
+                    //     std::string throw_message = "Unexpected token at line 1 column " + std::to_string(column) + ": " + value;
+                    //     throw std::logic_error(throw_message);
                 }
 
                 delete root;

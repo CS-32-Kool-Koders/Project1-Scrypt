@@ -31,7 +31,8 @@ void ExpressionNode::printInfix()
     }
 }
 
-void ExpressionNode::printTree() {
+void ExpressionNode::printTree()
+{
     std::cout << strstrm.str() << std::endl;
     strstrm.str("");
     strstrm.clear();
@@ -153,19 +154,31 @@ double ExpressionNode::computeResult()
 {
     if (value == "+" || value == "-" || value == "*" || value == "/" || value == "=" || value == "END")
     {
-        if (left == nullptr || right == nullptr)
+        if (right != nullptr)
         {
-            // if(value == "END") {
-            //     column +=2;
+            std::cout << right->value << std::endl;
+        }
+        else if (left != nullptr)
+        {
+            std::cout << left->value << std::endl;
+        }
+        if (left == nullptr || right == nullptr || (left->value == "END" || right->value == "END"))
+        {
+            // if(left->value == "END") {
+            //     std::string throw_message = "Unexpected token at line 1 column " + std::to_string(column) + ": " + value;
+            //     column = 1;
+            //     throw std::logic_error(throw_message);
             // }
+            // std::cout << "i am here" << std::endl;
             std::string throw_message = "Unexpected token at line 1 column " + std::to_string(column) + ": " + value;
-            column =1;
+            column = 1;
             throw std::logic_error(throw_message);
         }
+        // std::cout << "i was here" << std::endl;
         double leftValue = left->computeResult();
         column += 4;
         double rightValue = right->computeResult();
-        //column++;
+        // column++;
         if (value == "+")
         {
             return leftValue + rightValue;
@@ -176,7 +189,7 @@ double ExpressionNode::computeResult()
         }
         else if (value == "*")
         {
-            //std::cout << column << " is multiply " << std::endl;
+            // std::cout << column << " is multiply " << std::endl;
             return leftValue * rightValue;
         }
         else if (value == "/")
@@ -199,7 +212,7 @@ double ExpressionNode::computeResult()
         {
             if (var == value)
             {
-                column += value.length()-1;
+                column += value.length() - 1;
                 return ExpressionParser::variables[value];
             }
         }
@@ -224,8 +237,8 @@ double ExpressionNode::computeResult()
             //}
             throw std::logic_error("Invalid number: " + value);
         }
-        column+= value.length()-1;
-        //std::cout << column << " is number " <<std::endl;
+        column += value.length() - 1;
+        // std::cout << column << " is number " <<std::endl;
         return number;
     }
 
@@ -234,22 +247,22 @@ double ExpressionNode::computeResult()
 
 void ExpressionNode::printResult()
 {
-        // getVariablesNames();
+    // getVariablesNames();
     column = 1;
-        // double result = computeResult();
+    // double result = computeResult();
     // knowsVariables.clear();
     // if the number is an integer, print it without a decimal point
-        // if (result == std::floor(result))
-        // {
-        //     std::cout << std::floor(result);
-        // }
-        // else
-        // {
-        //     // print with only enough precision to show the value (no trailing zeros)
-        //     std::cout << result; // not sure if std::precision is needed for that case
-        // }
+    // if (result == std::floor(result))
+    // {
+    //     std::cout << std::floor(result);
+    // }
+    // else
+    // {
+    //     // print with only enough precision to show the value (no trailing zeros)
+    //     std::cout << result; // not sure if std::precision is needed for that case
+    // }
     std::cout << strstrm.str() << std::endl;
-    //std::cout << computeResult() << std::endl;
+    // std::cout << computeResult() << std::endl;
     strstrm.str("");
     strstrm.clear();
 }
