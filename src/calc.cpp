@@ -42,9 +42,14 @@ int main()
                         str += line[temp];
                         temp++;
                     }
+                    if (lexer.tokenList[i].text == "END")
+                    {
+                        str += "END";
+                    }
                 }
                 int paren_count = 0;
                 std::string tokenString = str;
+                // std::cout << "tokenString: " << tokenString << std::endl;
                 for (size_t i = 0; i < tokenString.length(); i++)
                 {
                     // std::cout << "Token at " << i << " " << tokenlist[i] << std::endl;
@@ -57,11 +62,15 @@ int main()
                         paren_count--;
                     }
                     int int_listSize = tokenString.length();
-                    if (tokenString.substr(i, i + 2) == "END" && i != (size_t)int_listSize - 1)
+                    if (tokenString.substr(i, i + 2) == "END" && (i != (size_t)int_listSize - 3 || paren_count != 0))
                     {
                         // std::cout << "the end";
                         std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i) + ": " + tokenString.substr(i, i + 2);
                         throw std::logic_error(throw_message);
+                    }
+                    else if (tokenString.substr(i, i + 2) == "END" && i + 2 == (size_t)int_listSize - 1 && paren_count == 0)
+                    {
+                        break;
                     }
                     //(paren_count == 0 && (i < (size_t) int_listSize-2) && (i >0))
                     else if ((paren_count < 0) || paren_count > int_listSize - 1 - (int)i)
@@ -70,7 +79,7 @@ int main()
                         // std::cout << "i " << i << std::endl;
                         // // //std::cout << "offset " << offset << std::endl;
                         // std::cout << "int_listSize " << int_listSize << std::endl;
-                        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i) + ": " + tokenString[i];
+                        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString[i];
                         throw std::logic_error(throw_message);
                     }
                     // else {
