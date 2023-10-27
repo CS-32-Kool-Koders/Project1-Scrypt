@@ -489,11 +489,11 @@ if (open != close) {
     std::vector<std::vector<Tokens>> separateExpressions;
     std::vector<Tokens> currentExpression;
     int depth = 0;
-    for (size_t i = 0; i < Lexer.tokenList.size(); i++){
-            if (parser.isIdentifier(Lexer.tokenList[i].text)){
-                parser.vars[Lexer.tokenList[i].text] = -69.6969;
-            }
-        }
+    // for (size_t i = 0; i < Lexer.tokenList.size(); i++){
+    //         if (parser.isIdentifier(Lexer.tokenList[i].text)){
+    //             parser.vars[Lexer.tokenList[i].text] = -69.6969;
+    //         }
+    //     }
 
     for (const auto& token : Lexer.tokenList) {
         if (token.text == "(") {
@@ -539,12 +539,12 @@ if (open != close) {
         // parser.makeMap(root);
         
         double eval = parser.evaluate(root, parser.vars);
-        for (size_t i = 0; i < Lexer.tokenList.size(); i ++){
-            if (parser.isIdentifier(Lexer.tokenList[i].text) && (parser.vars[Lexer.tokenList[i].text] == -69.6969)){
-                std::cout<< "Runtime error: unknown identifier " << Lexer.tokenList[i].text << std::endl;
-                exit(3);
-            }
-        }
+        // for (size_t i = 0; i < Lexer.tokenList.size(); i ++){
+        //     if (parser.isIdentifier(Lexer.tokenList[i].text) && (parser.vars[Lexer.tokenList[i].text] == -69.6969)){
+        //         std::cout<< "Runtime error: unknown identifier " << Lexer.tokenList[i].text << std::endl;
+        //         exit(3);
+        //     }
+        // }
         std::cout << std::endl << eval << std::endl;
         delete root;
     }
