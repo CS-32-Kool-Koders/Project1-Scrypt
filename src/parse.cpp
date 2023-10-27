@@ -192,16 +192,18 @@ double Parser::evaluate(Node* root, std::unordered_map<std::string, double>& var
             return std::stod(root->data);
         } 
         else if (isIdentifier(root->data)) {
-            //  if(variables.find(root->data) == variables.end()) {
-            //     std::cout << "Runtime error: unknown identifier " << root->data << std::endl;
-            //     exit(3);
-            // }
+            if(variables.find(root->data) == variables.end()) {
+                std::cout << "Runtime error: unknown identifier " << root->data << std::endl;
+                exit(3);
+             }
             return variables[root->data]; 
             
         }
     }
-
-    double result = evaluate(root->treeVec.back(), variables);
+    double result;
+    if (root->data!="="){
+        result = evaluate(root->treeVec.back(), variables);
+        }
 
     for (int i = root->treeVec.size() - 2; i >= 0; --i) {
         double operand = evaluate(root->treeVec[i], variables);
