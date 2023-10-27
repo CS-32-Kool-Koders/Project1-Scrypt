@@ -6,6 +6,8 @@
 
 std::vector<std::string> ExpressionParser::knowsVariables;
 std::map<std::string, double> ExpressionParser::variables;
+std::string ExpressionParser::line;
+
 double result;
 std::stringstream strstrm;
 void ExpressionNode::printInfix()
@@ -156,7 +158,8 @@ double ExpressionNode::computeResult()
     {
         if (value == "=" && right != nullptr && right->value == "END")
         {
-            throw std::logic_error("Unexpected token at line 1 column " + std::to_string(column + 2) + ": " + right->value);
+            int endColumn = ExpressionParser::line.find("END");
+            throw std::logic_error("Unexpected token at line 1 column " + std::to_string(endColumn + 1) + ": END");
         }
         if (left == nullptr || right == nullptr)
         {

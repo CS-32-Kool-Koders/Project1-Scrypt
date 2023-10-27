@@ -14,13 +14,12 @@
 int main()
 {
     std::vector<Tokens> tokens;
-    std::string line;
     int new_line = 0;
 
     while (!std::cin.eof())
     {
         new_line += 1;
-        while (std::getline(std::cin, line))
+        while (std::getline(std::cin, ExpressionParser::line))
         {
             auto varSave = ExpressionParser::knowsVariables;
             auto varSave2 = ExpressionParser::variables;
@@ -28,10 +27,11 @@ int main()
             try
             {
                 lexer lexer;
-                std::istringstream stream(line);
-                std::cout << "line str: " << line << std::endl;
+                std::istringstream stream(ExpressionParser::line);
                 lexer.tokenize(1, stream.str());
                 lexer.tokenList.push_back(Tokens(1, lexer.tokenList.back().col + 1, "END"));
+                ExpressionParser::line += "END";
+                std::cout << "line str: " << ExpressionParser::line << std::endl;
 
                 ExpressionParser parser(lexer.tokenList);
                 root = parser.parseExpression();

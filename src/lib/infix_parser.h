@@ -46,6 +46,7 @@ class ExpressionParser
 public:
     static std::vector<std::string> knowsVariables;
     static std::map<std::string, double> variables;
+    static std::string line;
 
 private:
     std::vector<Tokens> tokens;
