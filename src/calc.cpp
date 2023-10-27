@@ -47,6 +47,7 @@ int main()
                     }
                 }
                 ExpressionParser::line += "END";
+                std::cout << "line str: " << ExpressionParser::line << std::endl;
 
                 ExpressionParser parser(lexer.tokenList);
                 root = parser.parseExpression();
@@ -70,6 +71,12 @@ int main()
                 {
                     for (size_t i = 0; i < tokenString.length(); i++)
                     {
+                        if (tokenString[i] == '=')
+                        {
+                            std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString[i];
+                            throw std::logic_error(throw_message);
+                        }
+
                         if (tokenString[i] == '+' || tokenString[i] == '-' || tokenString[i] == '/' || tokenString[i] == '*')
                         {
                             if (i == 0)
