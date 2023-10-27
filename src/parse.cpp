@@ -1,4 +1,3 @@
-
 #include "./lib/parser.h"
 #include "./lib/lexer.h"
 // g++ -std=c++17 parse.cpp ./lib/lexer.cpp -Wall -Wextra -Werror
@@ -193,7 +192,11 @@ double Parser::evaluate(Node* root, std::unordered_map<std::string, double>& var
             return std::stod(root->data);
         } 
         else if (isIdentifier(root->data)) {
-            return variables[root->data];
+            //  if(variables.find(root->data) == variables.end()) {
+            //     std::cout << "Runtime error: unknown identifier " << root->data << std::endl;
+            //     exit(3);
+            // }
+            return variables[root->data]; 
             
         }
     }
@@ -417,6 +420,13 @@ if (open != close) {
     int c = 0;
     int id = 0;
     int n_ = 0;
+
+    if (Lexer.tokenList.size() == 1 && parser.isNumber(Lexer.tokenList[0].text)) {
+        std::cout << Lexer.tokenList[0].text << std::endl;  // print infix
+        std::cout << Lexer.tokenList[0].text << std::endl;  // evaluate
+        exit(0);
+}
+
     for (size_t i = 0; i < Lexer.tokenList.size(); i ++){
         if (Lexer.tokenList[i].text == "("){
             o++;
@@ -434,6 +444,12 @@ if (open != close) {
             std::cout << "Unexpected token at line " << Lexer.tokenList[i].line << " column " << Lexer.tokenList[i].col << ": " << Lexer.tokenList[i].text << std::endl;
             exit(2);
         }
+        if (parser.isNumber(Lexer.tokenList[i].text) && Lexer.tokenList.size() == 1) {
+            std::cout << Lexer.tokenList[i].text << std::endl;  // print infix
+            std::cout << Lexer.tokenList[i].text << std::endl;  // evaluate
+            exit(0);  // exit the program since the processing for this input is complete
+            }
+            
         if (Lexer.tokenList[i].text == "="){
             for (size_t j = i+1; j < Lexer.tokenList.size(); j++){
                 if (parser.isNumber(Lexer.tokenList[j].text)){
