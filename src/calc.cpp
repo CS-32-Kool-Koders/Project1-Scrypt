@@ -32,7 +32,6 @@ int main()
                 lexer.tokenize(1, stream.str());
                 lexer.tokenList.push_back(Tokens(1, lexer.tokenList.back().col + 1, "END"));
 
-                // int offset = 0;
                 std::string str = "";
                 size_t temp = 0;
                 for (size_t i = 0; i < lexer.tokenList.size(); i++)
@@ -49,49 +48,58 @@ int main()
                 }
                 int paren_count = 0;
                 std::string tokenString = str;
-                std::cout << "tokenString: " << tokenString << std::endl;
+
+                // std::cout << "tokenString: " << tokenString << std::endl;
                 for (size_t i = 0; i < tokenString.length(); i++)
                 {
                     // std::cout << "Token at " << i << " " << tokenlist[i] << std::endl;
                     if (tokenString[i] == '(')
                     {
                         paren_count++;
+                        // Checks if parentheses set is empty
+                        size_t temp = i;
+                        size_t space_count = 0;
+                        while (tokenString[temp] != ')' && temp < tokenString.length())
+                        {
+                            if (std::isspace(tokenString[temp]))
+                            {
+                                space_count++;
+                            }
+                            temp++;
+                        }
+                        if (space_count == temp - i - 1)
+                        {
+                            std::string throw_message = "Unexpected token at line 1 column " + std::to_string(temp + 1) + ": " + tokenString[temp];
+                            throw std::logic_error(throw_message);
+                        }
                     }
                     else if (tokenString[i] == ')')
                     {
                         paren_count--;
                     }
                     int int_listSize = tokenString.length();
+                    // Checks if END is not where its supposed to be and if the parenthesis are equal
                     if (tokenString.substr(i, i + 2) == "END" && (i != (size_t)int_listSize - 3 || paren_count != 0))
                     {
-                        // std::cout << "the end";
-                        std::string throw_message = "part 1 Unexpected token at line 1 column " + std::to_string(i) + ": " + tokenString.substr(i, i + 2) + tokenString;
+                        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i) + ": " + tokenString.substr(i, i + 2);
                         throw std::logic_error(throw_message);
                     }
+                    // If it reaches "END" and "END" is where its supposed to be, and the parentheses are closed
                     else if (tokenString.substr(i, i + 2) == "END" && i + 2 == (size_t)int_listSize - 1 && paren_count == 0)
                     {
                         break;
                     }
-                    //(paren_count == 0 && (i < (size_t) int_listSize-2) && (i >0))
+                    // If there are more close parenthesis or there are too many open parentheses and not enough space left to close them
                     else if ((paren_count < 0) || paren_count > int_listSize - 1 - (int)i)
                     {
                         // std::cout << "Paren count " << paren_count <<std::endl;
                         // std::cout << "i " << i << std::endl;
                         // // //std::cout << "offset " << offset << std::endl;
                         // std::cout << "int_listSize " << int_listSize << std::endl;
-                        std::string throw_message = "part 2 Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString[i] + tokenString;
+                        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString[i];
                         throw std::logic_error(throw_message);
                     }
-                    // else {
-                    //     std::string throw_message = "Unexpected token at line 1 column " + std::to_string(lexer.tokenList[i].col) + ": " + lexer.tokenList[i].text;
-                    //     throw std::logic_error(throw_message);
-                    // }
                 }
-
-                // if(paren_count != 0) {
-                //     std::string throw_message = "Unexpected token at line 1 column " + std::to_string(lexer.tokenList.back().col) + ": " + lexer.tokenList.back().text;
-                //     throw std::logic_error(throw_message);
-                // }
 
                 ExpressionParser parser(lexer.tokenList);
                 root = parser.parseExpression();

@@ -154,14 +154,6 @@ double ExpressionNode::computeResult()
 {
     if (value == "+" || value == "-" || value == "*" || value == "/" || value == "=" || value == "END")
     {
-        if (right != nullptr)
-        {
-            std::cout << right->value << std::endl;
-        }
-        else if (left != nullptr)
-        {
-            std::cout << left->value << std::endl;
-        }
         if (left == nullptr || right == nullptr || (left->value == "END" || right->value == "END"))
         {
             // if(left->value == "END") {
