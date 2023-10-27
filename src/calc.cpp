@@ -49,7 +49,7 @@ int main()
                 int paren_count = 0;
                 std::string tokenString = str;
 
-                // std::cout << "tokenString: " << tokenString << std::endl;
+                std::cout << "tokenString: " << tokenString << std::endl;
                 for (size_t i = 0; i < tokenString.length(); i++)
                 {
                     // std::cout << "Token at " << i << " " << tokenlist[i] << std::endl;
