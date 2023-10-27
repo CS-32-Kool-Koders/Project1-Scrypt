@@ -29,12 +29,14 @@ int main()
             {
                 lexer lexer;
                 std::istringstream stream(line);
+                std::cout << "line str: " << line << std::endl;
                 lexer.tokenize(1, stream.str());
                 lexer.tokenList.push_back(Tokens(1, lexer.tokenList.back().col + 1, "END"));
 
                 ExpressionParser parser(lexer.tokenList);
                 root = parser.parseExpression();
-                if(root == nullptr) {
+                if (root == nullptr)
+                {
                     throw std::runtime_error("Invalid Parenthesis");
                 }
                 root->getVariablesNames();
