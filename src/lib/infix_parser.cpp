@@ -70,7 +70,6 @@ ExpressionNode *ExpressionParser::parseAddSubtract()
         node->left = left;
         node->right = right;
         left = node;
-        delete node;
     }
     return left;
 }
@@ -88,7 +87,6 @@ ExpressionNode *ExpressionParser::parseMultiplyDivide()
         node->left = left;
         node->right = right;
         left = node;
-        delete node;
     }
     return left;
 }
@@ -107,6 +105,8 @@ ExpressionNode *ExpressionParser::parseOperand()
                 currentIndex++;
                 return node;
             }
+            if (node != nullptr)
+                delete node;
         }
         else
         {
