@@ -117,6 +117,7 @@ int main()
                     root->printResult();
                     // std::cout << "part 3" << std::endl;
                     std::cout << result << std::endl;
+                    delete root;
                 }
                 else
                 {
@@ -176,8 +177,6 @@ int main()
                     //     std::string throw_message = "Unexpected token at line 1 column " + std::to_string(column) + ": " + value;
                     //     throw std::logic_error(throw_message);
                 }
-
-                delete root;
             }
             catch (std::runtime_error &e)
             {
@@ -199,6 +198,5 @@ int main()
             }
         }
     }
-
     return 0;
 }
