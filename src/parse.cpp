@@ -178,7 +178,70 @@ void printTreeInfix(Node* node) {
 //     }
 // }
 
-double Parser::evaluate(Node* root, std::unordered_map<std::string, double>& variables) {
+// double Parser::evaluate(Node* root, std::unordered_map<std::string, double>& variables) {
+//     if (!root) {
+//         std::cout << "Error: Root is a nullptr" << std::endl;
+//         exit(1);
+//     }
+    
+//     if (root->treeVec.empty()) {
+//         if (root->data.size() == 1 && isdigit(root->data[0])) {
+//             return std::stod(root->data);
+//         } 
+//         else if (isNumber(root->data)) {
+//             return std::stod(root->data);
+//         } 
+//         else if (isIdentifier(root->data)) {
+//             if(variables.find(root->data) == variables.end()) {
+//                 std::cout << "Runtime error: unknown identifier " << root->data << std::endl;
+//                 exit(3);
+//              }
+//             return variables[root->data]; 
+            
+//         }
+//     }
+//     double result;
+//     if (root->data!="="){
+//         result = evaluate(root->treeVec.back(), variables);
+//     } else {
+//         result = evaluate(root->treeVec.front(), variables);
+//     }
+
+//     for (int i = root->treeVec.size() - 2; i >= 0; --i) {
+//         double operand = evaluate(root->treeVec[i], variables);
+//         if (root->data == "+") {
+//             result += operand;
+//         } else if (root->data == "-") {
+//             result -= operand;
+//         } else if (root->data == "*") {
+//             result *= operand;
+//         } else if (root->data == "/") {
+//             if (operand == 0) {
+//                 std::cout << "Runtime error: dvision by zero." << std::endl;
+//                 exit(3);
+//             }
+//             result /= operand;
+//         } 
+//         else if (root->data == "=") {
+//             // int idx = root->treeVec.si
+//             double res = evaluate(root->treeVec.front(), variables);
+//             for (auto node : root->treeVec){
+//                 //  std::cout<<"Node data"<<node->data<<std::endl;
+//                 if (isIdentifier(node->data)){
+//                     variables[node->data] = res;
+                   
+//                 }
+//                 else{
+//                     // break;
+//                 }
+//             }
+//             result = res;
+//         }
+//     }
+
+//     return result;
+// }
+double Parser::evaluate(Node* root, std::unordered_map<std::string, double>& variables, bool inAssignmentContext) {
     if (!root) {
         std::cout << "Error: Root is a nullptr" << std::endl;
         exit(1);
@@ -192,21 +255,23 @@ double Parser::evaluate(Node* root, std::unordered_map<std::string, double>& var
             return std::stod(root->data);
         } 
         else if (isIdentifier(root->data)) {
-            if(variables.find(root->data) == variables.end()) {
+            if(!inAssignmentContext && variables.find(root->data) == variables.end()) {
                 std::cout << "Runtime error: unknown identifier " << root->data << std::endl;
                 exit(3);
-             }
-            return variables[root->data]; 
-            
+            }
+            return variables[root->data];
         }
     }
+
     double result;
-    if (root->data!="="){
+    if (root->data != "=") {
         result = evaluate(root->treeVec.back(), variables);
-        }
+    } else {
+        result = evaluate(root->treeVec.front(), variables, true);
+    }
 
     for (int i = root->treeVec.size() - 2; i >= 0; --i) {
-        double operand = evaluate(root->treeVec[i], variables);
+        double operand = evaluate(root->treeVec[i], variables, root->data == "=");
         if (root->data == "+") {
             result += operand;
         } else if (root->data == "-") {
@@ -221,16 +286,10 @@ double Parser::evaluate(Node* root, std::unordered_map<std::string, double>& var
             result /= operand;
         } 
         else if (root->data == "=") {
-            // int idx = root->treeVec.si
-            double res = evaluate(root->treeVec.front(), variables);
+            double res = evaluate(root->treeVec.back(), variables, true);
             for (auto node : root->treeVec){
-                //  std::cout<<"Node data"<<node->data<<std::endl;
-                if (isIdentifier(node->data)){
+                if (isIdentifier(node->data)) {
                     variables[node->data] = res;
-                   
-                }
-                else{
-                    // break;
                 }
             }
             result = res;
@@ -240,6 +299,8 @@ double Parser::evaluate(Node* root, std::unordered_map<std::string, double>& var
     return result;
 }
 
+
+
 int main()
 {
     auto reportUnexpectedToken = [](const Tokens& token) {
@@ -247,24 +308,52 @@ int main()
                   << " column " << token.col << ": " << token.text << std::endl;
         exit(2);
     };
-
-    std::string line; 
+        std::string line; 
     int row = 0; 
     lexer Lexer;
-    int new_line = 0; 
-    while(!std::cin.eof()) {
-        new_line += 1;
-        if(getline(std::cin, line)) { 
-            row += 1;
-            Lexer.tokenize(row, line);
+    int new_line = 0;
+
+    try {
+        while(!std::cin.eof()) {
+            new_line += 1;
+            if(getline(std::cin, line)) { 
+                row += 1;
+                Lexer.tokenize(row, line);
+            }
         }
+        if(new_line > row) {
+            Lexer.tokenList.push_back(Tokens(new_line, 1, "END"));
+        }
+        else {
+            Lexer.tokenList.push_back(Tokens(row, Lexer.tokenList.back().col, "END"));
+        }
+    } catch(const std::runtime_error& e) {
+        std::cout << e.what() << std::endl;
+        return 1; // Exit with an error code, similar to the previous exit(1) calls
     }
-    if(new_line > row) {
-        Lexer.tokenList.push_back(Tokens(new_line, 1, "END"));
-    }
-    else {
-        Lexer.tokenList.push_back(Tokens(row, Lexer.tokenList.back().col, "END"));
-    }
+    
+    return 0; // Return 0 if there were no issues
+
+    //start try
+    // std::string line; 
+    // int row = 0; 
+    // lexer Lexer;
+    // int new_line = 0; 
+    // while(!std::cin.eof()) {
+    //     new_line += 1;
+    //     if(getline(std::cin, line)) { 
+    //         row += 1;
+    //         Lexer.tokenize(row, line);
+    //     }
+    // }
+    // if(new_line > row) {
+    //     Lexer.tokenList.push_back(Tokens(new_line, 1, "END"));
+    // }
+    // else {
+    //     Lexer.tokenList.push_back(Tokens(row, Lexer.tokenList.back().col, "END"));
+    // }
+    //catch error here and exit 1
+    
     // std::cout<<tokenList<<std::endl;
     int open = 0;
     int close = 0;
