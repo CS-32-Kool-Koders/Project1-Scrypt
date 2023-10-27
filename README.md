@@ -6,11 +6,7 @@ The program is a C++ application designed to perform calculations and utilize a 
 
 Seeing the forest through the trees...
 
-   ^        ^         ^          +
-  ^^^      ^^^       ^^^        / \
- ^^^^^    ^^^^^     ^^^^^       3   *
-^^^^^^^  ^^^^^^^^  ^^^^^^^         / \
-   |        |         |           4   5
+
 
 
 Taking a step back, the larger purpose of writing this program is to demonstrate the implementation of a programming language. Breaking this down into more digestable checkpoints such as a calculator and parser helps us undestand the fundamentals of a functional programming language. For example, checkpoint 2 helps us understand how programming languages can store more than  one expression at a time,  being able to save results by storing themin variable.
