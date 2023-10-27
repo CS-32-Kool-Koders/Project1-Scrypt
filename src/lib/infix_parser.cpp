@@ -163,7 +163,7 @@ double ExpressionNode::computeResult()
             //     throw std::logic_error(throw_message);
             // }
             // std::cout << "i am here" << std::endl;
-            std::string throw_message = "part 1 Unexpected token at line 1 column " + std::to_string(column) + ": " + value;
+            std::string throw_message = "Unexpected token at line 1 column " + std::to_string(column) + ": " + value;
             column = 1;
             throw std::logic_error(throw_message);
         }
