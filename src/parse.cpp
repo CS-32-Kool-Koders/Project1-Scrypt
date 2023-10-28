@@ -490,12 +490,7 @@ if (open != close) {
     std::vector<std::vector<Tokens>> separateExpressions;
     std::vector<Tokens> currentExpression;
     int depth = 0;
-    // for (size_t i = 0; i < Lexer.tokenList.size(); i++){
-    //         if (parser.isIdentifier(Lexer.tokenList[i].text)){
-    //             parser.vars[Lexer.tokenList[i].text] = -69.6969;
-    //         }
-    //     }
-
+   
     for (const auto& token : Lexer.tokenList) {
         if (token.text == "(") {
             depth++;
@@ -514,7 +509,12 @@ if (open != close) {
         } else if (token.text != "END") {
             currentExpression.push_back(token);
         }
+        // std::cout<<token.text<<std::endl;
     }
+    if (parser.isNumber(Lexer.tokenList[0].text)){
+        std::cout<<Lexer.tokenList[0].text<<std::endl<<Lexer.tokenList[0].text <<std::endl;
+    }
+    
 
     if (depth != 0) {
         std::cout << "Mismatched opening parenthesis." << std::endl;
@@ -527,25 +527,13 @@ if (open != close) {
         for (const auto& token : expressionTokens) {
             expressionStr += token.text + " ";
         }
-
-        // Parser parser(expressionStr);
         Node* root = parser.parse(expressionStr);
-
         if (root != nullptr) {
             parser.parseStack.pop();
         }
 
         printTreeInfix(root);
-        // std::cout<<std::endl;
-        // parser.makeMap(root);
-        
-        // double eval = parser.evaluate(root, parser.vars);
-        // for (size_t i = 0; i < Lexer.tokenList.size(); i ++){
-        //     if (parser.isIdentifier(Lexer.tokenList[i].text) && (parser.vars[Lexer.tokenList[i].text] == -69.6969)){
-        //         std::cout<< "Runtime error: unknown identifier " << Lexer.tokenList[i].text << std::endl;
-        //         exit(3);
-        //     }
-        // }
+       
         std::cout << std::endl << parser.evaluate(root, parser.vars) << std::endl;
         delete root;
     }
