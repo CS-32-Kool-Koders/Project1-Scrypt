@@ -59,8 +59,10 @@ int lexer::tokenize(int row, std::string line) {
 
         else {
             //case - invalid character
-            std::cout << "Syntax error on line " << row << " column " << i+1 << "." << std::endl;
-            exit(1);
+            // std::cout << "Syntax error on line " << row << " column " << i+1 << "." << std::endl;
+            // // exit(1);
+            // throw;
+            throw std::runtime_error("Syntax error on line " + std::to_string(row) + " column " + std::to_string(i + 1) + ".");
         }
     }
 
@@ -78,14 +80,18 @@ int lexer::checkIsDigit(std::string line, int row, int col) {
         while(isdigit(line[col+1]) || line[col+1] == '.') {
             if(line[col+1] == '.' && decimal > 0) {
                     //multiple decimal case
-                    std::cout << "Syntax error on line " << row << " column " << col+2 << "." << std::endl;
-                    exit(1);
+                    // std::cout << "Syntax error on line " << row << " column " << col+2 << "." << std::endl;
+                    // // exit(1);
+                    // throw;
+                    throw std::runtime_error("Syntax error on line " + std::to_string(row) + " column " + std::to_string(col + 2) + ".");
             }
             else if(line[col+1] == '.') {
                 if(!isdigit(line[col+2])) {
                     //decimal at end of number case
-                    std::cout << "Syntax error on line " << row << " column " << col+3 << "." << std::endl;
-                    exit(1);
+                    // std::cout << "Syntax error on line " << row << " column " << col+3 << "." << std::endl;
+                    // // exit(1);
+                    // throw;
+                    throw std::runtime_error("Syntax error on line " + std::to_string(row) + " column " + std::to_string(col + 3) + ".");
                 }
                 //number has a decimal
                 decimal++; // number of decimals in number
@@ -103,8 +109,10 @@ int lexer::checkIsDigit(std::string line, int row, int col) {
     }
     else {
         //starting decimal case
-        std::cout << "Syntax error on line " << row << " column " << col+1 << "." << std::endl;
-        exit(1); 
+        // std::cout << "Syntax error on line " << row << " column " << col+1 << "." << std::endl;
+        // // exit(1); 
+        // throw;
+        throw std::runtime_error("Syntax error on line " + std::to_string(row) + " column " + std::to_string(col + 1) + ".");
     }
     //col-offset+1 to reset the coords of column of the number
     tokenList.push_back(Tokens(row, col-offset+1, digit));
