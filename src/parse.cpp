@@ -136,6 +136,12 @@ Node* Parser::parse(std::string token){
             // if (tokens.at(i-1) == "=" && tokens.at(i-2) == "(")
             Node* id = nullptr;
             id = new Node(tokens.at(i));
+            int l = tokens.size();
+            for (int j = 0; j < l; j++){
+                if (tokens.at(j) == "=" && j < i){
+                    help.insert(id->data);
+                }
+            }
             parseStack.push(id);
         }
     }
@@ -171,13 +177,7 @@ void printTreeInfix(Node* node) {
     }
 }
 
-// void Parser::makeMap(Node* root){
-//     for (auto i : root->treeVec){
-//         if (isIdentifier(i->data)){
-//             variables[i->data] = 0;
-//         }
-//     }
-// }
+
 
 double Parser::evaluate(Node* root, std::unordered_map<std::string, double>& variables) {
     if (!root) {
@@ -193,10 +193,10 @@ double Parser::evaluate(Node* root, std::unordered_map<std::string, double>& var
             return std::stod(root->data);
         } 
         else if (isIdentifier(root->data)) {
-            //  if(variables.find(root->data) == variables.end()) {
-            //     std::cout << "Runtime error: unknown identifier " << root->data << std::endl;
-            //     exit(3);
-            // }
+            if(help.find(root->data) == help.end()) {
+                 std::cout << "Runtime error: unknown identifier " << root->data << std::endl;
+                 exit(3);
+            }
             return variables[root->data]; 
             
         }
@@ -229,7 +229,7 @@ double Parser::evaluate(Node* root, std::unordered_map<std::string, double>& var
                    
                 }
                 else{
-                    // break;
+                   
                 }
             }
             result = res;
