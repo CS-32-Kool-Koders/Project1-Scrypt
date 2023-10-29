@@ -137,10 +137,13 @@ int main()
                     ExpressionParser::knowsVariables = varSave;
                     ExpressionParser::variables = varSave2;
                 }
-                std::cout << e.what() << std::endl;
-                ExpressionParser::knowsVariables = varSave;
-                ExpressionParser::variables = varSave2;
-                // return 1;
+                else
+                {
+                    std::cout << e.what() << std::endl;
+                    ExpressionParser::knowsVariables = varSave;
+                    ExpressionParser::variables = varSave2;
+                    // return 1;
+                }
             }
             catch (std::logic_error &e)
             {
