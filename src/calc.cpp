@@ -129,10 +129,15 @@ int main()
             }
             catch (std::runtime_error &e)
             {
-                root->printTree();
-                std::cout << e.what() << std::endl;
                 if (root != nullptr)
+                {
+                    root->printTree();
+                    std::cout << e.what() << std::endl;
                     delete root;
+                    ExpressionParser::knowsVariables = varSave;
+                    ExpressionParser::variables = varSave2;
+                }
+                std::cout << e.what() << std::endl;
                 ExpressionParser::knowsVariables = varSave;
                 ExpressionParser::variables = varSave2;
                 // return 1;
