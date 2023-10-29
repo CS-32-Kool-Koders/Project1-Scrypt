@@ -14,13 +14,12 @@
 int main()
 {
     std::vector<Tokens> tokens;
-    std::string line;
     int new_line = 0;
 
     while (!std::cin.eof())
     {
         new_line += 1;
-        while (std::getline(std::cin, line))
+        while (std::getline(std::cin, ExpressionParser::line))
         {
             auto varSave = ExpressionParser::knowsVariables;
             auto varSave2 = ExpressionParser::variables;
@@ -28,17 +27,18 @@ int main()
             try
             {
                 lexer lexer;
-                std::istringstream stream(line);
+                std::istringstream stream(ExpressionParser::line);
                 lexer.tokenize(1, stream.str());
                 lexer.tokenList.push_back(Tokens(1, lexer.tokenList.back().col + 1, "END"));
+                // std::cout << "line str: " << ExpressionParser::line << std::endl;
 
                 std::string str = "";
                 size_t temp = 0;
                 for (size_t i = 0; i < lexer.tokenList.size(); i++)
                 {
-                    while (temp <= line.length() && line.substr(temp, temp + lexer.tokenList[i].text.length() - 1) != lexer.tokenList[i].text)
+                    while (temp <= ExpressionParser::line.length() && ExpressionParser::line.substr(temp, temp + lexer.tokenList[i].text.length() - 1) != lexer.tokenList[i].text)
                     {
-                        str += line[temp];
+                        str += ExpressionParser::line[temp];
                         temp++;
                     }
                     if (lexer.tokenList[i].text == "END")
@@ -46,6 +46,8 @@ int main()
                         str += "END";
                     }
                 }
+                ExpressionParser::line += "END";
+                // std::cout << "line str: " << ExpressionParser::line << std::endl;
 
                 ExpressionParser parser(lexer.tokenList);
                 root = parser.parseExpression();
@@ -69,7 +71,21 @@ int main()
                 {
                     for (size_t i = 0; i < tokenString.length(); i++)
                     {
-                        if (tokenString[i] == '+' || tokenString[i] == '-' || tokenString[i] == '/' || tokenString[i] == '*' || tokenString[i] == '=')
+                        if (tokenString[i] == '=')
+                        {
+                            if (tokenString[i + 1] == ')')
+                            {
+                                std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 2) + ": " + tokenString[i + 1];
+                                throw std::logic_error(throw_message);
+                            }
+                            else
+                            {
+                                std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString[i];
+                                throw std::logic_error(throw_message);
+                            }
+                        }
+
+                        if (tokenString[i] == '+' || tokenString[i] == '-' || tokenString[i] == '/' || tokenString[i] == '*')
                         {
                             if (i == 0)
                             {
