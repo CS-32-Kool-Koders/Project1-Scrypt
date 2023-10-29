@@ -99,37 +99,40 @@ int main()
                             }
                             else
                             {
-                                size_t temp = i;
-                                i--;
-                                while (std::isspace(tokenString[i]))
+                                if (tokenString[i] != '*')
                                 {
+                                    size_t temp = i;
                                     i--;
-                                }
-                                if (!isdigit(tokenString[i]))
-                                {
-                                    std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString[i];
-                                    throw std::logic_error(throw_message);
-                                }
-                                i = temp;
-                                i++;
-                                while (std::isspace(tokenString[i]))
-                                {
+                                    while (std::isspace(tokenString[i]))
+                                    {
+                                        i--;
+                                    }
+                                    if (!isdigit(tokenString[i]))
+                                    {
+                                        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString[i];
+                                        throw std::logic_error(throw_message);
+                                    }
+                                    i = temp;
                                     i++;
-                                }
-                                if (i == temp)
-                                {
-                                    std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 2) + ": " + tokenString[i + 1];
-                                    throw std::logic_error(throw_message);
-                                }
-                                else if (!isdigit(tokenString[i]) && tokenString.substr(i) != "END")
-                                {
-                                    std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString[i];
-                                    throw std::logic_error(throw_message);
-                                }
-                                else if (tokenString.substr(i) == "END")
-                                {
-                                    std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString.substr(i);
-                                    throw std::logic_error(throw_message);
+                                    while (std::isspace(tokenString[i]))
+                                    {
+                                        i++;
+                                    }
+                                    if (i == temp)
+                                    {
+                                        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 2) + ": " + tokenString[i + 1];
+                                        throw std::logic_error(throw_message);
+                                    }
+                                    else if (!isdigit(tokenString[i]) && tokenString.substr(i) != "END")
+                                    {
+                                        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString[i];
+                                        throw std::logic_error(throw_message);
+                                    }
+                                    else if (tokenString.substr(i) == "END")
+                                    {
+                                        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString.substr(i);
+                                        throw std::logic_error(throw_message);
+                                    }
                                 }
                             }
                         }
@@ -142,13 +145,21 @@ int main()
             }
             catch (std::runtime_error &e)
             {
-                root->printTree();
-                std::cout << e.what() << std::endl;
                 if (root != nullptr)
+                {
+                    root->printTree();
+                    std::cout << e.what() << std::endl;
                     delete root;
-                ExpressionParser::knowsVariables = varSave;
-                ExpressionParser::variables = varSave2;
-                // return 1;
+                    ExpressionParser::knowsVariables = varSave;
+                    ExpressionParser::variables = varSave2;
+                }
+                else
+                {
+                    std::cout << e.what() << std::endl;
+                    ExpressionParser::knowsVariables = varSave;
+                    ExpressionParser::variables = varSave2;
+                    // return 1;
+                }
             }
             catch (std::logic_error &e)
             {
