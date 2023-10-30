@@ -9,7 +9,6 @@ int main() {
     int row = 0; 
     lexer Lexer;
     int new_line = 0; // 
-    try{
         while(!std::cin.eof()) {
             //stores every instance of a new line
             new_line += 1;
@@ -18,7 +17,12 @@ int main() {
                 row += 1;
                 //makes tokens out of the line given
                 //then puts them in tokenList
+                try{
                 Lexer.tokenize(row, line);
+                } 
+                catch(...) {
+                    exit(1);
+                }
             }
         }
         if(new_line > row) {
@@ -30,9 +34,6 @@ int main() {
         for(Tokens token : Lexer.tokenList) {
             std::cout << std::setw(4) << token.line << std::setw(5) << token.col << std::setw(2+token.text.length()) << token.text << std::endl;
         }
-    }
-    catch(...){
-        exit(1);
-    }    
+    
     return 0;
 }
