@@ -1,3 +1,4 @@
+
 #include "./lib/parser.h"
 #include "./lib/lexer.h"
 // g++ -std=c++17 parse.cpp ./lib/lexer.cpp -Wall -Wextra -Werror
@@ -245,23 +246,27 @@ int main()
                   << " column " << token.col << ": " << token.text << std::endl;
         exit(2);
     };
-
     std::string line; 
     int row = 0; 
     lexer Lexer;
-    int new_line = 0; 
-    while(!std::cin.eof()) {
-        new_line += 1;
-        if(getline(std::cin, line)) { 
-            row += 1;
-            Lexer.tokenize(row, line);
+    int new_line = 0;
+    try{
+        while(!std::cin.eof()) {
+            new_line += 1;
+            if(getline(std::cin, line)) { 
+                row += 1;
+                Lexer.tokenize(row, line);
+            }
         }
-    }
-    if(new_line > row) {
-        Lexer.tokenList.push_back(Tokens(new_line, 1, "END"));
-    }
-    else {
-        Lexer.tokenList.push_back(Tokens(row, Lexer.tokenList.back().col, "END"));
+        if(new_line > row) {
+            Lexer.tokenList.push_back(Tokens(new_line, 1, "END"));
+        }
+        else {
+            Lexer.tokenList.push_back(Tokens(row, Lexer.tokenList.back().col, "END"));
+        }
+    } catch(const std::runtime_error& e){
+        std::cout << e.what() << std::endl;
+        exit(1);
     }
     // std::cout<<tokenList<<std::endl;
     int open = 0;
