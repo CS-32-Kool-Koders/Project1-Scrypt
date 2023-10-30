@@ -20,7 +20,7 @@ int main() {
                 try{
                 Lexer.tokenize(row, line);
                 } 
-                catch(...) {
+                catch(const std::runtime_error& e) {
                     exit(1);
                 }
             }
