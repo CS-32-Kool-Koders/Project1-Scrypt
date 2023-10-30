@@ -10,7 +10,8 @@ int main() {
     lexer Lexer;
     int new_line = 0; // 
 
-    try{while(!std::cin.eof()) {
+    try{
+        while(!std::cin.eof()) {
             //stores every instance of a new line
             new_line += 1;
             //goes through each line of input
@@ -28,6 +29,7 @@ int main() {
         }
         
     } catch(const std::runtime_error& e){
+        std::cout << e.what() << std::endl;
         exit(1);
     }
         if(new_line > row) {
