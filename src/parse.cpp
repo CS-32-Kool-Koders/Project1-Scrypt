@@ -250,18 +250,22 @@ int main()
     int row = 0; 
     lexer Lexer;
     int new_line = 0; 
-    while(!std::cin.eof()) {
-        new_line += 1;
-        if(getline(std::cin, line)) { 
-            row += 1;
-            Lexer.tokenize(row, line);
+    try{
+        while(!std::cin.eof()) {
+            new_line += 1;
+            if(getline(std::cin, line)) { 
+                row += 1;
+                Lexer.tokenize(row, line);
+            }
         }
-    }
-    if(new_line > row) {
-        Lexer.tokenList.push_back(Tokens(new_line, 1, "END"));
-    }
-    else {
-        Lexer.tokenList.push_back(Tokens(row, Lexer.tokenList.back().col, "END"));
+        if(new_line > row) {
+            Lexer.tokenList.push_back(Tokens(new_line, 1, "END"));
+        }
+        else {
+            Lexer.tokenList.push_back(Tokens(row, Lexer.tokenList.back().col, "END"));
+        }
+    } catch (...) {
+        exit(1);
     }
     // std::cout<<tokenList<<std::endl;
     int open = 0;

@@ -60,7 +60,8 @@ int lexer::tokenize(int row, std::string line) {
         else {
             //case - invalid character
             std::cout << "Syntax error on line " << row << " column " << i+1 << "." << std::endl;
-            exit(1);
+            // exit(1);
+            throw;
         }
     }
 
@@ -79,13 +80,15 @@ int lexer::checkIsDigit(std::string line, int row, int col) {
             if(line[col+1] == '.' && decimal > 0) {
                     //multiple decimal case
                     std::cout << "Syntax error on line " << row << " column " << col+2 << "." << std::endl;
-                    exit(1);
+                    // exit(1);
+                    throw;
             }
             else if(line[col+1] == '.') {
                 if(!isdigit(line[col+2])) {
                     //decimal at end of number case
                     std::cout << "Syntax error on line " << row << " column " << col+3 << "." << std::endl;
-                    exit(1);
+                    // exit(1);
+                    throw;
                 }
                 //number has a decimal
                 decimal++; // number of decimals in number
@@ -104,7 +107,8 @@ int lexer::checkIsDigit(std::string line, int row, int col) {
     else {
         //starting decimal case
         std::cout << "Syntax error on line " << row << " column " << col+1 << "." << std::endl;
-        exit(1); 
+        // exit(1); 
+        throw;
     }
     //col-offset+1 to reset the coords of column of the number
     tokenList.push_back(Tokens(row, col-offset+1, digit));
