@@ -30,7 +30,21 @@ void ExpressionNode::printInfix()
     }
     else
     {
-        strstrm << value;
+        if (!isVariable(value))
+        {
+            if (std::floor(std::stod(value)) == std::stod(value))
+            {
+                strstrm << std::floor(std::stod(value));
+            }
+            else
+            {
+                strstrm << std::stod(value);
+            }
+        }
+        else
+        {
+            strstrm << value;
+        }
     }
 }
 

@@ -24,7 +24,6 @@ int main()
             auto varSave = ExpressionParser::knowsVariables;
             auto varSave2 = ExpressionParser::variables;
             ExpressionNode *root = nullptr;
-            std::cout << ExpressionParser::line << std::endl;
             try
             {
                 lexer lexer;
