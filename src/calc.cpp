@@ -60,7 +60,14 @@ int main()
                     root->getVariablesNames();
                     root->printInfix();
                     // std::cout << "part 1" << std::endl;
-                    double result = root->computeResult();
+                    BooleanWrapper resultVar = root->computeResult();
+                    std::string result;
+                    if(resultVar.printType() == 'B') {
+                        result = resultVar.btos();
+                    }
+                    else if (resultVar.printType() == 'D'){
+                        result = resultVar.dtos();
+                    }
                     // std::cout << "part 2" << std::endl;
                     root->printResult();
                     // std::cout << "part 3" << std::endl;

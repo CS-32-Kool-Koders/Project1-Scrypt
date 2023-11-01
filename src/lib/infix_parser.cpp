@@ -1,10 +1,10 @@
 #include <iostream>
 #include <vector>
-#include <cmath>
 #include "infix_parser.h"
 #include "tokens.h"
 
 std::vector<std::string> ExpressionParser::knowsVariables;
+std::map<std::string, bool> ExpressionParser::boolVariables;
 std::map<std::string, double> ExpressionParser::variables;
 std::string ExpressionParser::line;
 
@@ -193,7 +193,11 @@ ExpressionNode *ExpressionParser::parseOperand()
 
 bool ExpressionNode::isVariable(std::string var)
 {
-    if (!isdigit(var[0]))
+    if (var == "true" || var == "false")
+    {
+        return false;
+    }
+    else if (!isdigit(var[0]))
     {
         for (char c : var)
         {
@@ -237,9 +241,9 @@ void ExpressionNode::getVariablesNames()
     right->getVariablesNames();
 }
 int column = 1;
-double ExpressionNode::computeResult()
+BooleanWrapper ExpressionNode::computeResult()
 {
-    if (value == "+" || value == "-" || value == "*" || value == "/" || value == "=" || value == "END")
+    if (value == "+" || value == "-" || value == "*" || value == "/" || value == "=" || value == "END" || value == "%" || value == "==" || value == ">" || value == ">=" || value == "<" || value == "<=" || value == "|" || value == "^" || value == "&" || value == "!=")
     {
         if (value == "=" && right != nullptr && right->value == "END")
         {
@@ -260,9 +264,9 @@ double ExpressionNode::computeResult()
             throw std::logic_error(throw_message);
         }
         // std::cout << "i was here" << std::endl;
-        double leftValue = left->computeResult();
+        BooleanWrapper leftValue = left->computeResult();
         column += 4;
-        double rightValue = right->computeResult();
+        BooleanWrapper rightValue = right->computeResult();
         // column++;
         if (value == "+")
         {
@@ -279,16 +283,50 @@ double ExpressionNode::computeResult()
         }
         else if (value == "/")
         {
-            if (rightValue == 0)
-            {
-                throw std::runtime_error("Runtime error: division by zero.");
-            }
             return leftValue / rightValue;
         }
         else if (value == "=")
         {
-            ExpressionParser::variables[left->value] = rightValue;
+            if (rightValue.printType() == 'B')
+            {
+                ExpressionParser::boolVariables[left->value] = rightValue.getBvalue();
+            }
+            else if (rightValue.printType() == 'D')
+            {
+                ExpressionParser::variables[left->value] = rightValue.getDvalue();
+            }
+
             return rightValue;
+        }
+        else if(value == "%") {
+            return rightValue % leftValue;
+        }
+        else if(value == "==") {
+            return rightValue == leftValue;
+        }
+        else if(value == ">") {
+            return rightValue > leftValue;
+        }
+        else if(value == ">=") {
+            return rightValue >= leftValue;
+        }
+        else if(value == "<") {
+            return rightValue < leftValue;
+        }
+        else if(value == "<=") {
+            return rightValue <= leftValue;
+        }
+        else if(value == "|" ) {
+            return rightValue || leftValue;
+        }
+        else if(value == "^" ) {
+            return rightValue ^ leftValue;
+        }
+        else if(value == "&") {
+            return rightValue && leftValue;
+        }
+        else if(value == "!=") {
+            return rightValue != leftValue;
         }
     }
     else if (isVariable(value))
@@ -324,7 +362,7 @@ double ExpressionNode::computeResult()
         }
         column += value.length() - 1;
         // std::cout << column << " is number " <<std::endl;
-        return number;
+        return BooleanWrapper(number);
     }
 
     throw std::logic_error("Invalid operator: " + value);
