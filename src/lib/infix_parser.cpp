@@ -397,14 +397,13 @@ void ExpressionNode::printInfix()
 void ExpressionNode::printResult()
 {
     BooleanWrapper resultVar = computeResult();
-    std::string result;
     if (resultVar.printType() == 'B')
     {
-        result = resultVar.btos();
+        std::cout << resultVar.btos() << std::endl;
     }
     else if (resultVar.printType() == 'D')
     {
-        result = resultVar.dtos();
+        std::string result = resultVar.dtos();
         if (std::stod(result) == std::floor(std::stod(result)))
         {
             std::cout << std::floor(std::stod(result)) << std::endl;
