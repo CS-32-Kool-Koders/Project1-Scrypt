@@ -35,7 +35,11 @@ void ExpressionNode::computeInfix()
     }
     else
     {
-        if (!isVariable(value))
+        if (std::find(supportedOperators.begin(), supportedOperators.end(), value) != supportedOperators.end())
+        {
+            strstrm << value;
+        }
+        else if (!isVariable(value))
         {
             if (BooleanWrapper::isBoolean(value))
             {
