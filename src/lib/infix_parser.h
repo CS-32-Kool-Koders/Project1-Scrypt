@@ -4,15 +4,16 @@
 #include <vector>
 #include <iomanip>
 #include <map>
+#include <functional>
 
 struct Tokens;
 
 struct BooleanWrapper
 {
 private:
-    char type;
-    bool bvalue;
-    double dvalue;
+    char type = '\0';
+    bool bvalue = false;
+    double dvalue = 0;
 
 public:
     BooleanWrapper(bool value)
@@ -60,15 +61,19 @@ public:
             return false;
     }
 
-    bool getBvalue() {
-        if(type == 'B') {
+    bool getBvalue()
+    {
+        if (type == 'B')
+        {
             return bvalue;
         }
         throw std::runtime_error("wrong lol");
     }
 
-    double getDvalue() {
-        if (type == 'D') {
+    double getDvalue()
+    {
+        if (type == 'D')
+        {
             return dvalue;
         }
         throw std::runtime_error("wrong lol");
@@ -89,7 +94,8 @@ public:
         {
             return std::to_string(this->dvalue);
         }
-        else {
+        else
+        {
             throw std::runtime_error("wrong lol");
         }
     }
@@ -152,7 +158,7 @@ public:
     }
     BooleanWrapper operator==(BooleanWrapper other)
     {
-        std::cout << "wow equal equal" <<std::endl;
+        std::cout << "wow equal equal" << std::endl;
         if (type == 'B' && other.type == 'B')
         {
             return BooleanWrapper(this->bvalue == other.bvalue);
@@ -410,6 +416,10 @@ public:
 private:
     std::vector<Tokens> tokens;
     std::size_t currentIndex;
+    // std::map<std::function<ExpressionNode *()>, std::string> operatorsFn = {
+    //     {std::bind(&ExpressionParser::parseMultiplyDivide, this), std::vector<std::string>{"+", "-"}},
+    //     {std::bind(&ExpressionParser::parseOperand, this), std::vector<std::string>{"*", "/"}},
+    // };
 
 public:
     ExpressionParser(std::vector<Tokens> tokens)
@@ -418,11 +428,14 @@ public:
         this->currentIndex = 0;
     }
 
-    ExpressionNode *parseExpression();
+    ExpressionNode *
+    parseExpression();
 
 private:
     ExpressionNode *parseAssignment();
     ExpressionNode *parseAddSubtract();
     ExpressionNode *parseMultiplyDivide();
+    ExpressionNode *parseComparison();
     ExpressionNode *parseOperand();
+    ExpressionNode *parseOperator(std::function<ExpressionNode *()> parseFunction, std::vector<std::string> operators);
 };

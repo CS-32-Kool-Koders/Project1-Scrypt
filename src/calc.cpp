@@ -56,16 +56,17 @@ int main()
 
                 if (root != nullptr)
                 {
-                    // std::cout << "root is not null" << std::endl;
                     root->getVariablesNames();
                     root->printInfix();
                     // std::cout << "part 1" << std::endl;
                     BooleanWrapper resultVar = root->computeResult();
                     std::string result;
-                    if(resultVar.printType() == 'B') {
+                    if (resultVar.printType() == 'B')
+                    {
                         result = resultVar.btos();
                     }
-                    else if (resultVar.printType() == 'D'){
+                    else if (resultVar.printType() == 'D')
+                    {
                         result = resultVar.dtos();
                     }
                     // std::cout << "part 2" << std::endl;

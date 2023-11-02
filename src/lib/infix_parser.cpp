@@ -2,6 +2,10 @@
 #include <vector>
 #include "infix_parser.h"
 #include "tokens.h"
+#include <algorithm>
+
+std::vector<std::string> supportedOperators = {
+    "+", "-", "*", "/", "=", "END", "%", "==", ">", ">=", "<", "<=", "|", "^", "&", "!="};
 
 std::vector<std::string> ExpressionParser::knowsVariables;
 std::map<std::string, bool> ExpressionParser::boolVariables;
@@ -10,6 +14,7 @@ std::string ExpressionParser::line;
 
 double result;
 int eqNb = 0;
+int column = 1;
 std::stringstream strstrm;
 void ExpressionNode::printInfix()
 {
@@ -123,10 +128,11 @@ ExpressionNode *ExpressionParser::parseAssignment()
     ExpressionNode *left = parseAddSubtract();
     if (currentIndex < tokens.size() && tokens[currentIndex].text == "=")
     {
-        ExpressionNode *node = new ExpressionNode(tokens[currentIndex].text);
         currentIndex++;
+        ExpressionNode *right = parseAssignment();
+        ExpressionNode *node = new ExpressionNode("=");
         node->left = left;
-        node->right = parseAssignment();
+        node->right = right;
         return node;
     }
     return left;
@@ -134,31 +140,28 @@ ExpressionNode *ExpressionParser::parseAssignment()
 
 ExpressionNode *ExpressionParser::parseAddSubtract()
 {
-    ExpressionNode *left = parseMultiplyDivide();
-    while (currentIndex < tokens.size() &&
-           (tokens[currentIndex].text == "+" || tokens[currentIndex].text == "-"))
-    {
-        std::string op = tokens[currentIndex].text;
-        currentIndex++;
-        ExpressionNode *right = parseMultiplyDivide();
-        ExpressionNode *node = new ExpressionNode(op);
-        node->left = left;
-        node->right = right;
-        left = node;
-    }
-    return left;
+    return parseOperator(std::bind(&ExpressionParser::parseMultiplyDivide, this), std::vector<std::string>{"+", "-"});
 }
 
 ExpressionNode *ExpressionParser::parseMultiplyDivide()
 {
-    ExpressionNode *left = parseOperand();
-    while (currentIndex < tokens.size() &&
-           (tokens[currentIndex].text == "*" || tokens[currentIndex].text == "/"))
+    return parseOperator(std::bind(&ExpressionParser::parseComparison, this), std::vector<std::string>{"*", "/", "%"});
+}
+
+ExpressionNode *ExpressionParser::parseComparison()
+{
+    return parseOperator(std::bind(&ExpressionParser::parseOperand, this), std::vector<std::string>{"==", ">", ">=", "<", "<=", "|", "^", "&", "!="});
+}
+
+ExpressionNode *ExpressionParser::parseOperator(std::function<ExpressionNode *()> parseFunction, std::vector<std::string> operators)
+{
+    ExpressionNode *left = parseFunction();
+    while (currentIndex < tokens.size() && std::find(operators.begin(), operators.end(), tokens[currentIndex].text) != operators.end())
     {
-        std::string op = tokens[currentIndex].text;
+        std::string operatorText = tokens[currentIndex].text;
         currentIndex++;
-        ExpressionNode *right = parseOperand();
-        ExpressionNode *node = new ExpressionNode(op);
+        ExpressionNode *right = parseFunction();
+        ExpressionNode *node = new ExpressionNode(operatorText);
         node->left = left;
         node->right = right;
         left = node;
@@ -240,10 +243,14 @@ void ExpressionNode::getVariablesNames()
 
     right->getVariablesNames();
 }
-int column = 1;
+
 BooleanWrapper ExpressionNode::computeResult()
 {
-    if (value == "+" || value == "-" || value == "*" || value == "/" || value == "=" || value == "END" || value == "%" || value == "==" || value == ">" || value == ">=" || value == "<" || value == "<=" || value == "|" || value == "^" || value == "&" || value == "!=")
+    // if (value == "+" || value == "-" || value == "*" || value == "/" || value == "=" ||
+    //     value == "END" || value == "%" || value == "==" || value == ">" || value == ">=" ||
+    //     value == "<" || value == "<=" || value == "|" || value == "^" || value == "&" || value == "!=")
+    // {
+    if (std::find(supportedOperators.begin(), supportedOperators.end(), value) != supportedOperators.end())
     {
         if (value == "=" && right != nullptr && right->value == "END")
         {
@@ -267,6 +274,7 @@ BooleanWrapper ExpressionNode::computeResult()
         BooleanWrapper leftValue = left->computeResult();
         column += 4;
         BooleanWrapper rightValue = right->computeResult();
+
         // column++;
         if (value == "+")
         {
@@ -298,34 +306,44 @@ BooleanWrapper ExpressionNode::computeResult()
 
             return rightValue;
         }
-        else if(value == "%") {
+        else if (value == "%")
+        {
             return rightValue % leftValue;
         }
-        else if(value == "==") {
+        else if (value == "==")
+        {
             return rightValue == leftValue;
         }
-        else if(value == ">") {
+        else if (value == ">")
+        {
             return rightValue > leftValue;
         }
-        else if(value == ">=") {
+        else if (value == ">=")
+        {
             return rightValue >= leftValue;
         }
-        else if(value == "<") {
+        else if (value == "<")
+        {
             return rightValue < leftValue;
         }
-        else if(value == "<=") {
+        else if (value == "<=")
+        {
             return rightValue <= leftValue;
         }
-        else if(value == "|" ) {
+        else if (value == "|")
+        {
             return rightValue || leftValue;
         }
-        else if(value == "^" ) {
+        else if (value == "^")
+        {
             return rightValue ^ leftValue;
         }
-        else if(value == "&") {
+        else if (value == "&")
+        {
             return rightValue && leftValue;
         }
-        else if(value == "!=") {
+        else if (value == "!=")
+        {
             return rightValue != leftValue;
         }
     }
