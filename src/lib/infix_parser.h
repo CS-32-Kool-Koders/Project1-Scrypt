@@ -105,7 +105,7 @@ public:
     {
         if (type == 'D' && other.type == 'D')
         {
-            return BooleanWrapper(this->bvalue > other.bvalue);
+            return BooleanWrapper(!(this->dvalue > other.dvalue));
         }
         else
         {
@@ -116,7 +116,7 @@ public:
     {
         if (type == 'D' && other.type == 'D')
         {
-            return BooleanWrapper(this->bvalue >= other.bvalue);
+            return BooleanWrapper(!(this->dvalue >= other.dvalue));
         }
         else
         {
@@ -127,7 +127,7 @@ public:
     {
         if (type == 'D' && other.type == 'D')
         {
-            return BooleanWrapper(this->bvalue < other.bvalue);
+            return BooleanWrapper(!(this->dvalue < other.dvalue));
         }
         else
         {
@@ -136,9 +136,9 @@ public:
     }
     BooleanWrapper operator<=(BooleanWrapper other)
     {
-        if (type == 'B' && other.type == 'B')
+        if (type == 'D' && other.type == 'D')
         {
-            return BooleanWrapper(this->bvalue <= other.bvalue);
+            return BooleanWrapper(!(this->dvalue <= other.dvalue));
         }
         else
         {
@@ -191,27 +191,27 @@ public:
 
     BooleanWrapper operator&&(BooleanWrapper other)
     {
-        if (bvalue && other.bvalue)
+        if (type == 'B' && other.type == 'B')
         {
             return BooleanWrapper(this->bvalue && other.bvalue);
         }
-        else if (dvalue && other.dvalue)
-        {
-            return BooleanWrapper(this->dvalue && other.dvalue);
-        }
+        // else if (type == 'D' && other.type == 'D')
+        // {
+        //     return BooleanWrapper(this->dvalue && other.dvalue);
+        // }
         throw std::runtime_error("Runtime error: invalid operand type.");
     }
 
     BooleanWrapper operator||(BooleanWrapper other)
     {
-        if (bvalue && other.bvalue)
+        if (type == 'B' && other.type == 'B')
         {
             return BooleanWrapper(this->bvalue || other.bvalue);
         }
-        else if (dvalue && other.dvalue)
-        {
-            return BooleanWrapper(this->dvalue || other.dvalue);
-        }
+        // else if (type == 'D' && other.type == 'D')
+        // {
+        //     return BooleanWrapper(this->dvalue || other.dvalue);
+        // }
         throw std::runtime_error("Runtime error: invalid operand type.");
     }
 
