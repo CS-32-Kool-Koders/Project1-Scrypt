@@ -399,6 +399,7 @@ public:
     BooleanWrapper computeResult();
     bool isVariable(std::string value);
     void getVariablesNames();
+    void computeInfix();
     void printInfix();
     void printTree();
     void printResult();

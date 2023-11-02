@@ -16,12 +16,12 @@ double result;
 int eqNb = 0;
 int column = 1;
 std::stringstream strstrm;
-void ExpressionNode::printInfix()
+void ExpressionNode::computeInfix()
 {
     if (left != nullptr && right != nullptr)
     {
         strstrm << "(";
-        left->printInfix();
+        left->computeInfix();
         if (std::find(supportedOperators.begin(), supportedOperators.end(), value) != supportedOperators.end())
         {
             strstrm << " " << value << " ";
@@ -30,7 +30,7 @@ void ExpressionNode::printInfix()
         {
             strstrm << value;
         }
-        right->printInfix();
+        right->computeInfix();
         strstrm << ")";
     }
     else
@@ -386,24 +386,33 @@ BooleanWrapper ExpressionNode::computeResult()
     throw std::logic_error("Invalid operator: " + value);
 }
 
-void ExpressionNode::printResult()
+void ExpressionNode::printInfix()
 {
-    // getVariablesNames();
     column = 1;
-    // double result = computeResult();
-    // knowsVariables.clear();
-    // if the number is an integer, print it without a decimal point
-    // if (result == std::floor(result))
-    // {
-    //     std::cout << std::floor(result);
-    // }
-    // else
-    // {
-    //     // print with only enough precision to show the value (no trailing zeros)
-    //     std::cout << result; // not sure if std::precision is needed for that case
-    // }
     std::cout << strstrm.str() << std::endl;
-    // std::cout << computeResult() << std::endl;
     strstrm.str("");
     strstrm.clear();
+}
+
+void ExpressionNode::printResult()
+{
+    BooleanWrapper resultVar = computeResult();
+    std::string result;
+    if (resultVar.printType() == 'B')
+    {
+        result = resultVar.btos();
+    }
+    else if (resultVar.printType() == 'D')
+    {
+        result = resultVar.dtos();
+        if (std::stod(result) == std::floor(std::stod(result)))
+        {
+            std::cout << std::floor(std::stod(result)) << std::endl;
+        }
+        else
+        {
+            // print with only enough precision to show the value (no trailing zeros)
+            std::cout << std::stod(result) << std::endl;
+        }
+    }
 }

@@ -57,22 +57,9 @@ int main()
                 if (root != nullptr)
                 {
                     root->getVariablesNames();
+                    root->computeInfix();
                     root->printInfix();
-                    // std::cout << "part 1" << std::endl;
-                    BooleanWrapper resultVar = root->computeResult();
-                    std::string result;
-                    if (resultVar.printType() == 'B')
-                    {
-                        result = resultVar.btos();
-                    }
-                    else if (resultVar.printType() == 'D')
-                    {
-                        result = resultVar.dtos();
-                    }
-                    // std::cout << "part 2" << std::endl;
                     root->printResult();
-                    // std::cout << "part 3" << std::endl;
-                    std::cout << result << std::endl;
                     delete root;
                 }
                 else
