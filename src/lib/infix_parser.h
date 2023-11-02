@@ -105,7 +105,7 @@ public:
     {
         if (type == 'D' && other.type == 'D')
         {
-            return BooleanWrapper((other.dvalue > this->dvalue));
+            return BooleanWrapper((this->dvalue > other.dvalue));
         }
         else
         {
@@ -116,7 +116,7 @@ public:
     {
         if (type == 'D' && other.type == 'D')
         {
-            return BooleanWrapper(other.dvalue >= this->dvalue);
+            return BooleanWrapper((this->dvalue >= other.dvalue));
         }
         else
         {
@@ -127,7 +127,7 @@ public:
     {
         if (type == 'D' && other.type == 'D')
         {
-            return BooleanWrapper(other.dvalue < this->dvalue);
+            return BooleanWrapper((this->dvalue < other.dvalue));
         }
         else
         {
@@ -138,7 +138,7 @@ public:
     {
         if (type == 'D' && other.type == 'D')
         {
-            return BooleanWrapper(other.dvalue <= this->dvalue);
+            return BooleanWrapper((this->dvalue <= other.dvalue));
         }
         else
         {

@@ -316,43 +316,43 @@ BooleanWrapper ExpressionNode::computeResult()
         }
         else if (value == "%")
         {
-            return rightValue % leftValue;
+            return leftValue % rightValue;
         }
         else if (value == "==")
         {
-            return rightValue == leftValue;
+            return leftValue == rightValue;
         }
         else if (value == ">")
         {
-            return rightValue > leftValue;
+            return leftValue > rightValue;
         }
         else if (value == ">=")
         {
-            return rightValue >= leftValue;
+            return leftValue >= rightValue;
         }
         else if (value == "<")
         {
-            return rightValue < leftValue;
+            return leftValue < rightValue;
         }
         else if (value == "<=")
         {
-            return rightValue <= leftValue;
+            return leftValue <= rightValue;
         }
         else if (value == "|")
         {
-            return rightValue || leftValue;
+            return leftValue || rightValue;
         }
         else if (value == "^")
         {
-            return rightValue ^ leftValue;
+            return leftValue ^ rightValue;
         }
         else if (value == "&")
         {
-            return rightValue && leftValue;
+            return leftValue && rightValue;
         }
         else if (value == "!=")
         {
-            return rightValue != leftValue;
+            return leftValue != rightValue;
         }
     }
     else if (isVariable(value))
