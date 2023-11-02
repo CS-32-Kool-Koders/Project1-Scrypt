@@ -22,7 +22,7 @@ void ExpressionNode::printInfix()
     {
         strstrm << "(";
         left->printInfix();
-        if (value == "+" || value == "-" || value == "*" || value == "/" || value == "=")
+        if (std::find(supportedOperators.begin(), supportedOperators.end(), value))
         {
             strstrm << " " << value << " ";
         }
