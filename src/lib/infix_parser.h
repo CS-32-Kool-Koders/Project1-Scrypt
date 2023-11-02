@@ -158,7 +158,7 @@ public:
     }
     BooleanWrapper operator==(BooleanWrapper other)
     {
-        std::cout << "wow equal equal" << std::endl;
+        // std::cout << "wow equal equal" << std::endl;
         if (type == 'B' && other.type == 'B')
         {
             return BooleanWrapper(this->bvalue == other.bvalue);
@@ -232,7 +232,7 @@ public:
         }
         else
         {
-            throw std::runtime_error("Runtime error: Invalid operand dype.");
+            throw std::runtime_error("Runtime error: Invalid operand type.");
         }
     }
 
@@ -244,7 +244,7 @@ public:
         }
         else
         {
-            throw std::runtime_error("Runtime error: Invalid operand dype.");
+            throw std::runtime_error("Runtime error: Invalid operand type.");
         }
     }
 
@@ -256,7 +256,7 @@ public:
         }
         else
         {
-            throw std::runtime_error("Runtime error: Invalid operand dype.");
+            throw std::runtime_error("Runtime error: Invalid operand type.");
         }
     }
 
@@ -275,7 +275,7 @@ public:
         }
         else
         {
-            throw std::runtime_error("Runtime error: Invalid operand dype.");
+            throw std::runtime_error("Runtime error: Invalid operand type.");
         }
     }
 
@@ -287,7 +287,7 @@ public:
         }
         else
         {
-            throw std::runtime_error("Runtime error: Invalid operand dype.");
+            throw std::runtime_error("Runtime error: Invalid operand type.");
         }
     }
 
@@ -299,7 +299,7 @@ public:
     //     }
     //     else
     //     {
-    //         throw std::runtime_error("Runtime error: Invalid operand dype.");
+    //         throw std::runtime_error("Runtime error: Invalid operand type.");
     //     }
     // }
 
@@ -347,7 +347,7 @@ public:
         }
         else
         {
-            throw std::runtime_error("Runtime error: Invalid operand dype.");
+            throw std::runtime_error("Runtime error: Invalid operand type.");
         }
     }
 
@@ -365,7 +365,7 @@ public:
         }
         else
         {
-            throw std::runtime_error("Runtime error: Invalid operand dype.");
+            throw std::runtime_error("Runtime error: Invalid operand type.");
         }
     }
 };
