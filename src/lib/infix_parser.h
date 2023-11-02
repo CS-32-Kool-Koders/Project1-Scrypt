@@ -105,7 +105,7 @@ public:
     {
         if (type == 'D' && other.type == 'D')
         {
-            return BooleanWrapper(!(this->dvalue > other.dvalue));
+            return BooleanWrapper((other.dvalue > this->dvalue));
         }
         else
         {
@@ -116,7 +116,7 @@ public:
     {
         if (type == 'D' && other.type == 'D')
         {
-            return BooleanWrapper(!(this->dvalue >= other.dvalue));
+            return BooleanWrapper(other.dvalue >= this->dvalue);
         }
         else
         {
@@ -127,7 +127,7 @@ public:
     {
         if (type == 'D' && other.type == 'D')
         {
-            return BooleanWrapper(!(this->dvalue < other.dvalue));
+            return BooleanWrapper(other.dvalue < this->dvalue);
         }
         else
         {
@@ -138,7 +138,7 @@ public:
     {
         if (type == 'D' && other.type == 'D')
         {
-            return BooleanWrapper(!(this->dvalue <= other.dvalue));
+            return BooleanWrapper(other.dvalue <= this->dvalue);
         }
         else
         {
@@ -158,7 +158,6 @@ public:
     }
     BooleanWrapper operator==(BooleanWrapper other)
     {
-        // std::cout << "wow equal equal" << std::endl;
         if (type == 'B' && other.type == 'B')
         {
             return BooleanWrapper(this->bvalue == other.bvalue);
