@@ -37,7 +37,11 @@ void ExpressionNode::computeInfix()
     {
         if (!isVariable(value))
         {
-            if (std::floor(std::stod(value)) == std::stod(value))
+            if (BooleanWrapper::isBoolean(value))
+            {
+                strstrm << value;
+            }
+            else if (std::floor(std::stod(value)) == std::stod(value))
             {
                 strstrm << std::floor(std::stod(value));
             }
@@ -362,25 +366,33 @@ BooleanWrapper ExpressionNode::computeResult()
     else
     {
         // Assuming value is a number (possibly with commas)
-        std::stringstream ss(value);
-        double number;
-        ss >> std::setprecision(15) >> number;
-
-        if (ss.fail())
+        if (!BooleanWrapper::isBoolean(value))
         {
-            // if((value[0] >= 'a' && value[0] <= 'z') || (value[0] >= 'A' && value[0] <= 'Z') || value[0] == '_') {
-            //     for(char c : value) {
-            //         if(!(c >= 'a' && c <= 'z') && !(c >= 'A' && c <= 'Z') && c != '_' && !isdigit(c)) {
-            //                 throw("Invalid operand: " + value);
-            //         }
+            std::stringstream ss(value);
+            double number;
+            ss >> std::setprecision(15) >> number;
 
-            //     }
-            //}
-            throw std::logic_error("Invalid number: " + value);
+            if (ss.fail())
+            {
+                // if((value[0] >= 'a' && value[0] <= 'z') || (value[0] >= 'A' && value[0] <= 'Z') || value[0] == '_') {
+                //     for(char c : value) {
+                //         if(!(c >= 'a' && c <= 'z') && !(c >= 'A' && c <= 'Z') && c != '_' && !isdigit(c)) {
+                //                 throw("Invalid operand: " + value);
+                //         }
+
+                //     }
+                //}
+                throw std::logic_error("Invalid number: " + value);
+            }
+            column += value.length() - 1;
+            // std::cout << column << " is number " <<std::endl;
+            return BooleanWrapper(number);
         }
-        column += value.length() - 1;
-        // std::cout << column << " is number " <<std::endl;
-        return BooleanWrapper(number);
+        else
+        {
+            column += value.length() - 1;
+            return BooleanWrapper(value);
+        }
     }
 
     throw std::logic_error("Invalid operator: " + value);
