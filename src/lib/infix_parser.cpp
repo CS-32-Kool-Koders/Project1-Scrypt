@@ -121,7 +121,7 @@ void ExpressionNode::checkParentheses(std::string tokenString)
 
 void ExpressionNode::printTree()
 {
-    std::cout << strstrm.str() << std::endl;
+    std::cout << strstrm.str();
     strstrm.str("");
     strstrm.clear();
 }

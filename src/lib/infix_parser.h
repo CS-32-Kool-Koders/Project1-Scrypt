@@ -231,7 +231,7 @@ public:
         }
         else
         {
-            throw std::runtime_error("Runtime error: Invalid operand type.");
+            throw std::runtime_error("Runtime error: invalid operand type.");
         }
     }
 
@@ -243,7 +243,7 @@ public:
         }
         else
         {
-            throw std::runtime_error("Runtime error: Invalid operand type.");
+            throw std::runtime_error("Runtime error: invalid operand type.");
         }
     }
 
@@ -255,7 +255,7 @@ public:
         }
         else
         {
-            throw std::runtime_error("Runtime error: Invalid operand type.");
+            throw std::runtime_error("Runtime error: invalid operand type.");
         }
     }
 
@@ -274,7 +274,7 @@ public:
         }
         else
         {
-            throw std::runtime_error("Runtime error: Invalid operand type.");
+            throw std::runtime_error("Runtime error: invalid operand type.");
         }
     }
 
@@ -286,7 +286,7 @@ public:
         }
         else
         {
-            throw std::runtime_error("Runtime error: Invalid operand type.");
+            throw std::runtime_error("Runtime error: invalid operand type.");
         }
     }
 
@@ -346,7 +346,7 @@ public:
         }
         else
         {
-            throw std::runtime_error("Runtime error: Invalid operand type.");
+            throw std::runtime_error("Runtime error: invalid operand type.");
         }
     }
 
@@ -364,7 +364,7 @@ public:
         }
         else
         {
-            throw std::runtime_error("Runtime error: Invalid operand type.");
+            throw std::runtime_error("Runtime error: invalid operand type.");
         }
     }
 };
