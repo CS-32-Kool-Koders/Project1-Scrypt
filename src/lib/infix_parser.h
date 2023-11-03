@@ -11,9 +11,21 @@ struct Tokens;
 struct BooleanWrapper
 {
 private:
+    bool isString(std::string value)
+    {
+        for (char c : value)
+        {
+            if (!isalpha(c))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
     char type = '\0';
     bool bvalue = false;
     double dvalue = 0;
+    std::string svalue = "\0";
 
 public:
     BooleanWrapper(bool value)
@@ -40,13 +52,18 @@ public:
             this->type = 'B';
             this->bvalue = false;
         }
+        else if (isString(value))
+        {
+            this->type = 'S';
+            this->svalue = value;
+        }
         else if (std::stod(value))
         {
             this->type = 'D';
             this->dvalue = std::stod(value);
         }
-        else
-            throw std::logic_error("Invalid boolean value");
+        // else
+        //     throw std::logic_error("Invalid boolean value");
     }
 
     char printType()
@@ -59,6 +76,15 @@ public:
             return true;
         else
             return false;
+    }
+
+    std::string getSvalue()
+    {
+        if (type == 'S')
+        {
+            return svalue;
+        }
+        throw std::runtime_error("wrong lol");
     }
 
     bool getBvalue()
@@ -409,8 +435,8 @@ class ExpressionParser
 {
 public:
     static std::vector<std::string> knowsVariables;
-    static std::map<std::string, bool> boolVariables;
-    static std::map<std::string, double> variables;
+    // static std::map<std::string, bool> boolVariables;
+    static std::map<std::string, BooleanWrapper> variables;
     static std::string line;
 
 private:

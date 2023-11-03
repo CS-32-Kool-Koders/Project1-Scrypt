@@ -8,8 +8,8 @@ std::vector<std::string> supportedOperators = {
     "+", "-", "*", "/", "=", "END", "%", "==", ">", ">=", "<", "<=", "|", "^", "&", "!="};
 
 std::vector<std::string> ExpressionParser::knowsVariables;
-std::map<std::string, bool> ExpressionParser::boolVariables;
-std::map<std::string, double> ExpressionParser::variables;
+// std::map<std::string, bool> ExpressionParser::boolVariables;
+std::map<std::string, BooleanWrapper> ExpressionParser::variables;
 std::string ExpressionParser::line;
 
 double result;
@@ -303,15 +303,7 @@ BooleanWrapper ExpressionNode::computeResult()
         }
         else if (value == "=")
         {
-            if (rightValue.printType() == 'B')
-            {
-                ExpressionParser::boolVariables[left->value] = rightValue.getBvalue();
-            }
-            else if (rightValue.printType() == 'D')
-            {
-                ExpressionParser::variables[left->value] = rightValue.getDvalue();
-            }
-
+            ExpressionParser::variables.insert({leftValue.getSvalue(), rightValue});
             return rightValue;
         }
         else if (value == "%")
@@ -361,8 +353,11 @@ BooleanWrapper ExpressionNode::computeResult()
         {
             if (var == value)
             {
+                // std::cout << "baldsfsdf";
+
                 column += value.length() - 1;
-                return ExpressionParser::variables[value];
+                return BooleanWrapper(value);
+                // ExpressionParser::variables.at(value);
             }
         }
         throw std::runtime_error("Runtime error: unknown identifier " + value);
@@ -375,7 +370,6 @@ BooleanWrapper ExpressionNode::computeResult()
             std::stringstream ss(value);
             double number;
             ss >> std::setprecision(15) >> number;
-
             if (ss.fail())
             {
                 // if((value[0] >= 'a' && value[0] <= 'z') || (value[0] >= 'A' && value[0] <= 'Z') || value[0] == '_') {
@@ -415,10 +409,11 @@ void ExpressionNode::printResult()
     BooleanWrapper resultVar = computeResult();
     if (resultVar.printType() == 'B')
     {
-        std::cout << resultVar.btos() << std::endl;
+        std::cout << resultVar.getBvalue() << std::endl;
     }
     else if (resultVar.printType() == 'D')
     {
+
         std::string result = resultVar.dtos();
         if (std::stod(result) == std::floor(std::stod(result)))
         {
@@ -429,5 +424,15 @@ void ExpressionNode::printResult()
             // print with only enough precision to show the value (no trailing zeros)
             std::cout << std::stod(result) << std::endl;
         }
+        //  double result = resultVar.getDvalue();
+        // if (result == std::floor(result))
+        // {
+        //     std::cout << std::floor(result) << std::endl;
+        // }
+        // else
+        // {
+        //     // print with only enough precision to show the value (no trailing zeros)
+        //     std::cout << result << std::endl;
+        // }
     }
 }
