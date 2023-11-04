@@ -54,6 +54,10 @@ void ExpressionNode::computeInfix()
             {
                 strstrm << value;
             }
+            else if (value == "print" || value == "if" || value == "while" || value == "else")
+            {
+                strstrm << value;
+            }
             else if (std::floor(std::stod(value)) == std::stod(value))
             {
                 strstrm << std::floor(std::stod(value));
