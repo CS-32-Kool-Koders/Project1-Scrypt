@@ -248,7 +248,7 @@ ExpressionNode *ExpressionParser::parseOperand()
 
 bool ExpressionNode::isVariable(std::string var)
 {
-    if (var == "true" || var == "false")
+    if (var == "true" || var == "false" || value == "print" || value == "if" || value == "while" || value == "else")
     {
         return false;
     }
@@ -412,6 +412,14 @@ BooleanWrapper ExpressionNode::computeResult()
 
         // a non initialized variable is false
         return BooleanWrapper(false);
+    }
+    else if (!isVariable(value))
+    {
+        strstrm.str("");
+        strstrm.clear();
+        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(column) + ": " + value;
+        column = 1;
+        throw std::logic_error(throw_message);
     }
     else
     {
