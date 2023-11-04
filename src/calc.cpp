@@ -14,7 +14,7 @@
 #ifdef MINI_TEST
 const std::map<std::string, std::vector<std::string>> tests =
     {
-        {"Arithmetic",
+        /*{"Arithmetic",
          {"1812",
           "x = y = 400.5 + 20 / 8 * 3 * (12 - 13.000)",
           "z = 4 + (x = 7)", "12 + 17 - 23 + 88 - y / 4 - 13 + 7",
@@ -38,8 +38,26 @@ const std::map<std::string, std::vector<std::string>> tests =
           "f & t",
           "t & f ^ f | t | t & f | f ^ t",
           "t | (f ^ f & t) ^ t | f | f | ((f | t) & t)",
-          "f"}},
-};
+          "f"}},*/
+        {"Assorted Operations",
+         {"2 + 2 == 4",
+          "true != true",
+          "1 < 2 & 3 <= 4 != 5 + 6 > 7 ^ 8 >= 9",
+          "true & false ^ false | true ^ false",
+          "17 % 4.25", "x = (3 < 7) | false",
+          "14 % 5 == 4 == x"}},
+        {"Assorted Errors",
+         {"(((", "+1", "24 /", ")",
+          "5000 + 10.25 / (1 + 2 - 3)",
+          "10 + 11 + xii + 13", "x = y =",
+          "88 = mph", "(c / d", "a * b)",
+          "(34 +)"}},
+        {"No Update on Error",
+         {"x = 10",
+          "y = 57",
+          "z = 16",
+          "(x = 3) + (y = 5) + w + (z = 145)",
+          "x + y + z"}}};
 #endif
 
 void checkTokenString(const std::string &tokenString);
