@@ -26,16 +26,6 @@ int eqNb = 0;
 int column = 1;
 std::stringstream strstrm;
 
-// New version of ExpressionNode::computeInfix that support comparison operators
-// Ex:
-//  Input : 2 + 2 != 5
-//  Output: ((2 + 2) != 5)
-// --
-//  Input : 1 <= 2 != 2 <= 1
-//  Output: ((1 <= 2) != (2 <= 1))
-
-// so here is the new version that support comparison operators by using the comparator vector
-// and the supportedOpAndCmpWithEnd vector
 void ExpressionNode::computeInfix()
 {
     if (left != nullptr && right != nullptr)
