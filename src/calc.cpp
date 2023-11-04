@@ -99,7 +99,7 @@ int main()
                     }
                 }
                 ExpressionParser::line += "END";
-                std::cout << "line str: " << ExpressionParser::line << std::endl;
+                // std::cout << "line str: " << ExpressionParser::line << std::endl;
 
                 ExpressionParser parser(lexer.tokenList);
                 root = parser.parseExpression();
