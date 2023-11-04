@@ -419,6 +419,15 @@ BooleanWrapper ExpressionNode::computeResult()
     }
     else if (!BooleanWrapper::isBoolean(value))
     {
+        if (value == "print" || value == "if" || value == "while" || value == "else")
+        {
+            strstrm.str("");
+            strstrm.clear();
+            std::string throw_message = "Unexpected token at line 1 column " + std::to_string(column) + ": " + value;
+            column = 1;
+            throw std::logic_error(throw_message);
+        }
+
         std::stringstream ss(value);
         double number;
         ss >> std::setprecision(15) >> number;
@@ -439,21 +448,10 @@ BooleanWrapper ExpressionNode::computeResult()
         // std::cout << column << " is number " <<std::endl;
         return BooleanWrapper(number);
     }
-    else if (BooleanWrapper::isBoolean(value))
+    else
     {
         column += value.length() - 1;
         return BooleanWrapper(value);
-    }
-    else if (!isVariable(value))
-    {
-        if (value != "true" && value != "false")
-        {
-            strstrm.str("");
-            strstrm.clear();
-            std::string throw_message = "Unexpected token at line 1 column " + std::to_string(column) + ": " + value;
-            column = 1;
-            throw std::logic_error(throw_message);
-        }
     }
 
     throw std::logic_error("Invalid operator: " + value);
