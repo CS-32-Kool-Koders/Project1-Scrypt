@@ -17,8 +17,7 @@ std::vector<std::string> supportedOpAndCmpWithoutEnd = {
     "+", "-", "*", "/", "=", "%", "==", ">", ">=", "<", "<=", "|", "^", "&", "!="};
 
 std::vector<std::string> ExpressionParser::knowsVariables;
-std::map<std::string, bool> ExpressionParser::boolVariables;
-std::map<std::string, double> ExpressionParser::variables;
+std::map<std::string, BooleanWrapper> ExpressionParser::variables;
 std::string ExpressionParser::line;
 
 double result;
@@ -342,15 +341,7 @@ BooleanWrapper ExpressionNode::computeResult()
         }
         else if (value == "=")
         {
-            if (rightValue.printType() == 'B')
-            {
-                ExpressionParser::boolVariables[left->value] = rightValue.getBvalue();
-            }
-            else if (rightValue.printType() == 'D')
-            {
-                ExpressionParser::variables[left->value] = rightValue.getDvalue();
-            }
-
+            ExpressionParser::variables[left->value] = rightValue;
             return rightValue;
         }
         else if (value == "%")
@@ -404,7 +395,11 @@ BooleanWrapper ExpressionNode::computeResult()
                 return ExpressionParser::variables[value];
             }
         }
-        throw std::runtime_error("Runtime error: unknown identifier " + value);
+
+        // throw std::runtime_error("Runtime error: unknown identifier " + value);
+
+        // a non initialized variable is false
+        return BooleanWrapper(false);
     }
     else
     {

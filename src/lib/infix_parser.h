@@ -16,6 +16,12 @@ private:
     double dvalue = 0;
 
 public:
+    BooleanWrapper()
+    {
+        this->type = 'B';
+        this->bvalue = false;
+    }
+
     BooleanWrapper(bool value)
     {
         this->type = 'B';
@@ -53,6 +59,7 @@ public:
     {
         return type;
     }
+
     static bool isBoolean(std::string value)
     {
         if (value == "true" || value == "false")
@@ -101,6 +108,21 @@ public:
     }
 
     // operator overloading
+    // assignment auto type conversion
+    BooleanWrapper operator=(bool value)
+    {
+        this->type = 'B';
+        this->bvalue = value;
+        return *this;
+    }
+
+    BooleanWrapper operator=(double value)
+    {
+        this->type = 'D';
+        this->dvalue = value;
+        return *this;
+    }
+
     BooleanWrapper operator>(BooleanWrapper other)
     {
         if (type == 'D' && other.type == 'D')
@@ -112,6 +134,7 @@ public:
             throw std::runtime_error("Runtime error: invalid operand type.");
         }
     }
+
     BooleanWrapper operator>=(BooleanWrapper other)
     {
         if (type == 'D' && other.type == 'D')
@@ -123,6 +146,7 @@ public:
             throw std::runtime_error("Runtime error: invalid operand type.");
         }
     }
+
     BooleanWrapper operator<(BooleanWrapper other)
     {
         if (type == 'D' && other.type == 'D')
@@ -134,6 +158,7 @@ public:
             throw std::runtime_error("Runtime error: invalid operand type.");
         }
     }
+
     BooleanWrapper operator<=(BooleanWrapper other)
     {
         if (type == 'D' && other.type == 'D')
@@ -145,6 +170,7 @@ public:
             throw std::runtime_error("Runtime error: invalid operand type.");
         }
     }
+
     BooleanWrapper operator^(BooleanWrapper other)
     {
         if (type == 'B' && other.type == 'B')
@@ -156,6 +182,7 @@ public:
             throw std::runtime_error("Runtime error: invalid operand type.a");
         }
     }
+
     BooleanWrapper operator==(BooleanWrapper other)
     {
         if (type == 'B' && other.type == 'B')
@@ -409,8 +436,7 @@ class ExpressionParser
 {
 public:
     static std::vector<std::string> knowsVariables;
-    static std::map<std::string, bool> boolVariables;
-    static std::map<std::string, double> variables;
+    static std::map<std::string, BooleanWrapper> variables;
     static std::string line;
 
 private:
