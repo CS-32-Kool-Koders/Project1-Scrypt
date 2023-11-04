@@ -248,7 +248,7 @@ ExpressionNode *ExpressionParser::parseOperand()
 
 bool ExpressionNode::isVariable(std::string var)
 {
-    if (var == "true" || var == "false" || value == "print" || value == "if" || value == "while" || value == "else")
+    if (var == "true" || var == "false" || var == "print" || var == "if" || var == "while" || var == "else")
     {
         return false;
     }
@@ -435,18 +435,21 @@ BooleanWrapper ExpressionNode::computeResult()
         // std::cout << column << " is number " <<std::endl;
         return BooleanWrapper(number);
     }
-    else if (!isVariable(value))
-    {
-        strstrm.str("");
-        strstrm.clear();
-        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(column) + ": " + value;
-        column = 1;
-        throw std::logic_error(throw_message);
-    }
-    else
+    else if (BooleanWrapper::isBoolean(value))
     {
         column += value.length() - 1;
         return BooleanWrapper(value);
+    }
+    else if (!isVariable(value))
+    {
+        if (value != "true" && value != "false")
+        {
+            strstrm.str("");
+            strstrm.clear();
+            std::string throw_message = "Unexpected token at line 1 column " + std::to_string(column) + ": " + value;
+            column = 1;
+            throw std::logic_error(throw_message);
+        }
     }
 
     throw std::logic_error("Invalid operator: " + value);
