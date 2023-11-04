@@ -153,7 +153,7 @@ public:
         }
         else
         {
-            throw std::runtime_error("Runtime error: invalid operand type.");
+            throw std::runtime_error("Runtime error: invalid operand type.a");
         }
     }
     BooleanWrapper operator==(BooleanWrapper other)
@@ -184,7 +184,7 @@ public:
         }
         else
         {
-            throw std::runtime_error("Runtime error: invalid operand type.");
+            throw std::runtime_error("Runtime error: invalid operand type.b");
         }
     }
 
@@ -231,7 +231,7 @@ public:
         }
         else
         {
-            throw std::runtime_error("Runtime error: invalid operand type.");
+            throw std::runtime_error("Runtime error: invalid operand type.w");
         }
     }
 
@@ -432,10 +432,25 @@ public:
     parseExpression();
 
 private:
-    ExpressionNode *parseAssignment();
-    ExpressionNode *parseAddSubtract();
-    ExpressionNode *parseMultiplyDivide();
-    ExpressionNode *parseComparison();
+    /*
+        Parentheses (( and )).
+        Multiplication, division, and modulo (*, /, and %).
+        Addition and subtraction (+ and -).
+        Ordered comparison (<, <=, >, and >=).
+        Equality and inequality (== and !=).
+        Logical and (&).
+        Logical exclusive or (^).
+        Logical inclusive or (|).
+        Assignment (=).
+    */
+    ExpressionNode *parseAssignment();          // =
+    ExpressionNode *parseLogicalOr();           // |
+    ExpressionNode *parseLogicalXor();          // ^
+    ExpressionNode *parseLogicalAnd();          // &
+    ExpressionNode *parseEquality();            // ==, !=
+    ExpressionNode *parseComparison();          // <, <=, >, >=
+    ExpressionNode *parseAdditionSubtraction(); // +, -
+    ExpressionNode *parseMultiplyDivide();      // *, /, %
     ExpressionNode *parseOperand();
     ExpressionNode *parseOperator(std::function<ExpressionNode *()> parseFunction, std::vector<std::string> operators);
 };

@@ -5,7 +5,16 @@
 #include <algorithm>
 
 std::vector<std::string> supportedOperators = {
+    "+", "-", "*", "/", "=", "END", "%"};
+
+std::vector<std::string> supportedComparators = {
+    "==", ">", ">=", "<", "<=", "|", "^", "&", "!="};
+
+std::vector<std::string> supportedOpAndCmpWithEnd = {
     "+", "-", "*", "/", "=", "END", "%", "==", ">", ">=", "<", "<=", "|", "^", "&", "!="};
+
+std::vector<std::string> supportedOpAndCmpWithoutEnd = {
+    "+", "-", "*", "/", "%", "==", ">", ">=", "<", "<=", "|", "^", "&", "!="};
 
 std::vector<std::string> ExpressionParser::knowsVariables;
 std::map<std::string, bool> ExpressionParser::boolVariables;
@@ -16,13 +25,24 @@ double result;
 int eqNb = 0;
 int column = 1;
 std::stringstream strstrm;
+
+// New version of ExpressionNode::computeInfix that support comparison operators
+// Ex:
+//  Input : 2 + 2 != 5
+//  Output: ((2 + 2) != 5)
+// --
+//  Input : 1 <= 2 != 2 <= 1
+//  Output: ((1 <= 2) != (2 <= 1))
+
+// so here is the new version that support comparison operators by using the comparator vector
+// and the supportedOpAndCmpWithEnd vector
 void ExpressionNode::computeInfix()
 {
     if (left != nullptr && right != nullptr)
     {
         strstrm << "(";
         left->computeInfix();
-        if (std::find(supportedOperators.begin(), supportedOperators.end(), value) != supportedOperators.end())
+        if (std::find(supportedOpAndCmpWithoutEnd.begin(), supportedOpAndCmpWithoutEnd.end(), value) != supportedOpAndCmpWithoutEnd.end())
         {
             strstrm << " " << value << " ";
         }
@@ -35,7 +55,7 @@ void ExpressionNode::computeInfix()
     }
     else
     {
-        if (std::find(supportedOperators.begin(), supportedOperators.end(), value) != supportedOperators.end())
+        if (std::find(supportedOpAndCmpWithoutEnd.begin(), supportedOpAndCmpWithoutEnd.end(), value) != supportedOpAndCmpWithoutEnd.end())
         {
             strstrm << value;
         }
@@ -131,9 +151,18 @@ ExpressionNode *ExpressionParser::parseExpression()
     return parseAssignment();
 }
 
+// ExpressionNode *parseAssignment(); // =
+// ExpressionNode *parseLogicalOr(); // |
+// ExpressionNode *parseLogicalXor(); // ^
+// ExpressionNode *parseLogicalAnd(); // &
+// ExpressionNode *parseEquality(); // ==, !=
+// ExpressionNode *parseComparison(); // <, <=, >, >=
+// ExpressionNode *parseAdditionSubtraction(); // +, -
+// ExpressionNode *parseMultiplyDivide(); // *, /, %
+
 ExpressionNode *ExpressionParser::parseAssignment()
 {
-    ExpressionNode *left = parseAddSubtract();
+    ExpressionNode *left = parseLogicalOr();
     if (currentIndex < tokens.size() && tokens[currentIndex].text == "=")
     {
         currentIndex++;
@@ -146,19 +175,39 @@ ExpressionNode *ExpressionParser::parseAssignment()
     return left;
 }
 
-ExpressionNode *ExpressionParser::parseAddSubtract()
+ExpressionNode *ExpressionParser::parseLogicalOr()
 {
-    return parseOperator(std::bind(&ExpressionParser::parseMultiplyDivide, this), std::vector<std::string>{"+", "-"});
+    return parseOperator(std::bind(&ExpressionParser::parseLogicalXor, this), {"|"});
 }
 
-ExpressionNode *ExpressionParser::parseMultiplyDivide()
+ExpressionNode *ExpressionParser::parseLogicalXor()
 {
-    return parseOperator(std::bind(&ExpressionParser::parseComparison, this), std::vector<std::string>{"*", "/", "%"});
+    return parseOperator(std::bind(&ExpressionParser::parseLogicalAnd, this), {"^"});
+}
+
+ExpressionNode *ExpressionParser::parseLogicalAnd()
+{
+    return parseOperator(std::bind(&ExpressionParser::parseEquality, this), {"&"});
+}
+
+ExpressionNode *ExpressionParser::parseEquality()
+{
+    return parseOperator(std::bind(&ExpressionParser::parseComparison, this), {"==", "!="});
 }
 
 ExpressionNode *ExpressionParser::parseComparison()
 {
-    return parseOperator(std::bind(&ExpressionParser::parseOperand, this), std::vector<std::string>{"==", ">", ">=", "<", "<=", "|", "^", "&", "!="});
+    return parseOperator(std::bind(&ExpressionParser::parseAdditionSubtraction, this), {"<", "<=", ">", ">="});
+}
+
+ExpressionNode *ExpressionParser::parseAdditionSubtraction()
+{
+    return parseOperator(std::bind(&ExpressionParser::parseMultiplyDivide, this), {"+", "-"});
+}
+
+ExpressionNode *ExpressionParser::parseMultiplyDivide()
+{
+    return parseOperator(std::bind(&ExpressionParser::parseOperand, this), {"*", "/", "%"});
 }
 
 ExpressionNode *ExpressionParser::parseOperator(std::function<ExpressionNode *()> parseFunction, std::vector<std::string> operators)
@@ -258,7 +307,7 @@ BooleanWrapper ExpressionNode::computeResult()
     //     value == "END" || value == "%" || value == "==" || value == ">" || value == ">=" ||
     //     value == "<" || value == "<=" || value == "|" || value == "^" || value == "&" || value == "!=")
     // {
-    if (std::find(supportedOperators.begin(), supportedOperators.end(), value) != supportedOperators.end())
+    if (std::find(supportedOpAndCmpWithEnd.begin(), supportedOpAndCmpWithEnd.end(), value) != supportedOpAndCmpWithEnd.end())
     {
         if (value == "=" && right != nullptr && right->value == "END")
         {
