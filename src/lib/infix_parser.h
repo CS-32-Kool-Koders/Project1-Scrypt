@@ -179,7 +179,7 @@ public:
         }
         else
         {
-            throw std::runtime_error("Runtime error: invalid operand type.a");
+            throw std::runtime_error("Runtime error: invalid operand type.");
         }
     }
 
@@ -211,7 +211,7 @@ public:
         }
         else
         {
-            throw std::runtime_error("Runtime error: invalid operand type.b");
+            throw std::runtime_error("Runtime error: invalid operand type.");
         }
     }
 
@@ -258,7 +258,7 @@ public:
         }
         else
         {
-            throw std::runtime_error("Runtime error: invalid operand type.w");
+            throw std::runtime_error("Runtime error: invalid operand type.");
         }
     }
 
