@@ -14,7 +14,7 @@ std::vector<std::string> supportedOpAndCmpWithEnd = {
     "+", "-", "*", "/", "=", "END", "%", "==", ">", ">=", "<", "<=", "|", "^", "&", "!="};
 
 std::vector<std::string> supportedOpAndCmpWithoutEnd = {
-    "+", "-", "*", "/", "%", "==", ">", ">=", "<", "<=", "|", "^", "&", "!="};
+    "+", "-", "*", "/", "=", "%", "==", ">", ">=", "<", "<=", "|", "^", "&", "!="};
 
 std::vector<std::string> ExpressionParser::knowsVariables;
 std::map<std::string, bool> ExpressionParser::boolVariables;
