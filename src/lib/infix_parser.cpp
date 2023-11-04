@@ -444,9 +444,9 @@ void ExpressionNode::printInfix()
     strstrm.clear();
 }
 
-void ExpressionNode::printResult()
+void ExpressionNode::printResult(BooleanWrapper resultVar)
 {
-    BooleanWrapper resultVar = computeResult();
+    // BooleanWrapper resultVar = computeResult();
     if (resultVar.printType() == 'B')
     {
         std::cout << resultVar.btos() << std::endl;

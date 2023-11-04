@@ -428,7 +428,7 @@ public:
     void computeInfix();
     void printInfix();
     void printTree();
-    void printResult();
+    void printResult(BooleanWrapper);
     void checkParentheses(std::string tokenString);
 };
 

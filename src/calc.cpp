@@ -110,8 +110,9 @@ int main()
                 {
                     root->getVariablesNames();
                     root->computeInfix();
+                    BooleanWrapper resultVar = root->computeResult();
                     root->printInfix();
-                    root->printResult();
+                    root->printResult(resultVar);
                     delete root;
                 }
                 else
