@@ -95,6 +95,8 @@ void ExpressionNode::checkParentheses(std::string tokenString)
             }
             if (space_count == temp - i - 1)
             {
+                strstrm.str("");
+                strstrm.clear();
                 std::string throw_message = "Unexpected token at line 1 column " + std::to_string(temp + 1) + ": " + tokenString[temp];
                 throw std::logic_error(throw_message);
             }
@@ -107,6 +109,8 @@ void ExpressionNode::checkParentheses(std::string tokenString)
         // Checks if END is not where its supposed to be and if the parenthesis are equal
         if (tokenString.substr(i, i + 2) == "END" && (i != (size_t)int_listSize - 3 || paren_count != 0))
         {
+            strstrm.str("");
+            strstrm.clear();
             std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i) + ": " + tokenString.substr(i, i + 2);
             throw std::logic_error(throw_message);
         }
@@ -122,6 +126,8 @@ void ExpressionNode::checkParentheses(std::string tokenString)
             // std::cout << "i " << i << std::endl;
             // // //std::cout << "offset " << offset << std::endl;
             // std::cout << "int_listSize " << int_listSize << std::endl;
+            strstrm.str("");
+            strstrm.clear();
             std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString[i];
             throw std::logic_error(throw_message);
         }
@@ -130,7 +136,7 @@ void ExpressionNode::checkParentheses(std::string tokenString)
 
 void ExpressionNode::printTree()
 {
-    std::cout << strstrm.str();
+    std::cout << strstrm.str() << std::endl;
     strstrm.str("");
     strstrm.clear();
 }
@@ -283,6 +289,8 @@ void ExpressionNode::getVariablesNames()
                 else
                     break;
             }
+            strstrm.str("");
+            strstrm.clear();
             throw std::logic_error("Unexpected token at line 1 column " + std::to_string(eqColumn + 1) + ": " + value);
         }
     }
@@ -301,6 +309,8 @@ BooleanWrapper ExpressionNode::computeResult()
         if (value == "=" && right != nullptr && right->value == "END")
         {
             int endColumn = ExpressionParser::line.find("END");
+            strstrm.str("");
+            strstrm.clear();
             throw std::logic_error("Unexpected token at line 1 column " + std::to_string(endColumn + 1) + ": END");
         }
         if (left == nullptr || right == nullptr)
@@ -312,6 +322,8 @@ BooleanWrapper ExpressionNode::computeResult()
             //     throw std::logic_error(throw_message);
             // }
             // std::cout << "i am here" << std::endl;
+            strstrm.str("");
+            strstrm.clear();
             std::string throw_message = "Unexpected token at line 1 column " + std::to_string(column) + ": " + value;
             column = 1;
             throw std::logic_error(throw_message);
@@ -396,7 +408,7 @@ BooleanWrapper ExpressionNode::computeResult()
             }
         }
 
-        // throw std::runtime_error("Runtime error: unknown identifier " + value);
+        throw std::runtime_error("Runtime error: unknown identifier " + value);
 
         // a non initialized variable is false
         return BooleanWrapper(false);
