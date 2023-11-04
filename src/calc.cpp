@@ -9,7 +9,6 @@
 // add -g for debugging with gdb/valgrind
 
 // comment / uncomment this line to use dummy input from the assignment
-
 // #define MINI_TEST
 
 #ifdef MINI_TEST
@@ -42,6 +41,8 @@ const std::map<std::string, std::vector<std::string>> tests =
           "f"}},
 };
 #endif
+
+void checkTokenString(const std::string &tokenString);
 
 int main()
 {
@@ -115,78 +116,7 @@ int main()
                 }
                 else
                 {
-                    for (size_t i = 0; i < tokenString.length(); i++)
-                    {
-                        if (tokenString[i] == '=')
-                        {
-                            if (tokenString[i + 1] == ')')
-                            {
-                                std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 2) + ": " + tokenString[i + 1];
-                                throw std::logic_error(throw_message);
-                            }
-                            else
-                            {
-                                std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString[i];
-                                throw std::logic_error(throw_message);
-                            }
-                        }
-
-                        if (tokenString[i] == '+' || tokenString[i] == '-' || tokenString[i] == '/' || tokenString[i] == '*')
-                        {
-                            if (i == 0)
-                            {
-                                std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i) + ": " + tokenString[i];
-                                throw std::logic_error(throw_message);
-                            }
-                            else if (i == tokenString.length() - 3)
-                            {
-                                std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString.substr(i);
-                                throw std::logic_error(throw_message);
-                            }
-                            else
-                            {
-                                if (tokenString[i] != '*')
-                                {
-                                    size_t temp = i;
-                                    i--;
-                                    while (std::isspace(tokenString[i]))
-                                    {
-                                        i--;
-                                    }
-                                    if (!isdigit(tokenString[i]))
-                                    {
-                                        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString[i];
-                                        throw std::logic_error(throw_message);
-                                    }
-                                    i = temp;
-                                    i++;
-                                    while (std::isspace(tokenString[i]))
-                                    {
-                                        i++;
-                                    }
-                                    if (i == temp)
-                                    {
-                                        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 2) + ": " + tokenString[i + 1];
-                                        throw std::logic_error(throw_message);
-                                    }
-                                    else if (!isdigit(tokenString[i]) && tokenString.substr(i) != "END")
-                                    {
-                                        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString[i];
-                                        throw std::logic_error(throw_message);
-                                    }
-                                    else if (tokenString.substr(i) == "END")
-                                    {
-                                        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString.substr(i);
-                                        throw std::logic_error(throw_message);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    // std::cout << "root is null lolollol, root value: " << line << std::endl;
-
-                    //     std::string throw_message = "Unexpected token at line 1 column " + std::to_string(column) + ": " + value;
-                    //     throw std::logic_error(throw_message);
+                    checkTokenString(tokenString);
                 }
             }
             catch (std::runtime_error &e)
@@ -218,4 +148,76 @@ int main()
         }
     }
     return 0;
+}
+
+void checkTokenString(const std::string &tokenString)
+{
+    for (size_t i = 0; i < tokenString.length(); i++)
+    {
+        if (tokenString[i] == '=')
+        {
+            if (tokenString[i + 1] == ')')
+            {
+                std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 2) + ": " + tokenString[i + 1];
+                throw std::logic_error(throw_message);
+            }
+            else
+            {
+                std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString[i];
+                throw std::logic_error(throw_message);
+            }
+        }
+
+        if (tokenString[i] == '+' || tokenString[i] == '-' || tokenString[i] == '/' || tokenString[i] == '*')
+        {
+            if (i == 0)
+            {
+                std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i) + ": " + tokenString[i];
+                throw std::logic_error(throw_message);
+            }
+            else if (i == tokenString.length() - 3)
+            {
+                std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString.substr(i);
+                throw std::logic_error(throw_message);
+            }
+            else
+            {
+                if (tokenString[i] != '*')
+                {
+                    size_t temp = i;
+                    i--;
+                    while (std::isspace(tokenString[i]))
+                    {
+                        i--;
+                    }
+                    if (!isdigit(tokenString[i]))
+                    {
+                        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString[i];
+                        throw std::logic_error(throw_message);
+                    }
+                    i = temp;
+                    i++;
+                    while (std::isspace(tokenString[i]))
+                    {
+                        i++;
+                    }
+                    if (i == temp)
+                    {
+                        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 2) + ": " + tokenString[i + 1];
+                        throw std::logic_error(throw_message);
+                    }
+                    else if (!isdigit(tokenString[i]) && tokenString.substr(i) != "END")
+                    {
+                        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString[i];
+                        throw std::logic_error(throw_message);
+                    }
+                    else if (tokenString.substr(i) == "END")
+                    {
+                        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString.substr(i);
+                        throw std::logic_error(throw_message);
+                    }
+                }
+            }
+        }
+    }
 }
