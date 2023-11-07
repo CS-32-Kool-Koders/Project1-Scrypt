@@ -1,2 +1,46 @@
-//format.cpp goes here
-int x = 0;
+#include <iostream>
+#include "lib/infix_parser.h"
+#include "lib/lexer.h"
+#include <string>
+#include <sstream>
+
+int main() {
+    std::string line; // o store input
+    int row = 0; 
+    lexer Lexer;
+    int new_line = 0; // 
+
+    try{
+        while(!std::cin.eof()) {
+            //stores every instance of a new line
+            new_line += 1;
+            //goes through each line of input
+            if(getline(std::cin, line)) { 
+                row += 1;
+                //makes tokens out of the line given
+                //then puts them in tokenList
+                // try{
+                Lexer.tokenize(row, line);
+                // } 
+                // catch(...) {
+                //     exit(1/)
+                // }
+            }
+        }
+        
+    } catch(const std::runtime_error& e){
+        std::cout << e.what() << std::endl;
+        exit(1);
+    }
+        if(new_line > row) {
+            Lexer.tokenList.push_back(Tokens(new_line, 1, "END"));
+        }
+        else {
+            Lexer.tokenList.push_back(Tokens(row, Lexer.tokenList.back().col+1, "END"));
+        }
+        for(Tokens token : Lexer.tokenList) {
+            std::cout << std::setw(4) << token.line << std::setw(5) << token.col << std::setw(2+token.text.length()) << token.text << std::endl;
+        }
+    
+    return 0;
+}
