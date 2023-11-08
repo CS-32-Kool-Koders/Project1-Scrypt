@@ -113,12 +113,25 @@ int lexer::tokenize(int row, std::string line)
         else if (line[i] == '=')
         {
             tokenList.push_back(Tokens((int)row, (int)i + 1, std::string(1, line[i])));
+        } 
+        else if (line.substr(i, 2) == "if"){
+            tokenList.push_back(Tokens((int)row, (int)i + 1, "if"));
+            i++;
+        } else if (line.substr(i,5) == "while"){
+            tokenList.push_back(Tokens((int)row, (int)i + 1, "while"));
+            i = i + 4;
+        } else if (line.substr(i,4) == "else"){
+            tokenList.push_back(Tokens((int)row, (int)i + 1, "else"));
+            i = i  + 3;
+        } else if (line.substr(i,5) == "print"){
+            tokenList.push_back(Tokens((int)row, (int)i + 1, "print"));
+            i = i + 4;
         }
 
         else if (isalpha(line[i]) || line[i] == '_')
         {
             i = checkIsIdentifier(line, (int)row, (int)i);
-        }
+        } 
 
         else
         {
