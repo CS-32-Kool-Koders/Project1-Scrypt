@@ -8,14 +8,16 @@
 
 struct Blocks {
     std::string value;
+    
     ExpressionParser *left;
-    // blocks *right;
-    std::vector<Tokens> tokens;
-    std::vector<std::vector<Tokens>> tokenlist;
+    Blocks *right;
+    std::vector<Blocks> blocklist;
+    std::vector<Tokens> tokenlist;
     // std::vector<
     
-    Blocks(std::string statement, std::vector<Tokens> tokens, ExpressionParser *left);
+    Blocks(ExpressionParser *left);
     ~Blocks();
     void execute(std::vector<Tokens> tokens);
+    
 
 };

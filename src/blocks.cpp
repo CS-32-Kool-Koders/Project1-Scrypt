@@ -1,8 +1,6 @@
 //ast shit here
 #include "lib/blocks.h"
-Blocks::Blocks(std::string statement, std::vector<Tokens> tokens, ExpressionParser *left){
-    this->value = statement;
-    this->tokens = tokens;
+Blocks::Blocks(ExpressionParser *left){
     this->left = left;
 }
 Blocks::~Blocks(){
