@@ -19,6 +19,7 @@ std::vector<std::string> supportedOpAndCmpWithoutEnd = {
 std::vector<std::string> ExpressionParser::knowsVariables;
 std::map<std::string, BooleanWrapper> ExpressionParser::variables;
 std::string ExpressionParser::line;
+std::vector<std::string> ExpressionParser::allLines;
 
 double result;
 int eqNb = 0;

@@ -438,6 +438,7 @@ public:
     static std::vector<std::string> knowsVariables;
     static std::map<std::string, BooleanWrapper> variables;
     static std::string line;
+    static std::vector<std::string> allLines;
 
 private:
     std::vector<Tokens> tokens;
