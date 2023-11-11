@@ -131,7 +131,7 @@ int main() {
     }
     
     for (Blocks* rootBlock : astNodes) {
-        std::cout<<"This is a block"<<std::endl;
+        // std::cout<<"This is a block"<<std::endl;
         std::cout<<rootBlock->type<<std::endl;
     }
     // for (Blocks* rootBlock : astNodes) {
@@ -164,71 +164,43 @@ Blocks* parseStatements(std::vector<std::vector<Tokens>>& lines, size_t& lineInd
     if (lineIndex >= lines.size()) return nullptr;
 
     std::vector<Tokens>& tokens = lines[lineIndex];
-    if (tokenIndex >= tokens.size()) {
+    Blocks* block = new Blocks();
+
+    if (tokens.front().text == "if" || tokens.front().text == "while") {
+        block->type = tokens.front().text;
+        std::vector<Tokens> conditionTokens(tokens.begin() + 1, tokens.end() - 1); // Exclude 'if'/'while' and '{'
+        block->condition = new ExpressionParser(conditionTokens);
+    
         lineIndex++;
         tokenIndex = 0;
-        if (lineIndex >= lines.size()) return nullptr;
-        tokens = lines[lineIndex];
-    }
-
-    // Debug: Print the current line being parsed
-    std::cout << "Parsing line: ";
-    for (const auto& token : lines[lineIndex]) {
-        std::cout << token.text << " ";
-    }
-    std::cout << std::endl;
-
-    Blocks* block = new Blocks();
-    if (tokens[tokenIndex].text == "if" || tokens[tokenIndex].text == "while") {
-        block->type = tokens[tokenIndex].text;
-        tokenIndex++;
-        // Extract the condition tokens until '{'
-        std::vector<Tokens> conditionTokens;
-        // Assuming '{' comes immediately after the condition
-        while (tokenIndex < tokens.size() && tokens[tokenIndex].text != "{") {
-            conditionTokens.push_back(tokens[tokenIndex]);
-            tokenIndex++;
-        }
-        block->condition = new ExpressionParser(conditionTokens);
-        if (tokenIndex < tokens.size() && tokens[tokenIndex].text == "{") {
-            lineIndex++;
-            tokenIndex = 0;
-        }
-
-        // Parse the statements inside the block
         block->thenBlock = parseBlock(lines, lineIndex, tokenIndex);
 
-        // Handle 'else' for 'if' statements
-        if (block->type == "if" && lineIndex < lines.size()) {
-            std::vector<Tokens>& nextTokens = lines[lineIndex];
-            if (nextTokens[tokenIndex].text == "else") {
-                tokenIndex++;
-                if (nextTokens[tokenIndex].text == "{") {
-                    lineIndex++;
-                    tokenIndex = 0;
-                    block->elseBlock = parseBlock(lines, lineIndex, tokenIndex);
-                } else if (nextTokens[tokenIndex].text == "if") {
-                    block->elseBlock = parseStatements(lines, lineIndex, tokenIndex);
-                }
+        // Handle 'else' or 'else if'
+        if (lineIndex < lines.size() && lines[lineIndex].front().text == "else") {
+            lineIndex++;
+            if (lineIndex < lines.size() && lines[lineIndex].front().text == "if") {
+                // This is an 'else if' block
+                block->elseBlock = parseStatements(lines, lineIndex, tokenIndex);
+            } else {
+                // This is an 'else' block
+                tokenIndex = 0;
+                block->elseBlock = parseBlock(lines, lineIndex, tokenIndex);
             }
         }
-    } else if (tokens[tokenIndex].text == "print") {
+    } else if (tokens.front().text == "print") {
         block->type = "print";
-        tokenIndex++; 
-        std::vector<Tokens> printExpressionTokens(tokens.begin() + tokenIndex, tokens.end());
-        block->condition = new ExpressionParser(printExpressionTokens); 
+        std::vector<Tokens> printExpressionTokens(tokens.begin() + 1, tokens.end());
+        block->condition = new ExpressionParser(printExpressionTokens);
     } else {
         block->type = "expression";
         block->condition = new ExpressionParser(tokens);
     }
 
-    // Debug: Print the type of block created
-    std::cout << "Created block of type: " << block->type << std::endl;
-
-    lineIndex++; 
-    tokenIndex = 0;
+    lineIndex++;
     return block;
 }
+
+
 
 Blocks* parseBlock(std::vector<std::vector<Tokens>>& lines, size_t& lineIndex, size_t& tokenIndex) {
     Blocks* block = new Blocks();
