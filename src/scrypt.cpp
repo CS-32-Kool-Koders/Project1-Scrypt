@@ -128,9 +128,9 @@ int main() {
         // std::cout<<"This is a block"<<std::endl;
         std::cout<<rootBlock->type<<std::endl;
     }
-    // for (Blocks* rootBlock : astNodes) {
-    //     evaluateBlock(rootBlock);
-    // }
+    for (Blocks* rootBlock : astNodes) {
+        evaluateBlock(rootBlock);
+    }
 
     // Clean-up (if necessary)
     // for (Blocks* node : astNodes) {
@@ -239,7 +239,7 @@ void evaluateBlock(Blocks* block) {
             do {
                 evaluateBlock(block->thenBlock);
                 // Re-evaluate condition for while loop
-                root = block->condition->parseExpression();
+                ExpressionNode* root = block->condition->parseExpression(); //segfault here?
                 root->getVariablesNames();
                 root->computeInfix();
                 resultVar = root->computeResult();
