@@ -123,10 +123,10 @@ int main() {
         // }
     }
     
-    for (Blocks* rootBlock : astNodes) {
-        // std::cout<<"This is a block"<<std::endl;
-        std::cout<<rootBlock->type<<std::endl;
-    }
+    // for (Blocks* rootBlock : astNodes) {
+    //     // std::cout<<"This is a block"<<std::endl;
+    //     std::cout<<rootBlock->type<<std::endl;
+    // }
     for (Blocks* rootBlock : astNodes) {
         evaluateBlock(rootBlock);
     }
