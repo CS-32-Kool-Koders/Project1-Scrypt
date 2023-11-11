@@ -504,7 +504,18 @@ if (open != close) {
                 std::cerr << "Mismatched closing parenthesis." << std::endl;
                 exit(2);
             }
-        }
+        }std::vector<std::string> supportedOperators = {
+    "+", "-", "*", "/", "=", "END", "%"};
+
+std::vector<std::string> supportedComparators = {
+    "==", ">", ">=", "<", "<=", "|", "^", "&", "!="};
+
+std::vector<std::string> supportedOpAndCmpWithEnd = {
+    "+", "-", "*", "/", "=", "END", "%", "==", ">", ">=", "<", "<=", "|", "^", "&", "!="};
+
+std::vector<std::string> supportedOpAndCmpWithoutEnd = {
+    "+", "-", "*", "/", "=", "%", "==", ">", ">=", "<", "<=", "|", "^", "&", "!="};
+
 
         if (depth == 0 && token.text == ")") {
             currentExpression.push_back(token);
