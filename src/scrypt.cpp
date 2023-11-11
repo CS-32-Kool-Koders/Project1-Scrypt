@@ -120,16 +120,17 @@ int main() {
         astNode = parseStatements(tokensByLine, lineIndex, tokenIndex);
         // if (astNode) {
             astNodes.push_back(astNode);
+            // lineIndex++;
         // }
     }
     
-    // for (Blocks* rootBlock : astNodes) {
-    //     // std::cout<<"This is a block"<<std::endl;
-    //     std::cout<<rootBlock->type<<std::endl;
-    // }
     for (Blocks* rootBlock : astNodes) {
-        evaluateBlock(rootBlock);
+        // std::cout<<"This is a block"<<std::endl;
+        std::cout<<rootBlock->type<<std::endl;
     }
+    // for (Blocks* rootBlock : astNodes) {
+    //     evaluateBlock(rootBlock);
+    // }
 
     // Clean-up (if necessary)
     // for (Blocks* node : astNodes) {
