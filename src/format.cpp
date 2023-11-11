@@ -25,13 +25,13 @@ int main() {
     }
 
     // Build the AST from the tokens
-    Blocks* root = buildAST(Lexer.tokenList);
+    // Blocks* root = buildAST(Lexer.tokenList);
 
-    // Print the AST with proper formatting
-    printAST(root);
+    // // Print the AST with proper formatting
+    // printAST(root);
 
     // Cleanup
-    delete root;
+    // delete root;
 
     return 0;
 }

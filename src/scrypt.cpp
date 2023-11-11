@@ -117,26 +117,19 @@ int main() {
     size_t lineIndex = 0, tokenIndex = 0;
     while (lineIndex < tokensByLine.size()) {
         Blocks* astNode = nullptr;
-        if (!tokensByLine[lineIndex].empty() && tokensByLine[lineIndex][0].text == "{") {
-            // If the line starts with a block opening
-            astNode = parseBlock(tokensByLine, lineIndex, tokenIndex);
-        } else {
-            // For regular statements or expressions
-            astNode = parseStatements(tokensByLine, lineIndex, tokenIndex);
-            lineIndex++;  // Move to the next line
-        }
-        if (astNode) {
+        astNode = parseStatements(tokensByLine, lineIndex, tokenIndex);
+        // if (astNode) {
             astNodes.push_back(astNode);
-        }
+        // }
     }
     
     for (Blocks* rootBlock : astNodes) {
         // std::cout<<"This is a block"<<std::endl;
         std::cout<<rootBlock->type<<std::endl;
     }
-    // for (Blocks* rootBlock : astNodes) {
-    //     evaluateBlock(rootBlock);
-    // }
+    for (Blocks* rootBlock : astNodes) {
+        evaluateBlock(rootBlock);
+    }
 
     // Clean-up (if necessary)
     // for (Blocks* node : astNodes) {
