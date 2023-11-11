@@ -51,66 +51,67 @@ int main() {
     //add to some string, if end, then 
      // std::cout << "tokenlist size = " << Lexer.tokenList.size() << std::endl;
      // std::cout << "tokenlist size = " << Lexer.tokenList.size() << std::endl;
-    std::vector<std::vector<Tokens>> tokensByLine;
+     std::vector<std::vector<Tokens>> tokensByLine;
     std::vector<Tokens> temp;
-    temp.push_back(Lexer.tokenList.at(0));
-    for (size_t i = 1; i < Lexer.tokenList.size(); i++)
+    size_t index = 0;
+    while (index + 1 < Lexer.tokenList.size())
     {
-        // std::cout << "i = " << i << std::endl;
-        if (!checkoperator(Lexer.tokenList.at(i - 1).text) && !checkoperator(Lexer.tokenList.at(i).text))
+        // std::cout << "index is " << index << std::endl;
+        // std::cout << "token at index is " << Lexer.tokenList.at(index).text << std::endl;
+        if (Lexer.tokenList.at(index).text == "if" || Lexer.tokenList.at(index).text == "while" || Lexer.tokenList.at(index).text == "else")
         {
-            // std::cout << "boop" << std::endl;
+            while (Lexer.tokenList.at(index).text != "{")
+            {
+                temp.push_back(Lexer.tokenList.at(index));
+                index++;
+            }
+            temp.push_back(Lexer.tokenList.at(index));
             tokensByLine.push_back(temp);
             temp.clear();
-            temp.push_back(Lexer.tokenList.at(i));
+            index++;
         }
-        // std::cout << "can't get past me" << std::endl;
-        if (i == Lexer.tokenList.size() - 1)
+        else if (Lexer.tokenList.at(index).text == "print")
         {
-            // std::cout << "owowow" << std::endl;
-            if (!checkoperator(Lexer.tokenList.at(i).text))
+            temp.push_back(Lexer.tokenList.at(index));
+            index++;
+        }
+        else if (Lexer.tokenList.at(index).text == "}")
+        {
+            // std::cout << "is closing paren" << std::endl;
+            temp.push_back(Lexer.tokenList.at(index));
+            tokensByLine.push_back(temp);
+            temp.clear();
+            index++;
+        }
+        else if (!checkoperator(Lexer.tokenList.at(index).text) && !checkoperator(Lexer.tokenList.at(index + 1).text))
+        {
+            // std::cout << "is not operator AND next is not operator" << std::endl;
+            if (Lexer.tokenList.at(index + 1).text == "}")
             {
-                // std::cout << "end of the line for you there, buddy" << std::endl;
-                temp.push_back(Lexer.tokenList.at(i));
+                // std::cout << "BUT NEXT WAS PAREN" << std::endl;
+                temp.push_back(Lexer.tokenList.at(index));
+                temp.push_back(Lexer.tokenList.at(index + 1));
                 tokensByLine.push_back(temp);
                 temp.clear();
+                index += 2;
             }
-            tokensByLine.push_back(temp);
-            temp.clear();
-            i++;
-        }
-        else
-        {
-            if (checkoperator(Lexer.tokenList.at(i).text) && !checkoperator(Lexer.tokenList.at(i + 1).text))
+            else
             {
-                // std::cout << "beep" << std::endl;
-                temp.push_back(Lexer.tokenList.at(i));
-                temp.push_back(Lexer.tokenList.at(i + 1));
-                i++;
+                temp.push_back(Lexer.tokenList.at(index));
+                tokensByLine.push_back(temp);
+                temp.clear();
+                // temp.push_back(Lexer.tokenList.at(index + 1));
+                index++;
             }
+        }
+        else if (!checkoperator(Lexer.tokenList.at(index).text) && checkoperator(Lexer.tokenList.at(index + 1).text))
+        {
+            // std::cout << "is not operator AND next is operator";
+            temp.push_back(Lexer.tokenList.at(index));
+            temp.push_back(Lexer.tokenList.at(index + 1));
+            index += 2;
         }
     }
-    for (std::vector<Tokens> vec : tokensByLine)
-    {
-        std::cout << "new vector" << std::endl;
-        for (Tokens token : vec)
-        {
-            std::cout << token.line << " " << token.col << " " << token.text << std::endl;
-        }
-        std::cout << "end vector" << std::endl;
-    } 
-
-    // std::vector<Blocks*> bList;
-    // for (std::vector<Tokens> vec : tokensByLine){
-    //     Blocks* tempBlock(nullptr);
-    //     // tempBlock = parseStatements(vec);
-    //     bList.push_back(tempBlock);
-    // }
-    // for (auto &Block: bList){
-    //     for(auto Token: Block->tokenlist){
-    //         std::cout << Token.text << std::endl;
-    //     }
-    // }
 
     std::vector<Blocks*> astNodes;
     size_t lineIndex = 0, tokenIndex = 0;
@@ -129,13 +130,13 @@ int main() {
         }
     }
     
-    // for (Blocks* rootBlock : astNodes) {
-    //     std::cout<<"This is a block"<<std::endl;
-    //     std::cout<<rootBlock->type<<std::endl;
-    // }
     for (Blocks* rootBlock : astNodes) {
-        evaluateBlock(rootBlock);
+        std::cout<<"This is a block"<<std::endl;
+        std::cout<<rootBlock->type<<std::endl;
     }
+    // for (Blocks* rootBlock : astNodes) {
+    //     evaluateBlock(rootBlock);
+    // }
 
     // Clean-up (if necessary)
     // for (Blocks* node : astNodes) {
@@ -146,9 +147,9 @@ int main() {
 
 bool checkoperator(std::string op){
     std::vector<std::string> ops = {
-    "+", "-", "*", "/", "=", "END", "%",
+    "+", "-", "*", "/", "=", "%",
     "==", ">", ">=", "<", "<=", "|", "^", "&", "!=",
-    "+", "-", "*", "/", "=", "END", "%", "==", ">", 
+    "+", "-", "*", "/", "=", "%", "==", ">", 
     ">=", "<", "<=", "|", "^", "&", "!=",
     "+", "-", "*", "/", "=", "%", "==", ">", ">=",
      "<", "<=", "|", "^", "&", "!="};
@@ -170,6 +171,13 @@ Blocks* parseStatements(std::vector<std::vector<Tokens>>& lines, size_t& lineInd
         tokens = lines[lineIndex];
     }
 
+    // Debug: Print the current line being parsed
+    std::cout << "Parsing line: ";
+    for (const auto& token : lines[lineIndex]) {
+        std::cout << token.text << " ";
+    }
+    std::cout << std::endl;
+
     Blocks* block = new Blocks();
     if (tokens[tokenIndex].text == "if" || tokens[tokenIndex].text == "while") {
         block->type = tokens[tokenIndex].text;
@@ -186,7 +194,7 @@ Blocks* parseStatements(std::vector<std::vector<Tokens>>& lines, size_t& lineInd
             lineIndex++;
             tokenIndex = 0;
         }
-        
+
         // Parse the statements inside the block
         block->thenBlock = parseBlock(lines, lineIndex, tokenIndex);
 
@@ -207,11 +215,15 @@ Blocks* parseStatements(std::vector<std::vector<Tokens>>& lines, size_t& lineInd
     } else if (tokens[tokenIndex].text == "print") {
         block->type = "print";
         tokenIndex++; 
-        block->condition = new ExpressionParser(tokens); 
+        std::vector<Tokens> printExpressionTokens(tokens.begin() + tokenIndex, tokens.end());
+        block->condition = new ExpressionParser(printExpressionTokens); 
     } else {
         block->type = "expression";
         block->condition = new ExpressionParser(tokens);
     }
+
+    // Debug: Print the type of block created
+    std::cout << "Created block of type: " << block->type << std::endl;
 
     lineIndex++; 
     tokenIndex = 0;
