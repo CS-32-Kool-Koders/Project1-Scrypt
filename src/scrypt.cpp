@@ -153,35 +153,39 @@ bool checkoperator(std::string op){
     return true;
 }
 
-
 Blocks* parseStatements(std::vector<std::vector<Tokens>>& lines, size_t& lineIndex, size_t& tokenIndex) {
     if (lineIndex >= lines.size()) return nullptr;
 
     std::vector<Tokens>& tokens = lines[lineIndex];
     Blocks* block = new Blocks();
 
+    // Handling if and while
     if (tokens.front().text == "if" || tokens.front().text == "while") {
         block->type = tokens.front().text;
         std::vector<Tokens> conditionTokens(tokens.begin() + 1, tokens.end() - 1); // Exclude 'if'/'while' and '{'
         block->condition = new ExpressionParser(conditionTokens);
-    
+
         lineIndex++;
         tokenIndex = 0;
         block->thenBlock = parseBlock(lines, lineIndex, tokenIndex);
+    }
 
-        // Handle 'else' or 'else if'
-        if (lineIndex < lines.size() && lines[lineIndex].front().text == "else") {
-            lineIndex++;
-            if (lineIndex < lines.size() && lines[lineIndex].front().text == "if") {
-                // This is an 'else if' block
-                block->elseBlock = parseStatements(lines, lineIndex, tokenIndex);
-            } else {
-                // This is an 'else' block
-                tokenIndex = 0;
-                block->elseBlock = parseBlock(lines, lineIndex, tokenIndex);
-            }
+    // Improved handling for else and else if
+    if (lineIndex < lines.size() && tokens.front().text == "else") {
+        if (tokens.size() > 1 && tokens[1].text == "if") {
+            // This is an 'else if' block
+            std::vector<Tokens> elseIfTokens(tokens.begin() + 1, tokens.end());
+            lines[lineIndex] = elseIfTokens; // Update the current line to start from 'if'
+            block->elseBlock = parseStatements(lines, lineIndex, tokenIndex);
+        } else {
+            // This is an 'else' block
+            tokenIndex = 0;
+            block->elseBlock = parseBlock(lines, lineIndex, tokenIndex);
         }
-    } else if (tokens.front().text == "print") {
+    }
+
+    // Handling print and other expressions
+    else if (tokens.front().text == "print") {
         block->type = "print";
         std::vector<Tokens> printExpressionTokens(tokens.begin() + 1, tokens.end());
         block->condition = new ExpressionParser(printExpressionTokens);
@@ -193,6 +197,7 @@ Blocks* parseStatements(std::vector<std::vector<Tokens>>& lines, size_t& lineInd
     lineIndex++;
     return block;
 }
+
 
 
 
