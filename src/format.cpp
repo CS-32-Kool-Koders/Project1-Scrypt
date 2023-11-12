@@ -228,14 +228,14 @@ Blocks *parseStatements(std::vector<std::vector<Tokens>> &lines, size_t &lineInd
         tokenIndex = 0;
         // thenBlock
         // OVERHERE
-        for (std::vector<Tokens> vec : lines)
-        {
-            for (Tokens token : vec)
-            {
-                std::cout << token.text;
-            }
-            std::cout << std::endl;
-        }
+        // for (std::vector<Tokens> vec : lines)
+        // {
+        //     for (Tokens token : vec)
+        //     {
+        //         std::cout << token.text;
+        //     }
+        //     std::cout << std::endl;
+        // }
         while (lineIndex < lines.size() && lines[lineIndex].back().text != "}")
         {
             // std::cout << "This is the thing " << lines[lineIndex ].back().text << std::endl;
@@ -244,6 +244,7 @@ Blocks *parseStatements(std::vector<std::vector<Tokens>> &lines, size_t &lineInd
         }
         block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));
         // block = parseStatements(lines, lineIndex, tokenIndex);
+        return block;
 
         // Handle 'else' or 'else if'
         if (lineIndex < lines.size() && lines[lineIndex].front().text == "else")
@@ -256,6 +257,7 @@ Blocks *parseStatements(std::vector<std::vector<Tokens>> &lines, size_t &lineInd
                 // This is an 'else if' block
                 // elseBlock
                 block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));
+                return block;
                 // block = parseStatements(lines, lineIndex, tokenIndex);
             }
             else
@@ -265,6 +267,7 @@ Blocks *parseStatements(std::vector<std::vector<Tokens>> &lines, size_t &lineInd
                 // elseBlock
                 // OVERHERE
                 block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));
+                return block;
                 // block = parseStatements(lines, lineIndex, tokenIndex);
             }
         }
@@ -284,6 +287,7 @@ Blocks *parseStatements(std::vector<std::vector<Tokens>> &lines, size_t &lineInd
             // lineIndex++;
         }
         block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));
+        return block;
     }
     else if (tokens.front().text == "print")
     {
@@ -304,3 +308,4 @@ Blocks *parseStatements(std::vector<std::vector<Tokens>> &lines, size_t &lineInd
     lineIndex++;
     return block;
 }
+
