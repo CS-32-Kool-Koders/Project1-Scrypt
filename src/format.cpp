@@ -153,9 +153,9 @@ void printAST(const Blocks *block, int indent)
 
     if (block->type == "if" || block->type == "while")
     {
-        std::cout << indentation << block->type << " (";
+        std::cout << indentation << block->type << " ";
         printExpression(block->condition);
-        std::cout << ") {" << std::endl;
+        std::cout << " {" << std::endl;
 
         for (const auto &childBlock : block->blocklist)
         {
@@ -165,7 +165,9 @@ void printAST(const Blocks *block, int indent)
     }
     else if (block->type == "print" || block->type == "expression")
     {
-        std::cout << indentation << block->type << " ";
+        std::cout << indentation;
+        if (block->type == "print")
+            std::cout << block->type << " ";
         printExpression(block->condition);
         std::cout << std::endl;
     }
