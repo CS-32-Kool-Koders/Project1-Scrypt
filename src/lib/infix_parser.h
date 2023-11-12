@@ -453,7 +453,10 @@ public:
         this->tokens = tokens;
         this->currentIndex = 0;
     }
-
+    std::vector<Tokens> getTokens()
+    {
+        return tokens;
+    }
     ExpressionNode *
     parseExpression();
 
