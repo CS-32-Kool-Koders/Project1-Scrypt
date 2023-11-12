@@ -190,7 +190,7 @@ void printExpression(ExpressionParser *exp)
     {
         root->getVariablesNames();
         root->computeInfix();
-        root->printInfix();
+        root->printInfix(false);
         delete root;
     }
 }
