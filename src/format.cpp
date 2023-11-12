@@ -230,14 +230,14 @@ Blocks *parseStatements(std::vector<std::vector<Tokens>> &lines, size_t &lineInd
         tokenIndex = 0;
         // thenBlock
         // OVERHERE
-        for (std::vector<Tokens> vec : lines)
-        {
-            for (Tokens token : vec)
-            {
-                std::cout << token.text;
-            }
-            std::cout << std::endl;
-        }
+        // for (std::vector<Tokens> vec : lines)
+        // {
+        //     for (Tokens token : vec)
+        //     {
+        //         std::cout << token.text;
+        //     }
+        //     std::cout << std::endl;
+        // }
         while (lineIndex < lines.size() && lines[lineIndex].back().text != "}")
         {
             // std::cout << "This is the thing " << lines[lineIndex ].back().text << std::endl;
