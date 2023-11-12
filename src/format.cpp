@@ -35,105 +35,105 @@ int main()
                 Lexer.tokenize(row, line);
             }
         }
-        if (new_line > row)
-        {
-            Lexer.tokenList.push_back(Tokens(new_line, 1, "END"));
-        }
-        else
-        {
-            Lexer.tokenList.push_back(Tokens(row, Lexer.tokenList.back().col + 1, "END"));
-        }
-
-        // go through token list
-        // add to some string, if end, then
-        //  std::cout << "tokenlist size = " << Lexer.tokenList.size() << std::endl;
-        //  std::cout << "tokenlist size = " << Lexer.tokenList.size() << std::endl;
-        std::vector<std::vector<Tokens>> tokensByLine;
-        std::vector<Tokens> temp;
-        size_t index = 0;
-        while (index + 1 < Lexer.tokenList.size())
-        {
-            // std::cout << "index is " << index << std::endl;
-            // std::cout << "token at index is " << Lexer.tokenList.at(index).text << std::endl;
-            if (Lexer.tokenList.at(index).text == "if" || Lexer.tokenList.at(index).text == "while" || Lexer.tokenList.at(index).text == "else")
-            {
-                while (Lexer.tokenList.at(index).text != "{")
-                {
-                    temp.push_back(Lexer.tokenList.at(index));
-                    index++;
-                }
-                temp.push_back(Lexer.tokenList.at(index));
-                tokensByLine.push_back(temp);
-                temp.clear();
-                index++;
-            }
-            else if (Lexer.tokenList.at(index).text == "print")
-            {
-                temp.push_back(Lexer.tokenList.at(index));
-                index++;
-            }
-            else if (Lexer.tokenList.at(index).text == "}")
-            {
-                // std::cout << "is closing paren" << std::endl;
-                temp.push_back(Lexer.tokenList.at(index));
-                tokensByLine.push_back(temp);
-                temp.clear();
-                index++;
-            }
-            else if (!checkoperator(Lexer.tokenList.at(index).text) && !checkoperator(Lexer.tokenList.at(index + 1).text))
-            {
-                // std::cout << "is not operator AND next is not operator" << std::endl;
-                if (Lexer.tokenList.at(index + 1).text == "}")
-                {
-                    // std::cout << "BUT NEXT WAS PAREN" << std::endl;
-                    temp.push_back(Lexer.tokenList.at(index));
-                    temp.push_back(Lexer.tokenList.at(index + 1));
-                    tokensByLine.push_back(temp);
-                    temp.clear();
-                    index += 2;
-                }
-                else
-                {
-                    temp.push_back(Lexer.tokenList.at(index));
-                    tokensByLine.push_back(temp);
-                    temp.clear();
-                    // temp.push_back(Lexer.tokenList.at(index + 1));
-                    index++;
-                }
-            }
-            else if (!checkoperator(Lexer.tokenList.at(index).text) && checkoperator(Lexer.tokenList.at(index + 1).text))
-            {
-                // std::cout << "is not operator AND next is operator";
-                temp.push_back(Lexer.tokenList.at(index));
-                temp.push_back(Lexer.tokenList.at(index + 1));
-                index += 2;
-            }
-        }
-
-        std::vector<Blocks *> astNodes;
-        size_t lineIndex = 0, tokenIndex = 0;
-        while (lineIndex < tokensByLine.size())
-        {
-            Blocks *astNode = nullptr;
-            astNode = parseStatements(tokensByLine, lineIndex, tokenIndex);
-            // if (astNode) {
-            astNodes.push_back(astNode);
-            // lineIndex++;
-            // }
-        }
-
-        for (Blocks *rootBlock : astNodes)
-        {
-            printAST(rootBlock);
-        }
-
-        return 0;
     }
     catch (const std::runtime_error &e)
     {
         std::cout << e.what() << std::endl;
         exit(1);
     }
+    if (new_line > row)
+    {
+        Lexer.tokenList.push_back(Tokens(new_line, 1, "END"));
+    }
+    else
+    {
+        Lexer.tokenList.push_back(Tokens(row, Lexer.tokenList.back().col + 1, "END"));
+    }
+
+    // go through token list
+    // add to some string, if end, then
+    //  std::cout << "tokenlist size = " << Lexer.tokenList.size() << std::endl;
+    //  std::cout << "tokenlist size = " << Lexer.tokenList.size() << std::endl;
+    std::vector<std::vector<Tokens>> tokensByLine;
+    std::vector<Tokens> temp;
+    size_t index = 0;
+    while (index + 1 < Lexer.tokenList.size())
+    {
+        // std::cout << "index is " << index << std::endl;
+        // std::cout << "token at index is " << Lexer.tokenList.at(index).text << std::endl;
+        if (Lexer.tokenList.at(index).text == "if" || Lexer.tokenList.at(index).text == "while" || Lexer.tokenList.at(index).text == "else")
+        {
+            while (Lexer.tokenList.at(index).text != "{")
+            {
+                temp.push_back(Lexer.tokenList.at(index));
+                index++;
+            }
+            temp.push_back(Lexer.tokenList.at(index));
+            tokensByLine.push_back(temp);
+            temp.clear();
+            index++;
+        }
+        else if (Lexer.tokenList.at(index).text == "print")
+        {
+            temp.push_back(Lexer.tokenList.at(index));
+            index++;
+        }
+        else if (Lexer.tokenList.at(index).text == "}")
+        {
+            // std::cout << "is closing paren" << std::endl;
+            temp.push_back(Lexer.tokenList.at(index));
+            tokensByLine.push_back(temp);
+            temp.clear();
+            index++;
+        }
+        else if (!checkoperator(Lexer.tokenList.at(index).text) && !checkoperator(Lexer.tokenList.at(index + 1).text))
+        {
+            // std::cout << "is not operator AND next is not operator" << std::endl;
+            if (Lexer.tokenList.at(index + 1).text == "}")
+            {
+                // std::cout << "BUT NEXT WAS PAREN" << std::endl;
+                temp.push_back(Lexer.tokenList.at(index));
+                temp.push_back(Lexer.tokenList.at(index + 1));
+                tokensByLine.push_back(temp);
+                temp.clear();
+                index += 2;
+            }
+            else
+            {
+                temp.push_back(Lexer.tokenList.at(index));
+                tokensByLine.push_back(temp);
+                temp.clear();
+                // temp.push_back(Lexer.tokenList.at(index + 1));
+                index++;
+            }
+        }
+        else if (!checkoperator(Lexer.tokenList.at(index).text) && checkoperator(Lexer.tokenList.at(index + 1).text))
+        {
+            // std::cout << "is not operator AND next is operator";
+            temp.push_back(Lexer.tokenList.at(index));
+            temp.push_back(Lexer.tokenList.at(index + 1));
+            index += 2;
+        }
+    }
+
+    std::vector<Blocks *> astNodes;
+    size_t lineIndex = 0, tokenIndex = 0;
+    while (lineIndex < tokensByLine.size())
+    {
+        Blocks *astNode = nullptr;
+        astNode = parseStatements(tokensByLine, lineIndex, tokenIndex);
+        // if (astNode) {
+        astNodes.push_back(astNode);
+        // lineIndex++;
+        // }
+    }
+
+    for (Blocks *rootBlock : astNodes)
+    {
+        printAST(rootBlock);
+    }
+
+    return 0;
 }
 
 // Implement this function to build the AST from the tokens
@@ -310,3 +310,5 @@ Blocks *parseStatements(std::vector<std::vector<Tokens>> &lines, size_t &lineInd
     lineIndex++;
     return block;
 }
+
+
