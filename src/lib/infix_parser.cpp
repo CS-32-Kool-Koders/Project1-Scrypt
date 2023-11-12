@@ -450,9 +450,10 @@ BooleanWrapper ExpressionNode::computeResult()
 
             //     }
             //}
-            // if (value != "}"){
+             if (value != "}"){
                 throw std::logic_error("Invalid number: " + value);
-            // } else {
+            } 
+            //else {
             //     std::cout<<"";
             // }
             
