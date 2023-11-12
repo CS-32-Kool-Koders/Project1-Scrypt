@@ -15,11 +15,12 @@ int lexer::tokenize(int row, std::string line)
     //-> using to_string method on line[i], because Tokens constructor needs 3rd argument to be a string
     //-> using (int) method on i+1 and row, because Tokens constructor needs 1st and 2nd argument to be an int
 
-    if (line.size() == 0 || std::all_of(line.begin(), line.end(), isspace))
-    {
-        tokenList.push_back(Tokens((int)row, 1, ""));
-        return 0;
-    }
+    // This will register a blank line as a token
+    // if (line.size() == 0 || std::all_of(line.begin(), line.end(), isspace))
+    // {
+    //     tokenList.push_back(Tokens((int)row, 1, ""));
+    //     return 0;
+    // }
 
     // goes through line character by character
     for (size_t i = 0; i < line.size(); i++)
