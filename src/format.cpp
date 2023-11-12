@@ -126,6 +126,9 @@ int main()
         {
             printAST(rootBlock);
         }
+        for (Blocks *root: astNodes){
+            delete root;
+        }
 
         return 0;
     }
