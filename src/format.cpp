@@ -18,6 +18,77 @@ bool checkoperator(std::string op);
 Blocks *parseStatements(std::vector<std::vector<Tokens>> &lines, size_t &lineIndex, size_t &tokenIndex);
 Blocks *parseBlock(std::vector<std::vector<Tokens>> &lines, size_t &lineIndex, size_t &tokenIndex);
 // parsestatements and parseblock will eventually have to be fixed. for now let it be a placeholder for constructing the AST
+void checkTokenString(const std::string &tokenString)
+{
+    for (size_t i = 0; i < tokenString.length(); i++)
+    {
+        if (tokenString[i] == '=')
+        {
+            if (tokenString[i + 1] == ')')
+            {
+                std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 2) + ": " + tokenString[i + 1];
+                throw std::logic_error(throw_message);
+            }
+            else
+            {
+                std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString[i];
+                throw std::logic_error(throw_message);
+            }
+        }
+
+        if (tokenString[i] == '+' || tokenString[i] == '-' || tokenString[i] == '/' || tokenString[i] == '*')
+        {
+            if (i == 0)
+            {
+                std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i) + ": " + tokenString[i];
+                throw std::logic_error(throw_message);
+            }
+            else if (i == tokenString.length() - 3)
+            {
+                std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString.substr(i);
+                throw std::logic_error(throw_message);
+            }
+            else
+            {
+                if (tokenString[i] != '*')
+                {
+                    size_t temp = i;
+                    i--;
+                    while (std::isspace(tokenString[i]))
+                    {
+                        i--;
+                    }
+                    if (!isdigit(tokenString[i]))
+                    {
+                        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString[i];
+                        throw std::logic_error(throw_message);
+                    }
+                    i = temp;
+                    i++;
+                    while (std::isspace(tokenString[i]))
+                    {
+                        i++;
+                    }
+                    if (i == temp)
+                    {
+                        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 2) + ": " + tokenString[i + 1];
+                        throw std::logic_error(throw_message);
+                    }
+                    else if (!isdigit(tokenString[i]) && tokenString.substr(i) != "END")
+                    {
+                        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString[i];
+                        throw std::logic_error(throw_message);
+                    }
+                    else if (tokenString.substr(i) == "END")
+                    {
+                        std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString.substr(i);
+                        throw std::logic_error(throw_message);
+                    }
+                }
+            }
+        }
+    }
+}
 
 int main()
 {
@@ -111,6 +182,16 @@ int main()
             }
         }
 
+        std::string tokenString;
+        for (std::vector<Tokens> vec : tokensByLine)
+        {
+            for (Tokens token : vec)
+            {
+                tokenString += token.text;
+            }
+            checkTokenString(tokenString);
+        }
+
         std::vector<Blocks *> astNodes;
         size_t lineIndex = 0, tokenIndex = 0;
         while (lineIndex < tokensByLine.size())
@@ -131,6 +212,11 @@ int main()
         return 0;
     }
     catch (const std::runtime_error &e)
+    {
+        std::cout << e.what() << std::endl;
+        exit(1);
+    }
+    catch (const std::logic_error &e)
     {
         std::cout << e.what() << std::endl;
         exit(1);
@@ -193,7 +279,9 @@ void printExpression(ExpressionParser *exp)
     {
         root->getVariablesNames();
         root->computeInfix();
+        // BooleanWrapper resultVar = root->computeResult();
         root->printInfix();
+        // root->printResult(resultVar);
         delete root;
     }
 }

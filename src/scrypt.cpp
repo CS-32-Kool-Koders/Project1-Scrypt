@@ -304,6 +304,15 @@ int main()
                 index += 2;
             }
         }
+        // std::string tokenString;
+        // for (std::vector<Tokens> vec : tokensByLine)
+        // {
+        //     for (Tokens token : vec)
+        //     {
+        //         tokenString += token.text;
+        //     }
+        //     checkTokenString(tokenString);
+        // }
 
         std::vector<Blocks *> astNodes;
         size_t lineIndex = 0, tokenIndex = 0;
