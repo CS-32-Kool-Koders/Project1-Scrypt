@@ -411,52 +411,8 @@ Blocks *parseStatements(std::vector<std::vector<Tokens>> &lines, size_t &lineInd
 void evaluateBlock(Blocks *block) {
     if (!block) return;
 
-    // Evaluate conditions for 'if' and 'while' blocks
-    BooleanWrapper resultVar;
-    if (block->type == "if" || block->type == "while") {
-        ExpressionNode *root = block->condition->parseExpression();
-        if (root != nullptr) {
-            root->getVariablesNames();
-            root->computeInfix();
-            resultVar = root->computeResult();
-            delete root;
-        }
-    }
-
-    // Handle 'if' blocks
-    if (block->type == "if") {
-        if (resultVar.getBvalue()) {
-            // Evaluate the first block in blocklist (thenBlock)
-            for (Blocks *innerBlock : block->blocklist) {
-                evaluateBlock(innerBlock);
-            }
-        }
-    } 
-    // Handle 'while' blocks
-    else if (block->type == "while") {
-        while (resultVar.getBvalue()) {
-            for (Blocks *innerBlock : block->blocklist) {
-                evaluateBlock(innerBlock);
-            }
-
-            // Re-evaluate condition for the while loop
-            ExpressionNode *root = block->condition->parseExpression();
-            if (root != nullptr) {
-                root->getVariablesNames();
-                root->computeInfix();
-                resultVar = root->computeResult();
-                delete root;
-            }
-        }
-    }
-    // Handle 'else' blocks
-    else if (block->type == "else") {
-        for (Blocks *innerBlock : block->blocklist) {
-            evaluateBlock(innerBlock);
-        }
-    }
     // Handle 'print' and 'expression' blocks
-    else if (block->type == "print" || block->type == "expression") {
+    if (block->type == "print" || block->type == "expression") {
         ExpressionNode *root = block->condition->parseExpression();
         if (root != nullptr) {
             root->getVariablesNames();
@@ -468,5 +424,53 @@ void evaluateBlock(Blocks *block) {
             delete root;
         }
     }
-}
+    // For 'if' and 'while' blocks, evaluate the condition
+    else if (block->type == "if" || block->type == "while") {
+        ExpressionNode *root = block->condition->parseExpression();
+        BooleanWrapper resultVar;
+        if (root != nullptr) {
+            root->getVariablesNames();
+            root->computeInfix();
+            resultVar = root->computeResult();
+            delete root;
+        }
 
+        // Evaluate 'if' blocks
+        if (block->type == "if") {
+            if (resultVar.getBvalue() && !block->blocklist.empty()) {
+                evaluateBlock(block->blocklist[0]);
+            } else if (block->blocklist.size() > 1) {
+                evaluateBlock(block->blocklist[1]);
+            }
+        } 
+        // Evaluate 'while' blocks
+        else if (block->type == "while") {
+        BooleanWrapper resultVar;
+        while (true) {
+            // Re-evaluate the condition at the beginning of each loop iteration
+            ExpressionNode *root = block->condition->parseExpression();
+            if (root != nullptr) {
+                root->getVariablesNames();
+                root->computeInfix();
+                resultVar = root->computeResult();
+                delete root;
+            }
+
+            if (!resultVar.getBvalue()) {
+                break; // Exit loop if condition is false
+            }
+
+            // Execute each block in the blocklist
+            for (Blocks *innerBlock : block->blocklist) {
+                evaluateBlock(innerBlock);
+            }
+        }
+    }
+    }
+    // Handle 'else' blocks
+    else if (block->type == "else") {
+        for (Blocks *innerBlock : block->blocklist) {
+            evaluateBlock(innerBlock);
+        }
+    }
+}
