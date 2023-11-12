@@ -182,7 +182,7 @@ void printAST(const Blocks *block, int indent)
         {
             printAST(childBlock, indent + 4);
         }
-        std::cout << indentation << "}" << std::endl;
+        // std::cout << indentation << "}" << std::endl;
     }
 }
 
