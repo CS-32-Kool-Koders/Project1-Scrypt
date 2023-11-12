@@ -134,6 +134,7 @@ int main()
             {
                 row += 1;
                 Lexer.tokenize(row, line);
+                std::cout << "|: " << line << std::endl;
             }
         }
         if (new_line > row)
