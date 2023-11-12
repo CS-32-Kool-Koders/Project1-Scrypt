@@ -5,7 +5,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
-#include "lib/blocks.h"
+#include "blocks.cpp"
 
 // Assuming 'Tokens', 'Blocks', and other necessary classes are defined in the included headers
 
