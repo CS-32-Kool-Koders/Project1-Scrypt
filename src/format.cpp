@@ -45,12 +45,12 @@ void checkTokenString(const std::string &tokenString)
         {
             if (tokenString[i + 1] == ')' || tokenString[i + 1] == '(' || tokenString[i + 1] == '}' || tokenString[i + 1] == '{')
             {
-                std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString[i + 1];
+                std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 2) + ": " + tokenString[i + 1];
                 throw std::logic_error(throw_message);
             }
             else if (tokenString[i - 1] == ')' || tokenString[i - 1] == '(' || tokenString[i - 1] == '}' || tokenString[i - 1] == '{')
             {
-                std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString[i + 1];
+                std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 2) + ": " + tokenString[i + 1];
                 throw std::logic_error(throw_message);
             }
         }
@@ -69,12 +69,12 @@ void checkTokenString(const std::string &tokenString)
             }
             else if (tokenString[i + 1] == ')' || tokenString[i + 1] == '(' || tokenString[i + 1] == '}' || tokenString[i + 1] == '{')
             {
-                std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString[i + 1];
+                std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 2) + ": " + tokenString[i + 1];
                 throw std::logic_error(throw_message);
             }
             else if (tokenString[i - 1] == ')' || tokenString[i - 1] == '(' || tokenString[i - 1] == '}' || tokenString[i - 1] == '{')
             {
-                std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 1) + ": " + tokenString[i + 1];
+                std::string throw_message = "Unexpected token at line 1 column " + std::to_string(i + 2) + ": " + tokenString[i + 1];
                 throw std::logic_error(throw_message);
             }
             else

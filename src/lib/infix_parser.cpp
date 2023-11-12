@@ -431,7 +431,6 @@ BooleanWrapper ExpressionNode::computeResult()
             column = 1;
             throw std::logic_error(throw_message);
         }
-
         std::stringstream ss(value);
         double number;
         ss >> std::setprecision(15) >> number;
