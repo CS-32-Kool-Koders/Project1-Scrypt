@@ -1,7 +1,7 @@
 #include <iostream>
 // #include "lib/infix_parser.h"
 #include "lib/lexer.h"
-#include "lib/blocks.h"
+#include "blocks.cpp"
 #include <string>
 #include <sstream>
 #include <algorithm>
@@ -319,6 +319,10 @@ int main()
         {
             evaluateBlock(rootBlock);
         }
+        for (Blocks *root: astNodes){
+            delete root;
+        }
+
         return 0;
     }
     catch (const std::runtime_error &e)
