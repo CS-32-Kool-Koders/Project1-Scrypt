@@ -426,7 +426,7 @@ public:
     bool isVariable(std::string value);
     void getVariablesNames();
     void computeInfix();
-    void printInfix();
+    void printInfix(bool newLine = true);
     void printTree();
     void printResult(BooleanWrapper);
     void checkParentheses(std::string tokenString);

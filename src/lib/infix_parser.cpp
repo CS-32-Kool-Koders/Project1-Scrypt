@@ -470,10 +470,12 @@ BooleanWrapper ExpressionNode::computeResult()
     throw std::logic_error("Invalid operator: " + value);
 }
 
-void ExpressionNode::printInfix()
+void ExpressionNode::printInfix(bool newLine)
 {
     column = 1;
-    std::cout << strstrm.str() << std::endl;
+    std::cout << strstrm.str();
+    if (newLine)
+        std::cout << std::endl;
     strstrm.str("");
     strstrm.clear();
 }
