@@ -359,26 +359,26 @@ void evaluateBlock(Blocks *block) {
         // Evaluate 'if' blocks
         if (block->type == "if") {
             if (resultVar.getBvalue() && !block->blocklist.empty()) {
-                evaluateBlock(block->blocklist[0]);
-            } else if (block->blocklist.size() > 1) {
-                evaluateBlock(block->blocklist[1]);
+            for (auto *bl: block->blocklist){
+                evaluateBlock(bl);
+            }
+            } else{
+                
             }
         } 
         // Evaluate 'while' blocks
          else if (block->type == "while") {
-        BooleanWrapper resultVar;
-        // Initialize loop condition
-        ExpressionNode *root = block->condition->parseExpression();
-        if (root != nullptr) {
-            root->getVariablesNames();
-            root->computeInfix();
-            resultVar = root->computeResult();
-            delete root;
-        }
 
         while (resultVar.getBvalue()) {
             // Execute each block in the blocklist
             for (Blocks *innerBlock : block->blocklist) {
+                // std::vector<Tokens> temp = innerBlock->condition->getTokens();
+                // std::vector<Tokens> upd;
+                // for (auto i : temp){
+                //     if (i.text != "}"){
+                //        upd.push_back(i);
+                //     }
+                // }
                 evaluateBlock(innerBlock);
             }
 
@@ -394,6 +394,7 @@ void evaluateBlock(Blocks *block) {
     }
     }
     // Handle 'else' blocks
+    //this shit wrong prolly, come back to
     else if (block->type == "else") {
         for (Blocks *innerBlock : block->blocklist) {
             evaluateBlock(innerBlock);
