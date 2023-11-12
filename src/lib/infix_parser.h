@@ -426,7 +426,7 @@ public:
     bool isVariable(std::string value);
     void getVariablesNames();
     void computeInfix();
-    void printInfix(bool newLine = true);
+    void printInfix();
     void printTree();
     void printResult(BooleanWrapper);
     void checkParentheses(std::string tokenString);
@@ -453,7 +453,10 @@ public:
         this->tokens = tokens;
         this->currentIndex = 0;
     }
-
+    std::vector<Tokens> getTokens()
+    {
+        return tokens;
+    }
     ExpressionNode *
     parseExpression();
 
