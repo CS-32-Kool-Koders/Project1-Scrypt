@@ -58,6 +58,10 @@ void ExpressionNode::computeInfix()
             {
                 strstrm << value;
             }
+            else if (value == "{" || value == "}" || value == "(" || value == ")")
+            {
+                strstrm << value;
+            }
             else if (std::floor(std::stod(value)) == std::stod(value))
             {
                 strstrm << std::floor(std::stod(value));
