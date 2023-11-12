@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <iomanip>
 #include "lib/infix_parser.h"
@@ -246,7 +247,6 @@ Blocks *parseStatements(std::vector<std::vector<Tokens>> &lines, size_t &lineInd
         }
         block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));
         // block = parseStatements(lines, lineIndex, tokenIndex);
-        return block;
 
         // Handle 'else' or 'else if'
         if (lineIndex < lines.size() && lines[lineIndex].front().text == "else")
@@ -259,7 +259,6 @@ Blocks *parseStatements(std::vector<std::vector<Tokens>> &lines, size_t &lineInd
                 // This is an 'else if' block
                 // elseBlock
                 block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));
-                return block;
                 // block = parseStatements(lines, lineIndex, tokenIndex);
             }
             else
@@ -269,7 +268,6 @@ Blocks *parseStatements(std::vector<std::vector<Tokens>> &lines, size_t &lineInd
                 // elseBlock
                 // OVERHERE
                 block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));
-                return block;
                 // block = parseStatements(lines, lineIndex, tokenIndex);
             }
         }
@@ -289,7 +287,6 @@ Blocks *parseStatements(std::vector<std::vector<Tokens>> &lines, size_t &lineInd
             // lineIndex++;
         }
         block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));
-        return block;
     }
     else if (tokens.front().text == "print")
     {
@@ -310,5 +307,3 @@ Blocks *parseStatements(std::vector<std::vector<Tokens>> &lines, size_t &lineInd
     lineIndex++;
     return block;
 }
-
-
