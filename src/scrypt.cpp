@@ -464,7 +464,7 @@ void evaluateBlock(Blocks *block)
                     else
                     {
                         std::cout << "this should break" << std::endl;
-                        break;
+                        return;
                     }
                     // //std::cout <<std::endl;
                     // for (auto i: innerBlock->condition->tokens){
