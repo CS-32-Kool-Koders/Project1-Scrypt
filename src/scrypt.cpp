@@ -381,7 +381,11 @@ void evaluateBlock(Blocks *block) {
                 evaluateBlock(bl);
             }
             } else{
-                
+                 for (auto *bl: block->blocklist){
+                    if (bl->type == "else"){
+                        evaluateBlock(bl);
+                    }
+            }
             }
         } 
         // Evaluate 'while' blocks
@@ -391,6 +395,9 @@ void evaluateBlock(Blocks *block) {
             // std::cout<<resultVar2.getBvalue()<<std::endl;
             for (Blocks *innerBlock : block->blocklist) {
                 std::vector<Tokens> tempVec;
+                if (!innerBlock){
+                    break;
+                }
                 for (auto i: innerBlock->condition->tokens){
                     if (i.text != "}"){
                         tempVec.push_back(i);
@@ -420,9 +427,9 @@ void evaluateBlock(Blocks *block) {
     }
     // Handle 'else' blocks
     //this shit wrong prolly, come back to
-    else if (block->type == "else") {
-        for (Blocks *innerBlock : block->blocklist) {
-            evaluateBlock(innerBlock);
-        }
-    }
+    // else if (block->type == "else") {
+    //     for (Blocks *innerBlock : block->blocklist) {
+    //         evaluateBlock(innerBlock);
+    //     }
+    // }
 }
