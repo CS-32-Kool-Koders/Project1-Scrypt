@@ -349,7 +349,7 @@ void evaluateBlock(Blocks *block) {
     // Handle 'print' and 'expression' blocks
     if (block->type == "print" || block->type == "expression") {
         ExpressionNode *root = block->condition->parseExpression();
-        std::cout<<root<<std::endl;
+        // std::cout<<root<<std::endl;
         if (root != nullptr) {
             root->getVariablesNames();
             root->computeInfix();
@@ -389,20 +389,20 @@ void evaluateBlock(Blocks *block) {
             // Execute each block in the blocklist
             // std::cout<<resultVar2.getBvalue()<<std::endl;
             for (Blocks *innerBlock : block->blocklist) {
-                std::vector<Tokens> tempVec;
-                for (auto i: innerBlock->condition->tokens){
-                    if (i.text != "}"){
-                        tempVec.push_back(i);
-                        std::cout<< "Token: " << i.text<< std::endl;
-                    }
-                }
+                // std::vector<Tokens> tempVec;
+                // for (auto i: innerBlock->condition->tokens){
+                //     if (i.text != "}"){
+                //         tempVec.push_back(i);
+                //         std::cout<< "Token: " << i.text<< std::endl;
+                //     }
+                // }
                 // //std::cout <<std::endl;
                 // innerBlock->condition->tokens = tempVec;
                 // for (auto i: innerBlock->condition->tokens){
                 //     //std::cout<< "New Token: " << i.text<< std::endl;
                 // }
                 
-                std::cout<<innerBlock<< innerBlock->type<<std::endl;
+                // std::cout<<innerBlock<< innerBlock->type<<std::endl;
                 evaluateBlock(innerBlock);
             }
 
