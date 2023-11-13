@@ -108,6 +108,13 @@ int lexer::tokenize(int row, std::string line)
         {
             tokenList.push_back(Tokens((int)row, (int)i + 1, "}"));
         }
+        else if (line[i] == ';'){
+            tokenList.push_back(Tokens((int)row, (int)i + 1, ";"));
+        }
+        else if (line[i] == ','){
+            tokenList.push_back(Tokens((int)row, (int)i + 1, ","));
+        }
+        
         // case - space or similar character
         else if (isspace(line[i]))
         {
