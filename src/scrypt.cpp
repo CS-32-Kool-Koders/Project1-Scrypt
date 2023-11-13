@@ -350,12 +350,12 @@ void evaluateBlock(Blocks *block) {
     // Handle 'print' and 'expression' blocks
     if (block->type == "print" || block->type == "expression") {
         ExpressionNode *root = block->condition->parseExpression();
-        std::cout<<root<<std::endl;
+        // std::cout<<root<<std::endl;
         if (root != nullptr) {
             root->getVariablesNames();
             root->computeInfix();
             BooleanWrapper resultVar1 = root->computeResult();
-            root->printResult(resultVar1); // Print result for print blocks
+            // root->printResult(resultVar1); // Print result for print blocks
             if (block->type == "print") {
                 root->printResult(resultVar1); // Print result for print blocks
             }
@@ -394,7 +394,7 @@ void evaluateBlock(Blocks *block) {
                 for (auto i: innerBlock->condition->tokens){
                     if (i.text != "}"){
                         tempVec.push_back(i);
-                        std::cout<< "Token: " << i.text<< std::endl;
+                        // std::cout<< "Token: " << i.text<< std::endl;
                     }
                 }
                 // //std::cout <<std::endl;
@@ -403,7 +403,7 @@ void evaluateBlock(Blocks *block) {
                 //     //std::cout<< "New Token: " << i.text<< std::endl;
                 // }
                 
-                std::cout<<innerBlock<< innerBlock->type<<std::endl;
+                // std::cout<<innerBlock<< innerBlock->type<<std::endl;
                 evaluateBlock(innerBlock);
             }
 
