@@ -152,8 +152,8 @@ Blocks *parseStatements(std::vector<std::vector<Tokens>> &lines, size_t &lineInd
         {
             //maybe delete the bottom two lines, don't go to next line for else if
             //move to next token, see if next token is an if
-            // lineIndex++;
-            // tokenIndex = 0; // HMMMMMMMMM
+            lineIndex++;
+            tokenIndex = 0; // HMMMMMMMMM
             // Blocks *block = new Blocks();
             if (lineIndex < lines.size() && lines[lineIndex].front().text == "if")
             {
