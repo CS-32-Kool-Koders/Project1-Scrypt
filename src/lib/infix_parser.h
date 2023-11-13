@@ -438,10 +438,10 @@ public:
     static std::vector<std::string> knowsVariables;
     static std::map<std::string, BooleanWrapper> variables;
     static std::string line;
-
-private:
     std::vector<Tokens> tokens;
     std::size_t currentIndex;
+
+private:
     // std::map<std::function<ExpressionNode *()>, std::string> operatorsFn = {
     //     {std::bind(&ExpressionParser::parseMultiplyDivide, this), std::vector<std::string>{"+", "-"}},
     //     {std::bind(&ExpressionParser::parseOperand, this), std::vector<std::string>{"*", "/"}},

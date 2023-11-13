@@ -151,6 +151,7 @@ void ExpressionNode::printTree()
 
 ExpressionNode *ExpressionParser::parseExpression()
 {
+    currentIndex = 0;
     return parseAssignment();
 }
 
@@ -408,7 +409,7 @@ BooleanWrapper ExpressionNode::computeResult()
         // else if (value == "}"){
         //     return true;
         // }
-    }
+    } 
     else if (isVariable(value))
     {
         for (std::string var : ExpressionParser::knowsVariables)
@@ -424,6 +425,10 @@ BooleanWrapper ExpressionNode::computeResult()
 
         // a non initialized variable is false
         return BooleanWrapper(false);
+    }
+    //maybe if value is a closing bracket, j continue
+    else if (value == "}"){
+        return 65.42310;
     }
     else if (!BooleanWrapper::isBoolean(value))
     {

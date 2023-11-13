@@ -141,15 +141,19 @@ Blocks *parseStatements(std::vector<std::vector<Tokens>> &lines, size_t &lineInd
             block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));
             // lineIndex++;
         }
-        block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));
+        
+        //std::cout << "THIS IS FOR DEBUGGING }: " << lines[lineIndex].back().text;
+        block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));//here
         // block = parseStatements(lines, lineIndex, tokenIndex);
         return block;
 
         // Handle 'else' or 'else if'
         if (lineIndex < lines.size() && lines[lineIndex].front().text == "else")
         {
-            lineIndex++;
-            tokenIndex = 0; // HMMMMMMMMM
+            //maybe delete the bottom two lines, don't go to next line for else if
+            //move to next token, see if next token is an if
+            // lineIndex++;
+            // tokenIndex = 0; // HMMMMMMMMM
             // Blocks *block = new Blocks();
             if (lineIndex < lines.size() && lines[lineIndex].front().text == "if")
             {
@@ -185,7 +189,8 @@ Blocks *parseStatements(std::vector<std::vector<Tokens>> &lines, size_t &lineInd
             block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));
             // lineIndex++;
         }
-        block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));
+        // std::cout << "THIS IS FOR DEBUGGING }: " << lines[lineIndex].back().text;
+        block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));//here here
         return block;
     }
     else if (tokens.front().text == "print")
@@ -330,6 +335,11 @@ int main()
         std::cout << e.what() << std::endl;
         exit(1);
     }
+    catch(const std::logic_error &e)
+    {
+        std::cout << e.what() << std::endl;
+        exit(1);
+    }
 }
 
 
@@ -339,30 +349,33 @@ void evaluateBlock(Blocks *block) {
     // Handle 'print' and 'expression' blocks
     if (block->type == "print" || block->type == "expression") {
         ExpressionNode *root = block->condition->parseExpression();
+        std::cout<<root<<std::endl;
         if (root != nullptr) {
             root->getVariablesNames();
             root->computeInfix();
-            BooleanWrapper resultVar = root->computeResult();
+            BooleanWrapper resultVar1 = root->computeResult();
+            root->printResult(resultVar1); // Print result for print blocks
             if (block->type == "print") {
-                root->printResult(resultVar); // Print result for print blocks
+                root->printResult(resultVar1); // Print result for print blocks
             }
             delete root;
+            // return;
         }
     }
     // For 'if' and 'while' blocks, evaluate the condition
     else if (block->type == "if" || block->type == "while") {
         ExpressionNode *root = block->condition->parseExpression();
-        BooleanWrapper resultVar;
+        BooleanWrapper resultVar2;
         if (root != nullptr) {
             root->getVariablesNames();
             root->computeInfix();
-            resultVar = root->computeResult();
+            resultVar2 = root->computeResult();
             delete root;
         }
 
         // Evaluate 'if' blocks
         if (block->type == "if") {
-            if (resultVar.getBvalue() && !block->blocklist.empty()) {
+            if (resultVar2.getBvalue() && !block->blocklist.empty()) {
             for (auto *bl: block->blocklist){
                 evaluateBlock(bl);
             }
@@ -372,17 +385,24 @@ void evaluateBlock(Blocks *block) {
         } 
         // Evaluate 'while' blocks
          else if (block->type == "while") {
-
-        while (resultVar.getBvalue()) {
+        while (resultVar2.getBvalue()) {
             // Execute each block in the blocklist
+            // std::cout<<resultVar2.getBvalue()<<std::endl;
             for (Blocks *innerBlock : block->blocklist) {
-                // std::vector<Tokens> temp = innerBlock->condition->getTokens();
-                // std::vector<Tokens> upd;
-                // for (auto i : temp){
-                //     if (i.text != "}"){
-                //        upd.push_back(i);
-                //     }
+                std::vector<Tokens> tempVec;
+                for (auto i: innerBlock->condition->tokens){
+                    if (i.text != "}"){
+                        tempVec.push_back(i);
+                        std::cout<< "Token: " << i.text<< std::endl;
+                    }
+                }
+                // //std::cout <<std::endl;
+                // innerBlock->condition->tokens = tempVec;
+                // for (auto i: innerBlock->condition->tokens){
+                //     //std::cout<< "New Token: " << i.text<< std::endl;
                 // }
+                
+                std::cout<<innerBlock<< innerBlock->type<<std::endl;
                 evaluateBlock(innerBlock);
             }
 
@@ -391,7 +411,7 @@ void evaluateBlock(Blocks *block) {
             if (root != nullptr) {
                 root->getVariablesNames();
                 root->computeInfix();
-                resultVar = root->computeResult();
+                resultVar2 = root->computeResult();
                 delete root;
             }
         }

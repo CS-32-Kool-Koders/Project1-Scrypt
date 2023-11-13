@@ -254,8 +254,8 @@ Blocks *parseStatements(std::vector<std::vector<Tokens>> &lines, size_t &lineInd
         // Handle 'else' or 'else if'
         if (lineIndex < lines.size() && lines[lineIndex].front().text == "else")
         {
-            lineIndex++;
-            tokenIndex = 0; // HMMMMMMMMM
+            // lineIndex++;
+            // tokenIndex = 0; // HMMMMMMMMM
             // Blocks *block = new Blocks();
             if (lineIndex < lines.size() && lines[lineIndex].front().text == "if")
             {
