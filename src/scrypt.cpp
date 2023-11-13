@@ -354,7 +354,7 @@ void evaluateBlock(Blocks *block) {
             root->getVariablesNames();
             root->computeInfix();
             BooleanWrapper resultVar1 = root->computeResult();
-            root->printResult(resultVar1); // Print result for print blocks
+            // root->printResult(resultVar1); // Print result for print blocks
             if (block->type == "print") {
                 root->printResult(resultVar1); // Print result for print blocks
             }
