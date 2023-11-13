@@ -398,14 +398,14 @@ void evaluateBlock(Blocks *block) {
                 if (!innerBlock){
                     break;
                 }
-                if(innerBlock->condition) {
-                    for (auto i: innerBlock->condition->tokens){
-                        if (i.text != "}"){
-                            tempVec.push_back(i);
-                            // std::cout<< "Token: " << i.text<< std::endl;
-                        }
-                    }
-                }
+                // if(innerBlock->condition) {
+                //     for (auto i: innerBlock->condition->tokens){
+                //         if (i.text != "}"){
+                //             tempVec.push_back(i);
+                //             // std::cout<< "Token: " << i.text<< std::endl;
+                //         }
+                //     }
+                // }
                 // //std::cout <<std::endl;
                 // innerBlock->condition->tokens = tempVec;
                 // for (auto i: innerBlock->condition->tokens){
