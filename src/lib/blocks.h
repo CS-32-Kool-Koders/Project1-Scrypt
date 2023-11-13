@@ -7,10 +7,10 @@ struct Blocks
 {
     std::string type;
     ExpressionParser *condition;
-    Blocks *thenBlock;
-    Blocks *elseBlock;
+    // Blocks *thenBlock;
+    // Blocks *elseBlock;
     std::vector<Blocks *> blocklist;
 
-    Blocks() : condition(nullptr), thenBlock(nullptr), elseBlock(nullptr) {}
+    Blocks() : condition(nullptr) {}
     ~Blocks();
 };

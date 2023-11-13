@@ -405,11 +405,11 @@ BooleanWrapper ExpressionNode::computeResult()
         {
             return leftValue != rightValue;
         }
-        //added for scrypt shit
-        // else if (value == "}"){
-        //     return true;
-        // }
-    } 
+        // added for scrypt shit
+        //  else if (value == "}"){
+        //      return true;
+        //  }
+    }
     else if (isVariable(value))
     {
         for (std::string var : ExpressionParser::knowsVariables)
@@ -426,8 +426,9 @@ BooleanWrapper ExpressionNode::computeResult()
         // a non initialized variable is false
         return BooleanWrapper(false);
     }
-    //maybe if value is a closing bracket, j continue
-    else if (value == "}"){
+    // maybe if value is a closing bracket, j continue
+    else if (value == "}")
+    {
         return 65.42310;
     }
     else if (!BooleanWrapper::isBoolean(value))
@@ -455,13 +456,14 @@ BooleanWrapper ExpressionNode::computeResult()
 
             //     }
             //}
-            // if (value != "}"){
+            if (value != "}" && value != ")")
+            {
+                // std::cout << "value is " << value << std::endl;
                 throw std::logic_error("Invalid number: " + value);
-            // } 
-            //else {
-            //     std::cout<<"";
-            // }
-            
+            }
+            // else {
+            //      std::cout<<"";
+            //  }
         }
         column += value.length() - 1;
         // std::cout << column << " is number " <<std::endl;
