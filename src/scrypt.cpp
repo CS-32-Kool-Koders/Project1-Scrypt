@@ -394,16 +394,16 @@ void evaluateBlock(Blocks *block) {
             // Execute each block in the blocklist
             // std::cout<<resultVar2.getBvalue()<<std::endl;
             for (Blocks *innerBlock : block->blocklist) {
-                std::vector<Tokens> tempVec;
+                // std::vector<Tokens> tempVec;
                 if (!innerBlock){
                     break;
                 }
-                for (auto i: innerBlock->condition->tokens){
-                    if (i.text != "}"){
-                        tempVec.push_back(i);
-                        // std::cout<< "Token: " << i.text<< std::endl;
-                    }
-                }
+                // for (auto i: innerBlock->condition->tokens){
+                //     if (i.text != "}"){
+                //         tempVec.push_back(i);
+                //         // std::cout<< "Token: " << i.text<< std::endl;
+                //     }
+                // }
                 // //std::cout <<std::endl;
                 // innerBlock->condition->tokens = tempVec;
                 // for (auto i: innerBlock->condition->tokens){
