@@ -1,6 +1,7 @@
 #include "lexer.h"
 #include <ctype.h>
 #include <iostream>
+#include <algorithm>
 
 // in lex.cpp in src, we have a while loop that goes thru input line-by-line
 // add goes thu each char
@@ -13,6 +14,13 @@ int lexer::tokenize(int row, std::string line)
     // regarding tokenList.push_back(Tokens(row, (int)i, std::to_string(1, line[i])));
     //-> using to_string method on line[i], because Tokens constructor needs 3rd argument to be a string
     //-> using (int) method on i+1 and row, because Tokens constructor needs 1st and 2nd argument to be an int
+
+    // This will register a blank line as a token
+    // if (line.size() == 0 || std::all_of(line.begin(), line.end(), isspace))
+    // {
+    //     tokenList.push_back(Tokens((int)row, 1, ""));
+    //     return 0;
+    // }
 
     // goes through line character by character
     for (size_t i = 0; i < line.size(); i++)
@@ -113,17 +121,24 @@ int lexer::tokenize(int row, std::string line)
         else if (line[i] == '=')
         {
             tokenList.push_back(Tokens((int)row, (int)i + 1, std::string(1, line[i])));
-        } 
-        else if (line.substr(i, 2) == "if"){
+        }
+        else if (line.substr(i, 2) == "if")
+        {
             tokenList.push_back(Tokens((int)row, (int)i + 1, "if"));
             i++;
-        } else if (line.substr(i,5) == "while"){
+        }
+        else if (line.substr(i, 5) == "while")
+        {
             tokenList.push_back(Tokens((int)row, (int)i + 1, "while"));
             i = i + 4;
-        } else if (line.substr(i,4) == "else"){
+        }
+        else if (line.substr(i, 4) == "else")
+        {
             tokenList.push_back(Tokens((int)row, (int)i + 1, "else"));
-            i = i  + 3;
-        } else if (line.substr(i,5) == "print"){
+            i = i + 3;
+        }
+        else if (line.substr(i, 5) == "print")
+        {
             tokenList.push_back(Tokens((int)row, (int)i + 1, "print"));
             i = i + 4;
         }
@@ -131,7 +146,7 @@ int lexer::tokenize(int row, std::string line)
         else if (isalpha(line[i]) || line[i] == '_')
         {
             i = checkIsIdentifier(line, (int)row, (int)i);
-        } 
+        }
 
         else
         {
