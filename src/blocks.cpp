@@ -12,16 +12,16 @@ Blocks::~Blocks()
     }
 
     // Delete the thenBlock if it was allocated dynamically
-    if (thenBlock != nullptr)
-    {
-        delete thenBlock;
-    }
+    // if (thenBlock != nullptr)
+    // {
+    //     delete thenBlock;
+    // }
 
     // Delete the elseBlock if it was allocated dynamically
-    if (elseBlock != nullptr)
-    {
-        delete elseBlock;
-    }
+    // if (elseBlock != nullptr)
+    // {
+    //     delete elseBlock;
+    // }
 
     // Delete all dynamically allocated Blocks in blocklist
     for (Blocks *block : blocklist)
