@@ -348,10 +348,10 @@ int main()
         {
             evaluateBlock(rootBlock);
         }
-        // for (Blocks *root : astNodes)
-        // {
-        //     delete root;
-        // }
+        for (Blocks *root : astNodes)
+        {
+            delete root;
+        }
 
         return 0;
     }
