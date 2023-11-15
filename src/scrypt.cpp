@@ -1,4 +1,3 @@
-
 #include <iostream>
 // #include "lib/infix_parser.h"
 #include "lib/lexer.h"
@@ -240,7 +239,6 @@ Blocks *parseStatements(std::vector<std::vector<Tokens>> &lines, size_t &lineInd
 
 int main()
 {
-    std::vector<Blocks *> astNodes;
     std::string line;
     int row = 0;
     lexer Lexer;
@@ -332,7 +330,7 @@ int main()
             }
         }
 
-        // std::vector<Blocks *> astNodes;
+        std::vector<Blocks *> astNodes;
         size_t lineIndex = 0, tokenIndex = 0;
         while (lineIndex < tokensByLine.size())
         {
@@ -358,22 +356,13 @@ int main()
     catch (const std::runtime_error &e)
     {
         std::cout << e.what() << std::endl;
-        for (Blocks *root : astNodes)
-        {
-            delete root;
-        }
-        exit(3);
+        exit(1);
     }
     catch (const std::logic_error &e)
     {
         std::cout << e.what() << std::endl;
-        for (Blocks *root : astNodes)
-        {
-            delete root;
-        }
         exit(1);
     }
-    
 }
 
 void evaluateBlock(Blocks *block)
