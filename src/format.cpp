@@ -248,13 +248,17 @@ Blocks *parseStatements(std::vector<std::vector<Tokens>> &lines, size_t &lineInd
             block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));
             // lineIndex++;
         }
-        block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));
+        
+        //std::cout << "THIS IS FOR DEBUGGING }: " << lines[lineIndex].back().text;
+        block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));//here
         // block = parseStatements(lines, lineIndex, tokenIndex);
         return block;
 
         // Handle 'else' or 'else if'
         if (lineIndex < lines.size() && lines[lineIndex].front().text == "else")
         {
+            //maybe delete the bottom two lines, don't go to next line for else if
+            //move to next token, see if next token is an if
             // lineIndex++;
             // tokenIndex = 0; // HMMMMMMMMM
             // Blocks *block = new Blocks();
@@ -292,7 +296,8 @@ Blocks *parseStatements(std::vector<std::vector<Tokens>> &lines, size_t &lineInd
             block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));
             // lineIndex++;
         }
-        block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));
+        // std::cout << "THIS IS FOR DEBUGGING }: " << lines[lineIndex].back().text;
+        block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));//here here
         return block;
     }
     else if (tokens.front().text == "print")
