@@ -313,9 +313,9 @@ Blocks *parseStatements(std::vector<std::vector<Tokens>> &lines, size_t &lineInd
                 // block = parseStatements(lines, lineIndex, tokenIndex);
                 // return block;
                 block->blocklist.push_back(ifblock);
-                std::cout << "THIS IS TH ELINE INDEX: " << lineIndex << std::endl;
-                // lineIndex--;
-                //   return block;
+                // std::cout << "THIS IS TH ELINE INDEX: " << lineIndex << std::endl;
+                //  lineIndex--;
+                //    return block;
             }
             else
             {
