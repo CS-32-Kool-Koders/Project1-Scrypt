@@ -357,7 +357,7 @@ int main()
     catch (const std::runtime_error &e)
     {
         std::cout << e.what() << std::endl;
-        exit(1);
+        exit(3);
     }
     catch (const std::logic_error &e)
     {
