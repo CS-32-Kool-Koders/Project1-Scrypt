@@ -7,6 +7,8 @@
 #include <sstream>
 #include <algorithm>
 
+bool elseBlock = false;
+
 bool isStatement(const std::string &tokenText)
 {
     return tokenText == "if" || tokenText == "while" || tokenText == "else";
@@ -142,9 +144,15 @@ Blocks *parseStatements(std::vector<std::vector<Tokens>> &lines, size_t &lineInd
             block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));
             // lineIndex++;
         }
-
+        if (lines[lineIndex][0].text != "}")
+        {
+            block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));
+        }
+        else
+        {
+            lineIndex++;
+        }
         // std::cout << "THIS IS FOR DEBUGGING }: " << lines[lineIndex].back().text;
-        block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex)); // here
         // block = parseStatements(lines, lineIndex, tokenIndex);
         return block;
 
@@ -200,6 +208,7 @@ Blocks *parseStatements(std::vector<std::vector<Tokens>> &lines, size_t &lineInd
             // block = parseStatements(lines, lineIndex, tokenIndex);
             // return block;
             block->blocklist.push_back(ifblock);
+            lineIndex--;
         }
         else
         {
@@ -356,6 +365,7 @@ int main()
 
         for (Blocks *rootBlock : astNodes)
         {
+            // std::cout << rootBlock->type;
             evaluateBlock(rootBlock);
         }
         for (Blocks *root : astNodes)
@@ -417,6 +427,7 @@ void evaluateBlock(Blocks *block)
         // Evaluate 'if' blocks
         if (block->type == "if")
         {
+            elseBlock = resultVar2.getBvalue();
             if (resultVar2.getBvalue() && !block->blocklist.empty())
             {
                 for (auto *bl : block->blocklist)
@@ -460,10 +471,11 @@ void evaluateBlock(Blocks *block)
                             }
                         }
                         innerBlock->condition->tokens = tempVec;
+                        evaluateBlock(innerBlock);
                     }
                     else
                     {
-                        std::cout << "this should break" << std::endl;
+                        evaluateBlock(innerBlock);
                         return;
                     }
                     // //std::cout <<std::endl;
@@ -472,7 +484,6 @@ void evaluateBlock(Blocks *block)
                     // }
 
                     // std::cout<<innerBlock<< innerBlock->type<<std::endl;
-                    evaluateBlock(innerBlock);
                 }
 
                 // Re-evaluate the condition at the end of each loop iteration
@@ -489,9 +500,14 @@ void evaluateBlock(Blocks *block)
     }
     // Handle 'else' blocks
     // this shit wrong prolly, come back to
-    // else if (block->type == "else") {
-    //     for (Blocks *innerBlock : block->blocklist) {
-    //         evaluateBlock(innerBlock);
-    //     }
-    // }
+    else if (block->type == "else")
+    {
+        if (!elseBlock)
+        {
+            for (Blocks *innerBlock : block->blocklist)
+            {
+                evaluateBlock(innerBlock);
+            }
+        }
+    }
 }
