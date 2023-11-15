@@ -290,7 +290,7 @@ Blocks *parseStatements(std::vector<std::vector<Tokens>> &lines, size_t &lineInd
     {
         block->type = "else";
         int elseNum = 0;
-        while (lines[lineIndex].front().text == "else")
+        while (lineIndex < lines.size() && lines[lineIndex].front().text == "else")
         {
             tokens = lines[lineIndex];
             if (tokens[1].text == "if")
