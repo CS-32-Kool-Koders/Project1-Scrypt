@@ -170,11 +170,14 @@ void printAST(const Blocks *block, int indent)
     }
     else if (block->type == "print" || block->type == "expression")
     {
-        std::cout << indentation;
-        if (block->type == "print")
-            std::cout << block->type << " ";
-        printExpression(block->condition);
-        std::cout << std::endl;
+        if (block->condition->getTokens()[0].text != "}")
+        {
+            std::cout << indentation;
+            if (block->type == "print")
+                std::cout << block->type << " ";
+            printExpression(block->condition);
+            std::cout << std::endl;
+        }
     }
     else if (block->type == "else")
     {
@@ -184,7 +187,7 @@ void printAST(const Blocks *block, int indent)
         {
             printAST(childBlock, indent + 4);
         }
-        // std::cout << indentation << "}" << std::endl;
+        std::cout << indentation << "}" << std::endl;
     }
 }
 
@@ -286,42 +289,51 @@ Blocks *parseStatements(std::vector<std::vector<Tokens>> &lines, size_t &lineInd
     else if (tokens.front().text == "else")
     {
         block->type = "else";
-        if (tokens[1].text == "if")
+        while (lines[lineIndex].front().text == "else")
         {
-            Blocks *ifblock = new Blocks();
-            ifblock->type = "if";
-            std::vector<Tokens> conditionTokens(tokens.begin() + 2, tokens.end() - 1); // Exclude 'if'/'while' and '{'
-            ifblock->condition = new ExpressionParser(conditionTokens);
-
-            lineIndex++;
-            tokenIndex = 0;
-            while (lineIndex < lines.size() && lines[lineIndex].back().text != "}")
+            tokens = lines[lineIndex];
+            if (tokens[1].text == "if")
             {
-                // std::cout << "This is the thing " << lines[lineIndex ].back().text << std::endl;
-                ifblock->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));
-                // lineIndex++;
-            }
+                Blocks *ifblock = new Blocks();
+                ifblock->type = "if";
+                std::vector<Tokens> conditionTokens(tokens.begin() + 2, tokens.end() - 1); // Exclude 'if'/'while' and '{'
+                ifblock->condition = new ExpressionParser(conditionTokens);
 
-            // std::cout << "THIS IS FOR DEBUGGING }: " << lines[lineIndex].back().text;
-            ifblock->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex)); // here
-            // block = parseStatements(lines, lineIndex, tokenIndex);
-            // return block;
-            block->blocklist.push_back(ifblock);
-            lineIndex--;
-        }
-        else
-        {
-            lineIndex++;
-            while (lineIndex < lines.size() && lines[lineIndex].back().text != "}")
-            {
-                // std::cout << "This is the thing " << lines[lineIndex ].back().text << std::endl;
-                block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));
-                // lineIndex++;
+                lineIndex++;
+                tokenIndex = 0;
+                while (lineIndex < lines.size() && lines[lineIndex].back().text != "}")
+                {
+                    // std::cout << "This is the thing " << lines[lineIndex ].back().text << std::endl;
+                    ifblock->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));
+                    // lineIndex++;
+                }
+
+                // std::cout << "THIS IS FOR DEBUGGING }: " << lines[lineIndex].back().text;
+                ifblock->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex)); // here
+                // block = parseStatements(lines, lineIndex, tokenIndex);
+                // return block;
+                block->blocklist.push_back(ifblock);
+                std::cout << "THIS IS TH ELINE INDEX: " << lineIndex << std::endl;
+                // lineIndex--;
+                //   return block;
             }
-            // std::cout << "THIS IS FOR DEBUGGING }: " << lines[lineIndex].back().text;
-            block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex)); // here here
-            return block;
+            else
+            {
+                Blocks *Eblock = new Blocks();
+                Eblock->type = "else";
+                lineIndex++;
+                while (lineIndex < lines.size() && lines[lineIndex].back().text != "}")
+                {
+                    // std::cout << "This is the thing " << lines[lineIndex ].back().text << std::endl;
+                    Eblock->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));
+                    // lineIndex++;
+                }
+                // std::cout << "THIS IS FOR DEBUGGING }: " << lines[lineIndex].back().text;
+                Eblock->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex)); // here here
+                block->blocklist.push_back(Eblock);
+            }
         }
+        return block;
     }
     else if (tokens.front().text == "print")
     {
