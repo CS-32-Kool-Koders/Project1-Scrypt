@@ -258,42 +258,44 @@ Blocks *parseStatements(std::vector<std::vector<Tokens>> &lines, size_t &lineInd
         // block = parseStatements(lines, lineIndex, tokenIndex);
         return block;
 
-        // Handle 'else' or 'else if'
-        if (lineIndex < lines.size() && lines[lineIndex].front().text == "else")
-        {
-            // maybe delete the bottom two lines, don't go to next line for else if
-            // move to next token, see if next token is an if
-            //  lineIndex++;
-            //  tokenIndex = 0; // HMMMMMMMMM
-            //  Blocks *block = new Blocks();
-            if (lineIndex < lines.size() && lines[lineIndex].front().text == "if")
-            {
-                // This is an 'else if' block
-                // elseBlock
-                block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));
-                return block;
-                // block = parseStatements(lines, lineIndex, tokenIndex);
-            }
-            else
-            {
-                // This is an 'else' block
-                tokenIndex = 0;
-                // elseBlock
-                // OVERHERE
-                block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));
-                return block;
-                // block = parseStatements(lines, lineIndex, tokenIndex);
-            }
-        }
+        // // Handle 'else' or 'else if'
+        // if (lineIndex < lines.size() && lines[lineIndex].front().text == "else")
+        // {
+        //     // maybe delete the bottom two lines, don't go to next line for else if
+        //     // move to next token, see if next token is an if
+        //     //  lineIndex++;
+        //     //  tokenIndex = 0; // HMMMMMMMMM
+        //     //  Blocks *block = new Blocks();
+        //     if (lineIndex < lines.size() && lines[lineIndex].front().text == "if")
+        //     {
+        //         // This is an 'else if' block
+        //         // elseBlock
+        //         block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));
+        //         return block;
+        //         // block = parseStatements(lines, lineIndex, tokenIndex);
+        //     }
+        //     else
+        //     {
+        //         // This is an 'else' block
+        //         tokenIndex = 0;
+        //         // elseBlock
+        //         // OVERHERE
+        //         block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));
+        //         return block;
+        //         // block = parseStatements(lines, lineIndex, tokenIndex);
+        //     }
+        // }
     }
     else if (tokens.front().text == "else")
     {
         block->type = "else";
+        int elseNum = 0;
         while (lines[lineIndex].front().text == "else")
         {
             tokens = lines[lineIndex];
             if (tokens[1].text == "if")
             {
+                elseNum++;
                 Blocks *ifblock = new Blocks();
                 ifblock->type = "if";
                 std::vector<Tokens> conditionTokens(tokens.begin() + 2, tokens.end() - 1); // Exclude 'if'/'while' and '{'
@@ -319,18 +321,34 @@ Blocks *parseStatements(std::vector<std::vector<Tokens>> &lines, size_t &lineInd
             }
             else
             {
-                Blocks *Eblock = new Blocks();
-                Eblock->type = "else";
-                lineIndex++;
-                while (lineIndex < lines.size() && lines[lineIndex].back().text != "}")
+                elseNum++;
+                if (elseNum > 1)
                 {
-                    // std::cout << "This is the thing " << lines[lineIndex ].back().text << std::endl;
-                    Eblock->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));
-                    // lineIndex++;
+                    Blocks *Eblock = new Blocks();
+                    Eblock->type = "else";
+                    lineIndex++;
+                    while (lineIndex < lines.size() && lines[lineIndex].back().text != "}")
+                    {
+                        // std::cout << "This is the thing " << lines[lineIndex ].back().text << std::endl;
+                        Eblock->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));
+                        // lineIndex++;
+                    }
+                    // std::cout << "THIS IS FOR DEBUGGING }: " << lines[lineIndex].back().text;
+                    Eblock->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex)); // here here
+                    block->blocklist.push_back(Eblock);
                 }
-                // std::cout << "THIS IS FOR DEBUGGING }: " << lines[lineIndex].back().text;
-                Eblock->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex)); // here here
-                block->blocklist.push_back(Eblock);
+                else
+                {
+                    lineIndex++;
+                    while (lineIndex < lines.size() && lines[lineIndex].back().text != "}")
+                    {
+                        // std::cout << "This is the thing " << lines[lineIndex ].back().text << std::endl;
+                        block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));
+                        // lineIndex++;
+                    }
+                    // std::cout << "THIS IS FOR DEBUGGING }: " << lines[lineIndex].back().text;
+                    block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex)); // here here
+                }
             }
         }
         return block;
