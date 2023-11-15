@@ -75,7 +75,7 @@ public:
         {
             return bvalue;
         }
-        throw std::runtime_error("wrong lol");
+        throw std::runtime_error("Runtime error: condition is not a bool.");
     }
 
     double getDvalue()
@@ -84,7 +84,7 @@ public:
         {
             return dvalue;
         }
-        throw std::runtime_error("wrong lol");
+        throw std::runtime_error("Runtime error: condition is not a bool.");
     }
 
     std::string btos()
@@ -93,7 +93,7 @@ public:
         {
             return this->bvalue ? "true" : "false";
         }
-        throw std::runtime_error("wrong lol");
+        throw std::runtime_error("Runtime error: condition is not a bool.");
     }
 
     std::string dtos()
@@ -104,7 +104,7 @@ public:
         }
         else
         {
-            throw std::runtime_error("wrong lol");
+        throw std::runtime_error("Runtime error: condition is not a bool.");
         }
     }
 
