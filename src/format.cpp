@@ -52,6 +52,7 @@ int main()
         std::vector<std::vector<Tokens>> tokensByLine;
         std::vector<Tokens> temp;
         size_t index = 0;
+        size_t parens = 0;
         while (index + 1 < Lexer.tokenList.size())
         {
             // std::cout << "index is " << index << std::endl;
@@ -79,6 +80,42 @@ int main()
                 temp.push_back(Lexer.tokenList.at(index));
                 tokensByLine.push_back(temp);
                 temp.clear();
+                index++;
+            }
+            // else if (Lexer.tokenList.at(index).text == ")")
+            // {
+            //     temp.push_back(Lexer.tokenList.at(index));
+            //     index++;
+            // }
+
+            // else if (Lexer.tokenList.at(index).text == "(" && !checkoperator(Lexer.tokenList.at(index + 1).text))
+            // {
+            //     parens++;
+            //     temp.push_back(Lexer.tokenList.at(index));
+            //     temp.push_back(Lexer.tokenList.at(index + 1));
+            //     index += 2;
+            // }
+            else if (checkoperator(Lexer.tokenList.at(index).text) && !checkoperator(Lexer.tokenList.at(index + 1).text))
+            {
+                temp.push_back(Lexer.tokenList.at(index));
+                temp.push_back(Lexer.tokenList.at(index + 1));
+                index += 2;
+            }
+            else if (checkoperator(Lexer.tokenList.at(index).text) && checkoperator(Lexer.tokenList.at(index + 1).text))
+            {
+                temp.push_back(Lexer.tokenList.at(index));
+                temp.push_back(Lexer.tokenList.at(index + 1));
+                index += 2;
+            }
+            // else if (Lexer.tokenList.at(index).text == ")")
+            // {
+            //     temp.push_back(Lexer.tokenList.at(index));
+            //     index++;
+            // }
+            else if (Lexer.tokenList.at(index).text == ")")
+            {
+                temp.push_back(Lexer.tokenList.at(index));
+                parens--;
                 index++;
             }
             else if (!checkoperator(Lexer.tokenList.at(index).text) && !checkoperator(Lexer.tokenList.at(index + 1).text))
@@ -109,6 +146,33 @@ int main()
                 temp.push_back(Lexer.tokenList.at(index + 1));
                 index += 2;
             }
+            else if (!checkoperator(Lexer.tokenList.at(index).text))
+            {
+                temp.push_back(Lexer.tokenList.at(index));
+                tokensByLine.push_back(temp);
+                temp.clear();
+                // temp.push_back(Lexer.tokenList.at(index + 1));
+                index++;
+            }
+            else
+            {
+                index++;
+            }
+        }
+        if (!temp.empty())
+        {
+            tokensByLine.push_back(temp);
+            temp.clear();
+        }
+
+        std::cout << std::endl;
+        for (auto vec : tokensByLine)
+        {
+            for (auto token : vec)
+            {
+                std::cout << token.text << " ";
+            }
+            std::cout << std::endl;
         }
 
         std::vector<Blocks *> astNodes;
@@ -212,7 +276,7 @@ bool checkoperator(std::string op)
         "+", "-", "*", "/", "=", "%", "==", ">",
         ">=", "<", "<=", "|", "^", "&", "!=",
         "+", "-", "*", "/", "=", "%", "==", ">", ">=",
-        "<", "<=", "|", "^", "&", "!="};
+        "<", "<=", "|", "^", "&", "!=", "(", ")"};
     if (std::find(ops.begin(), ops.end(), op) == ops.end())
     {
         return false;
