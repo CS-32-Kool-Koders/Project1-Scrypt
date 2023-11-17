@@ -420,7 +420,7 @@ BooleanWrapper ExpressionNode::computeResult()
                 return ExpressionParser::variables[value];
             }
         }
-
+        column = 1;
         throw std::runtime_error("Runtime error: unknown identifier " + value);
 
         // a non initialized variable is false
