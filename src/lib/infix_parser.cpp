@@ -298,9 +298,9 @@ void ExpressionNode::getVariablesNames()
                 else
                     break;
             }
-            strstrm.str("");
-            strstrm.clear();
-            throw std::logic_error("Unexpected token at line 1 column " + std::to_string(eqColumn + 1) + ": " + value);
+            // strstrm.str("");
+            // strstrm.clear();
+            // throw std::logic_error("Unexpected token at line 1 column " + std::to_string(eqColumn + 1) + ": " + value);
         }
     }
 
@@ -369,6 +369,8 @@ BooleanWrapper ExpressionNode::computeResult()
         }
         else if (value == "=")
         {
+            if (!ExpressionNode::isVariable(left->value))
+                throw std::runtime_error("Runtime error: invalid assignee.");
             ExpressionParser::variables[left->value] = rightValue;
             return rightValue;
         }
