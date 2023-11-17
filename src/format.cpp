@@ -165,15 +165,15 @@ int main()
             temp.clear();
         }
 
-        std::cout << std::endl;
-        for (auto vec : tokensByLine)
-        {
-            for (auto token : vec)
-            {
-                std::cout << token.text << " ";
-            }
-            std::cout << std::endl;
-        }
+        // std::cout << std::endl;
+        // for (auto vec : tokensByLine)
+        // {
+        //     for (auto token : vec)
+        //     {
+        //         std::cout << token.text << " ";
+        //     }
+        //     std::cout << std::endl;
+        // }
 
         std::vector<Blocks *> astNodes;
         size_t lineIndex = 0, tokenIndex = 0;
