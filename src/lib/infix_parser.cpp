@@ -333,6 +333,13 @@ BooleanWrapper ExpressionNode::computeResult()
             // std::cout << "val: " << value << std::endl;
             strstrm.str("");
             strstrm.clear();
+            // if ExpressionParser::line[column - 1] is E and the rest of the line is ND, then it's an END
+            if (ExpressionParser::line.length() >= column + 2 && ExpressionParser::line[column - 1] == 'E' && ExpressionParser::line[column] == 'N' && ExpressionParser::line[column + 1] == 'D')
+            {
+                std::string throw_message = "Unexpected token at line 1 column " + std::to_string(column) + ": END";
+                column = 1;
+                throw std::logic_error(throw_message);
+            }
             std::string throw_message = "Unexpected token at line 1 column " + std::to_string(column) + ": " + ExpressionParser::line[column - 1];
             column = 1;
             throw std::logic_error(throw_message);
