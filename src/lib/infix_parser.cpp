@@ -330,10 +330,10 @@ BooleanWrapper ExpressionNode::computeResult()
             //     column = 1;
             //     throw std::logic_error(throw_message);
             // }
-            // std::cout << "i am here" << std::endl;
+            // std::cout << "val: " << value << std::endl;
             strstrm.str("");
             strstrm.clear();
-            std::string throw_message = "Unexpected token at line 1 column " + std::to_string(column) + ": " + value;
+            std::string throw_message = "Unexpected token at line 1 column " + std::to_string(column) + ": " + ExpressionParser::line[column - 1];
             column = 1;
             throw std::logic_error(throw_message);
         }
