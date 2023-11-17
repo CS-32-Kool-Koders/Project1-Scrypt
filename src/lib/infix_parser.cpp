@@ -22,7 +22,7 @@ std::string ExpressionParser::line;
 
 double result;
 int eqNb = 0;
-int column = 1;
+size_t column = 1;
 std::stringstream strstrm;
 
 void ExpressionNode::computeInfix()
