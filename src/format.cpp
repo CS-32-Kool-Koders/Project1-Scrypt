@@ -97,6 +97,13 @@ int main()
             // }
             else if (checkoperator(Lexer.tokenList.at(index).text) && !checkoperator(Lexer.tokenList.at(index + 1).text))
             {
+                if (Lexer.tokenList.at(index).text == ")")
+                {
+                    temp.push_back(Lexer.tokenList.at(index));
+                    tokensByLine.push_back(temp);
+                    temp.clear();
+                    index++;
+                }
                 temp.push_back(Lexer.tokenList.at(index));
                 temp.push_back(Lexer.tokenList.at(index + 1));
                 index += 2;
