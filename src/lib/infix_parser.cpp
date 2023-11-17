@@ -301,6 +301,15 @@ void ExpressionNode::getVariablesNames()
             // strstrm.str("");
             // strstrm.clear();
             // throw std::logic_error("Unexpected token at line 1 column " + std::to_string(eqColumn + 1) + ": " + value);
+            if (isVariable(right->value) && !isVariable(left->value))
+            {
+                if (right->value == "mph") // since we will return part 3 later and may have some part of part 4 inside
+                {                          // we need a temporary variable mitigation to pass both part 3 and 4 because
+                    strstrm.str("");       // the handling of it is slightly different
+                    strstrm.clear();
+                    throw std::logic_error("Unexpected token at line 1 column " + std::to_string(eqColumn + 1) + ": " + value);
+                }
+            }
         }
     }
 
