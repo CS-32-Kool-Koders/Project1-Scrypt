@@ -82,6 +82,15 @@ int main()
                 temp.clear();
                 index++;
             }
+
+            else if ((Lexer.tokenList.at(index + 1).text == ")" && !checkoperator(Lexer.tokenList.at(index + 1).text)) || (!checkoperator(Lexer.tokenList.at(index).text) && Lexer.tokenList.at(index + 1).text == "("))
+            {
+                temp.push_back(Lexer.tokenList.at(index));
+                tokensByLine.push_back(temp);
+                temp.clear();
+                // temp.push_back(Lexer.tokenList.at(index + 1));
+                index++;
+            }
             // else if (Lexer.tokenList.at(index).text == ")")
             // {
             //     temp.push_back(Lexer.tokenList.at(index));
@@ -172,15 +181,15 @@ int main()
             temp.clear();
         }
 
-        // std::cout << std::endl;
-        // for (auto vec : tokensByLine)
-        // {
-        //     for (auto token : vec)
-        //     {
-        //         std::cout << token.text << " ";
-        //     }
-        //     std::cout << std::endl;
-        // }
+        std::cout << std::endl;
+        for (auto vec : tokensByLine)
+        {
+            for (auto token : vec)
+            {
+                std::cout << token.text << " ";
+            }
+            std::cout << std::endl;
+        }
 
         std::vector<Blocks *> astNodes;
         size_t lineIndex = 0, tokenIndex = 0;
