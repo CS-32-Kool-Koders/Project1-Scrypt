@@ -245,6 +245,7 @@ int main()
     int new_line = 0;
     try
     {
+        try{
         while (!std::cin.eof())
         {
             new_line += 1;
@@ -262,6 +263,10 @@ int main()
         else
         {
             Lexer.tokenList.push_back(Tokens(row, Lexer.tokenList.back().col + 1, "END"));
+        }
+        } catch(const std::runtime_error &e){
+            std::cout << e.what() << std::endl;
+            exit(1);
         }
 
         // go through token list
@@ -356,7 +361,7 @@ int main()
     catch (const std::runtime_error &e)
     {
         std::cout << e.what() << std::endl;
-        exit(1);
+        exit(3);
     }
     catch (const std::logic_error &e)
     {
