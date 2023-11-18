@@ -245,6 +245,7 @@ int main()
     int new_line = 0;
     try
     {
+        try{
         while (!std::cin.eof())
         {
             new_line += 1;
@@ -263,6 +264,11 @@ int main()
         {
             Lexer.tokenList.push_back(Tokens(row, Lexer.tokenList.back().col + 1, "END"));
         }
+        } catch (const std::runtime_error &e)
+    {
+            std::cout << e.what() << std::endl;
+            exit(3);
+    }
 
         // go through token list
         // add to some string, if end, then
