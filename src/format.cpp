@@ -52,6 +52,7 @@ int main()
         std::vector<std::vector<Tokens>> tokensByLine;
         std::vector<Tokens> temp;
         size_t index = 0;
+        // size_t parens = 0;
         while (index + 1 < Lexer.tokenList.size())
         {
             // std::cout << "index is " << index << std::endl;
@@ -63,6 +64,13 @@ int main()
                     temp.push_back(Lexer.tokenList.at(index));
                     index++;
                 }
+                temp.push_back(Lexer.tokenList.at(index));
+                tokensByLine.push_back(temp);
+                temp.clear();
+                index++;
+            }
+            else if (Lexer.tokenList.at(index).text == ";")
+            {
                 temp.push_back(Lexer.tokenList.at(index));
                 tokensByLine.push_back(temp);
                 temp.clear();
@@ -81,6 +89,52 @@ int main()
                 temp.clear();
                 index++;
             }
+
+            else if ((Lexer.tokenList.at(index + 1).text == ")" && !checkoperator(Lexer.tokenList.at(index + 1).text)) || (!checkoperator(Lexer.tokenList.at(index).text) && Lexer.tokenList.at(index + 1).text == "("))
+            {
+                temp.push_back(Lexer.tokenList.at(index));
+                tokensByLine.push_back(temp);
+                temp.clear();
+                // temp.push_back(Lexer.tokenList.at(index + 1));
+                index++;
+            }
+            // else if (Lexer.tokenList.at(index).text == ")")
+            // {
+            //     temp.push_back(Lexer.tokenList.at(index));
+            //     index++;
+            // }
+
+            // else if (Lexer.tokenList.at(index).text == "(" && !checkoperator(Lexer.tokenList.at(index + 1).text))
+            // {
+            //     parens++;
+            //     temp.push_back(Lexer.tokenList.at(index));
+            //     temp.push_back(Lexer.tokenList.at(index + 1));
+            //     index += 2;
+            // }
+            else if (checkoperator(Lexer.tokenList.at(index).text) && !checkoperator(Lexer.tokenList.at(index + 1).text))
+            {
+                if (Lexer.tokenList.at(index).text == ")")
+                {
+                    temp.push_back(Lexer.tokenList.at(index));
+                    tokensByLine.push_back(temp);
+                    temp.clear();
+                    index++;
+                }
+                temp.push_back(Lexer.tokenList.at(index));
+                temp.push_back(Lexer.tokenList.at(index + 1));
+                index += 2;
+            }
+            else if (checkoperator(Lexer.tokenList.at(index).text) && checkoperator(Lexer.tokenList.at(index + 1).text))
+            {
+                temp.push_back(Lexer.tokenList.at(index));
+                temp.push_back(Lexer.tokenList.at(index + 1));
+                index += 2;
+            }
+            else if (Lexer.tokenList.at(index).text == ")")
+            {
+                temp.push_back(Lexer.tokenList.at(index));
+                index++;
+            }
             else if (!checkoperator(Lexer.tokenList.at(index).text) && !checkoperator(Lexer.tokenList.at(index + 1).text))
             {
                 // std::cout << "is not operator AND next is not operator" << std::endl;
@@ -92,6 +146,28 @@ int main()
                     tokensByLine.push_back(temp);
                     temp.clear();
                     index += 2;
+                }
+                else if (Lexer.tokenList.at(index + 1).text == ";")
+                {
+                    if (index + 2 < Lexer.tokenList.size() && Lexer.tokenList.at(index + 2).text == "}")
+                    {
+                        temp.push_back(Lexer.tokenList.at(index));
+                        temp.push_back(Lexer.tokenList.at(index + 1));
+                        temp.push_back(Lexer.tokenList.at(index + 2));
+                        tokensByLine.push_back(temp);
+                        temp.clear();
+                        // temp.push_back(Lexer.tokenList.at(index + 1));
+                        index += 3;
+                    }
+                    else
+                    {
+                        temp.push_back(Lexer.tokenList.at(index));
+                        temp.push_back(Lexer.tokenList.at(index + 1));
+                        tokensByLine.push_back(temp);
+                        temp.clear();
+                        // temp.push_back(Lexer.tokenList.at(index + 1));
+                        index += 2;
+                    }
                 }
                 else
                 {
@@ -109,6 +185,32 @@ int main()
                 temp.push_back(Lexer.tokenList.at(index + 1));
                 index += 2;
             }
+            else if (!checkoperator(Lexer.tokenList.at(index).text))
+            {
+                temp.push_back(Lexer.tokenList.at(index));
+                tokensByLine.push_back(temp);
+                temp.clear();
+                // temp.push_back(Lexer.tokenList.at(index + 1));
+                index++;
+            }
+            else
+            {
+                index++;
+            }
+        }
+        if (!temp.empty())
+        {
+            tokensByLine.push_back(temp);
+            temp.clear();
+        }
+        std::cout << "tokensByLine" << std::endl;
+        for (auto vec : tokensByLine)
+        {
+            for (auto token : vec)
+            {
+                std::cout << token.text << " ";
+            }
+            std::cout << std::endl;
         }
 
         std::vector<Blocks *> astNodes;
@@ -176,7 +278,7 @@ void printAST(const Blocks *block, int indent)
             if (block->type == "print")
                 std::cout << block->type << " ";
             printExpression(block->condition);
-            std::cout << std::endl;
+            std::cout << ";" << std::endl;
         }
     }
     else if (block->type == "else")
@@ -212,7 +314,7 @@ bool checkoperator(std::string op)
         "+", "-", "*", "/", "=", "%", "==", ">",
         ">=", "<", "<=", "|", "^", "&", "!=",
         "+", "-", "*", "/", "=", "%", "==", ">", ">=",
-        "<", "<=", "|", "^", "&", "!="};
+        "<", "<=", "|", "^", "&", "!=", "(", ")"};
     if (std::find(ops.begin(), ops.end(), op) == ops.end())
     {
         return false;
@@ -355,18 +457,39 @@ Blocks *parseStatements(std::vector<std::vector<Tokens>> &lines, size_t &lineInd
     }
     else if (tokens.front().text == "print")
     {
-        block->type = "print";
-        std::vector<Tokens> printExpressionTokens(tokens.begin() + 1, tokens.end());
-        block->condition = new ExpressionParser(printExpressionTokens);
-        lineIndex++;
-        return block;
+        if (tokens.back().text == ";")
+        {
+            block->type = "print";
+            std::vector<Tokens> printExpressionTokens(tokens.begin() + 1, tokens.end());
+            block->condition = new ExpressionParser(printExpressionTokens);
+            lineIndex++;
+            return block;
+        }
+        else
+        {
+            std::string error_message = "Unexpected token at line " + std::to_string(tokens.front().col) + " column " + std::to_string(tokens.front().line);
+            throw std::runtime_error(error_message);
+        }
     }
     else
     {
+        // if (tokens.back().text == ";")
+        // {
         block->type = "expression";
         block->condition = new ExpressionParser(tokens);
         lineIndex++;
         return block;
+        // }
+        // else
+        // {
+        //     std::cout << "index: " << lineIndex;
+        //     for (auto token : tokens)
+        //     {
+        //         std::cout << token.text << " " << std::endl;
+        //     }
+        //     std::string error_message = "2Unexpected token at line " + std::to_string(tokens.front().col + 1) + " column " + std::to_string(lineIndex);
+        //     throw std::runtime_error(error_message);
+        // }
     }
 
     lineIndex++;

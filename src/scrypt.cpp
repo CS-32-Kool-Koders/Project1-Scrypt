@@ -227,6 +227,7 @@ Blocks *parseStatements(std::vector<std::vector<Tokens>> &lines, size_t &lineInd
     }
     else
     {
+
         block->type = "expression";
         block->condition = new ExpressionParser(tokens);
         lineIndex++;

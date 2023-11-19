@@ -104,7 +104,7 @@ public:
         }
         else
         {
-        throw std::runtime_error("Runtime error: condition is not a bool.");
+            throw std::runtime_error("Runtime error: condition is not a bool.");
         }
     }
 
@@ -196,7 +196,7 @@ public:
         }
         else
         {
-            throw std::runtime_error("Runtime error: invalid operand type.");
+            return BooleanWrapper(false);
         }
     }
 
@@ -212,7 +212,7 @@ public:
         }
         else
         {
-            throw std::runtime_error("Runtime error: invalid operand type.");
+            return BooleanWrapper(false);
         }
     }
 

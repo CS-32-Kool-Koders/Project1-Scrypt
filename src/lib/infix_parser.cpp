@@ -324,7 +324,7 @@ BooleanWrapper ExpressionNode::computeResult()
     // {
     if (std::find(supportedOpAndCmpWithEnd.begin(), supportedOpAndCmpWithEnd.end(), value) != supportedOpAndCmpWithEnd.end())
     {
-        if (value == "=" && right != nullptr && right->value == "END")
+        if (value == "=" && right != nullptr && (right->value == "END" || right->value == ";"))
         {
             int endColumn = ExpressionParser::line.find("END");
             strstrm.str("");
