@@ -1,3 +1,4 @@
+
 #pragma once
 #include <cmath>
 #include <string>
@@ -74,7 +75,7 @@ public:
         {
             return bvalue;
         }
-        throw std::runtime_error("wrong lol");
+        throw std::runtime_error("Runtime error: condition is not a bool.");
     }
 
     double getDvalue()
@@ -83,7 +84,7 @@ public:
         {
             return dvalue;
         }
-        throw std::runtime_error("wrong lol");
+        throw std::runtime_error("Runtime error: condition is not a bool.");
     }
 
     std::string btos()
@@ -92,7 +93,7 @@ public:
         {
             return this->bvalue ? "true" : "false";
         }
-        throw std::runtime_error("wrong lol");
+        throw std::runtime_error("Runtime error: condition is not a bool.");
     }
 
     std::string dtos()
@@ -103,7 +104,7 @@ public:
         }
         else
         {
-            throw std::runtime_error("wrong lol");
+        throw std::runtime_error("Runtime error: condition is not a bool.");
         }
     }
 
@@ -426,7 +427,7 @@ public:
     bool isVariable(std::string value);
     void getVariablesNames();
     void computeInfix();
-    void printInfix();
+    void printInfix(bool newLine = true);
     void printTree();
     void printResult(BooleanWrapper);
     void checkParentheses(std::string tokenString);
@@ -438,10 +439,10 @@ public:
     static std::vector<std::string> knowsVariables;
     static std::map<std::string, BooleanWrapper> variables;
     static std::string line;
-
-private:
     std::vector<Tokens> tokens;
     std::size_t currentIndex;
+
+private:
     // std::map<std::function<ExpressionNode *()>, std::string> operatorsFn = {
     //     {std::bind(&ExpressionParser::parseMultiplyDivide, this), std::vector<std::string>{"+", "-"}},
     //     {std::bind(&ExpressionParser::parseOperand, this), std::vector<std::string>{"*", "/"}},
@@ -453,7 +454,10 @@ public:
         this->tokens = tokens;
         this->currentIndex = 0;
     }
-
+    std::vector<Tokens> getTokens()
+    {
+        return tokens;
+    }
     ExpressionNode *
     parseExpression();
 

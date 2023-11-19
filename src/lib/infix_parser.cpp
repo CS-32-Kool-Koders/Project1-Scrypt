@@ -58,6 +58,10 @@ void ExpressionNode::computeInfix()
             {
                 strstrm << value;
             }
+            else if (value == "{" || value == "}" || value == "(" || value == ")")
+            {
+                strstrm << value;
+            }
             else if (std::floor(std::stod(value)) == std::stod(value))
             {
                 strstrm << std::floor(std::stod(value));
@@ -147,6 +151,7 @@ void ExpressionNode::printTree()
 
 ExpressionNode *ExpressionParser::parseExpression()
 {
+    currentIndex = 0;
     return parseAssignment();
 }
 
@@ -400,6 +405,10 @@ BooleanWrapper ExpressionNode::computeResult()
         {
             return leftValue != rightValue;
         }
+        // added for scrypt shit
+        //  else if (value == "}"){
+        //      return true;
+        //  }
     }
     else if (isVariable(value))
     {
@@ -416,6 +425,11 @@ BooleanWrapper ExpressionNode::computeResult()
 
         // a non initialized variable is false
         return BooleanWrapper(false);
+    }
+    // maybe if value is a closing bracket, j continue
+    else if (value == "}")
+    {
+        return 65.42310;
     }
     else if (!BooleanWrapper::isBoolean(value))
     {
@@ -442,7 +456,14 @@ BooleanWrapper ExpressionNode::computeResult()
 
             //     }
             //}
-            throw std::logic_error("Invalid number: " + value);
+            if (value != "}" && value != ")")
+            {
+                // std::cout << "value is " << value << std::endl;
+                throw std::logic_error("Invalid number: " + value);
+            }
+            // else {
+            //      std::cout<<"";
+            //  }
         }
         column += value.length() - 1;
         // std::cout << column << " is number " <<std::endl;
@@ -457,10 +478,12 @@ BooleanWrapper ExpressionNode::computeResult()
     throw std::logic_error("Invalid operator: " + value);
 }
 
-void ExpressionNode::printInfix()
+void ExpressionNode::printInfix(bool newLine)
 {
     column = 1;
-    std::cout << strstrm.str() << std::endl;
+    std::cout << strstrm.str();
+    if (newLine)
+        std::cout << std::endl;
     strstrm.str("");
     strstrm.clear();
 }
