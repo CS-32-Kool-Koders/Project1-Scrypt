@@ -203,15 +203,6 @@ int main()
             tokensByLine.push_back(temp);
             temp.clear();
         }
-        std::cout << "tokensByLine" << std::endl;
-        for (auto vec : tokensByLine)
-        {
-            for (auto token : vec)
-            {
-                std::cout << token.text << " ";
-            }
-            std::cout << std::endl;
-        }
 
         std::vector<Blocks *> astNodes;
         size_t lineIndex = 0, tokenIndex = 0;
