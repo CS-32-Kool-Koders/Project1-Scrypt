@@ -421,7 +421,7 @@ BooleanWrapper ExpressionNode::computeResult()
             }
         }
 
-        throw std::runtime_error("Unexpected token at line 1 column " + std::to_string(column) + ": " + value);
+        throw std::runtime_error("Runtime error: unknown identifier " + value);
 
         // a non initialized variable is false
         return BooleanWrapper(false);
