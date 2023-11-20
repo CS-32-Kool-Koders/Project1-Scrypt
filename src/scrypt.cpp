@@ -266,6 +266,7 @@ int main()
         }
         } catch (const std::runtime_error &e)
     {
+            Lexer.tokenList.clear();
             std::cout << e.what() << std::endl;
             exit(1);
     }

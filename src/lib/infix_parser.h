@@ -483,4 +483,8 @@ private:
     ExpressionNode *parseMultiplyDivide();      // *, /, %
     ExpressionNode *parseOperand();
     ExpressionNode *parseOperator(std::function<ExpressionNode *()> parseFunction, std::vector<std::string> operators);
+    ExpressionNode *parseArray();
+    ExpressionNode *parseArrayAssignment();
+
+    //member functions for parsing the array literals, lookups, assignments
 };

@@ -58,7 +58,7 @@ void ExpressionNode::computeInfix()
             {
                 strstrm << value;
             }
-            else if (value == "{" || value == "}" || value == "(" || value == ")")
+            else if (value == "{" || value == "}" || value == "(" || value == ")" || value == "[" || value == "]" || value == ",")
             {
                 strstrm << value;
             }
@@ -240,6 +240,18 @@ ExpressionNode *ExpressionParser::parseOperand()
         {
             ExpressionNode *node = parseAssignment();
             if (currentIndex < tokens.size() && tokens[currentIndex].text == ")")
+            {
+                currentIndex++;
+                return node;
+            }
+            if (node != nullptr)
+                delete node;
+        }
+        else if (text == "["){
+            // ExpressionNode *node = parseAssignment();
+            //go thru array here?
+            ExpressionNode *node = parseAssignment();
+            if (currentIndex < tokens.size() && tokens[currentIndex].text == "]")
             {
                 currentIndex++;
                 return node;
@@ -433,7 +445,7 @@ BooleanWrapper ExpressionNode::computeResult()
     }
     else if (!BooleanWrapper::isBoolean(value))
     {
-        if (value == "print" || value == "if" || value == "while" || value == "else")
+        if (value == "print" || value == "if" || value == "while" || value == "else"|| value == "[" || value == "]" || value == ",")
         {
             strstrm.str("");
             strstrm.clear();
@@ -456,7 +468,7 @@ BooleanWrapper ExpressionNode::computeResult()
 
             //     }
             //}
-            if (value != "}" && value != ")")
+            if (value != "}" && value != ")")//maybe add ]
             {
                 // std::cout << "value is " << value << std::endl;
                 throw std::logic_error("Invalid number: " + value);
