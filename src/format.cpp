@@ -57,8 +57,9 @@ int main()
         {
             // std::cout << "index is " << index << std::endl;
             // std::cout << "token at index is " << Lexer.tokenList.at(index).text << std::endl;
-            if (Lexer.tokenList.at(index).text == "if" || Lexer.tokenList.at(index).text == "while" || Lexer.tokenList.at(index).text == "else")
+            if (Lexer.tokenList.at(index).text == "if" || Lexer.tokenList.at(index).text == "while" || Lexer.tokenList.at(index).text == "else" || Lexer.tokenList.at(index).text == "def")
             {
+                // index++;
                 while (Lexer.tokenList.at(index).text != "{")
                 {
                     temp.push_back(Lexer.tokenList.at(index));
@@ -261,6 +262,20 @@ void printAST(const Blocks *block, int indent)
         }
         std::cout << indentation << "}" << std::endl;
     }
+    else if (block->type == "function")
+    {
+        std::cout << indentation << "def " << block->name;
+        for (Tokens token : block->condition->getTokens())
+        {
+            std::cout << token.text;
+        }
+        std::cout << "{" << std::endl;
+        for (const auto &childBlock : block->blocklist)
+        {
+            printAST(childBlock, indent + 4);
+        }
+        std::cout << indentation << "}" << std::endl;
+    }
     else if (block->type == "print" || block->type == "expression")
     {
         if (block->condition->getTokens()[0].text != "}")
@@ -448,19 +463,51 @@ Blocks *parseStatements(std::vector<std::vector<Tokens>> &lines, size_t &lineInd
     }
     else if (tokens.front().text == "print")
     {
-        if (tokens.back().text == ";")
+        // if (tokens.back().text == ";")
+        // {
+        block->type = "print";
+        std::vector<Tokens> printExpressionTokens(tokens.begin() + 1, tokens.end());
+        block->condition = new ExpressionParser(printExpressionTokens);
+        lineIndex++;
+        return block;
+        // }
+        // else
+        // {
+        //     std::string error_message = "Unexpected token at line " + std::to_string(lineIndex) + " column " + std::to_string(tokenIndex);
+        //     throw std::runtime_error(error_message);
+        // }
+    }
+    else if (tokens.front().text == "def")
+    {
+        block->type = "function";
+        int index;
+        block->name = tokens[1].text;
+        for (size_t i = 2; i < tokens.size(); i++)
         {
-            block->type = "print";
-            std::vector<Tokens> printExpressionTokens(tokens.begin() + 1, tokens.end());
-            block->condition = new ExpressionParser(printExpressionTokens);
-            lineIndex++;
-            return block;
+            if (tokens[i].text == "(")
+            {
+                index = i;
+                break;
+            }
         }
-        else
+        std::vector<Tokens> func_vars;
+        while (tokens[index].text != ")")
         {
-            std::string error_message = "Unexpected token at line " + std::to_string(tokens.front().col) + " column " + std::to_string(tokens.front().line);
-            throw std::runtime_error(error_message);
+            func_vars.push_back(tokens[index]); // includes both ( ) and commas
+            index++;
         }
+        func_vars.push_back(tokens[index]);
+        block->condition = new ExpressionParser(func_vars);
+
+        lineIndex++;
+        tokenIndex = 0;
+        while (lineIndex < lines.size() && lines[lineIndex].back().text != "}")
+        {
+            block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex));
+        }
+        block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex)); // here
+
+        return block;
     }
     else
     {
