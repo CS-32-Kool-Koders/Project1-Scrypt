@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <stdexcept>
-
+//kanav likes men
 // Define a custom exception for array-related runtime errors
 class ArrayError : public std::runtime_error {
 public:
