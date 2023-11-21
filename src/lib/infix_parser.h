@@ -7,6 +7,7 @@
 #include <map>
 #include <functional>
 
+class Blocks;
 struct Tokens;
 
 struct BooleanWrapper
@@ -35,6 +36,11 @@ public:
         this->dvalue = value;
     }
 
+    BooleanWrapper(Blocks *value)
+    {
+        this->type = 'F';
+        this->block = value;
+    }
     BooleanWrapper(std::string value)
     {
         if (value == "true")
