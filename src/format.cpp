@@ -77,7 +77,7 @@ int main()
                 temp.clear();
                 index++;
             }
-            else if (Lexer.tokenList.at(index).text == "print")
+            else if (Lexer.tokenList.at(index).text == "print" || Lexer.tokenList.at(index).text == "return")
             {
                 temp.push_back(Lexer.tokenList.at(index));
                 index++;
@@ -268,6 +268,10 @@ void printAST(const Blocks *block, int indent)
         for (Tokens token : block->condition->getTokens())
         {
             std::cout << token.text;
+            if (token.text == ",")
+            {
+                std::cout << " ";
+            }
         }
         std::cout << "{" << std::endl;
         for (const auto &childBlock : block->blocklist)
@@ -276,14 +280,18 @@ void printAST(const Blocks *block, int indent)
         }
         std::cout << indentation << "}" << std::endl;
     }
-    else if (block->type == "print" || block->type == "expression")
+    else if (block->type == "print" || block->type == "expression" || block->type == "return")
     {
         if (block->condition->getTokens()[0].text != "}")
         {
             std::cout << indentation;
-            if (block->type == "print")
-                std::cout << block->type << " ";
-            printExpression(block->condition);
+            if (block->type == "print" || block->type == "return")
+                std::cout << block->type;
+            if ((block->type == "return" && block->condition->getTokens().size() != 1) || block->type == "print" || block->type == "expression")
+            {
+                std::cout << " ";
+                printExpression(block->condition);
+            }
             std::cout << ";" << std::endl;
         }
     }
@@ -507,6 +515,14 @@ Blocks *parseStatements(std::vector<std::vector<Tokens>> &lines, size_t &lineInd
         }
         block->blocklist.push_back(parseStatements(lines, lineIndex, tokenIndex)); // here
 
+        return block;
+    }
+    else if (tokens.front().text == "return")
+    {
+        block->type = "return";
+        std::vector<Tokens> printExpressionTokens(tokens.begin() + 1, tokens.end());
+        block->condition = new ExpressionParser(printExpressionTokens);
+        lineIndex++;
         return block;
     }
     else

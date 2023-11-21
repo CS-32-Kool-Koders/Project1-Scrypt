@@ -108,16 +108,20 @@ int lexer::tokenize(int row, std::string line)
         {
             tokenList.push_back(Tokens((int)row, (int)i + 1, "}"));
         }
-        else if (line[i] == ';'){
+        else if (line[i] == ';')
+        {
             tokenList.push_back(Tokens((int)row, (int)i + 1, ";"));
         }
-        else if (line[i] == ','){
+        else if (line[i] == ',')
+        {
             tokenList.push_back(Tokens((int)row, (int)i + 1, ","));
         }
-         else if (line[i] == '['){
+        else if (line[i] == '[')
+        {
             tokenList.push_back(Tokens((int)row, (int)i + 1, "["));
         }
-         else if (line[i] == ']'){
+        else if (line[i] == ']')
+        {
             tokenList.push_back(Tokens((int)row, (int)i + 1, "]"));
         }
         // case - space or similar character
@@ -135,22 +139,22 @@ int lexer::tokenize(int row, std::string line)
         {
             tokenList.push_back(Tokens((int)row, (int)i + 1, std::string(1, line[i])));
         }
-        else if (line.substr(i, 2) == "if")
+        else if (line.substr(i, 2) == "if" && line[i + 2] != '_')
         {
             tokenList.push_back(Tokens((int)row, (int)i + 1, "if"));
             i++;
         }
-        else if (line.substr(i, 5) == "while")
+        else if (line.substr(i, 5) == "while" && line[i + 5] != '_')
         {
             tokenList.push_back(Tokens((int)row, (int)i + 1, "while"));
             i = i + 4;
         }
-        else if (line.substr(i, 4) == "else")
+        else if (line.substr(i, 4) == "else" && line[i + 4] != '_')
         {
             tokenList.push_back(Tokens((int)row, (int)i + 1, "else"));
             i = i + 3;
         }
-        else if (line.substr(i, 5) == "print")
+        else if (line.substr(i, 5) == "print" && line[i + 5] != '_')
         {
             tokenList.push_back(Tokens((int)row, (int)i + 1, "print"));
             i = i + 4;
