@@ -509,11 +509,11 @@ void ExpressionNode::printInfix(bool newLine)
 void ExpressionNode::printResult(BooleanWrapper resultVar)
 {
     // BooleanWrapper resultVar = computeResult();
-    if (resultVar.printType() == 'B')
+    if (resultVar.getType() == BooleanWrapper::DataType::Boolean)
     {
         std::cout << resultVar.btos() << std::endl;
     }
-    else if (resultVar.printType() == 'D')
+    else if (resultVar.getType() == BooleanWrapper::DataType::Double)
     {
         std::string result = resultVar.dtos();
         if (std::stod(result) == std::floor(std::stod(result)))

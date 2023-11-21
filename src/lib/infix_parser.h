@@ -8,61 +8,82 @@
 #include <functional>
 
 class Blocks;
+
 struct Tokens;
 
 struct BooleanWrapper
 {
+public:
+    enum DataType
+    {
+        Undefined,
+        Boolean,
+        Double,
+        Function,
+    };
+
 private:
-    char type = '\0';
+    DataType type = DataType::Undefined;
     bool bvalue = false;
     double dvalue = 0;
+    Blocks *block = nullptr;
 
 public:
     BooleanWrapper()
     {
-        this->type = 'B';
+        this->type = DataType::Boolean;
         this->bvalue = false;
     }
 
     BooleanWrapper(bool value)
     {
-        this->type = 'B';
+        this->type = DataType::Boolean;
         this->bvalue = value;
     }
 
     BooleanWrapper(double value)
     {
-        this->type = 'D';
+        this->type = DataType::Double;
         this->dvalue = value;
     }
 
     BooleanWrapper(Blocks *value)
     {
-        this->type = 'F';
+        this->type = DataType::Function;
         this->block = value;
     }
+
     BooleanWrapper(std::string value)
     {
         if (value == "true")
         {
-            this->type = 'B';
+            this->type = DataType::Boolean;
             this->bvalue = true;
         }
         else if (value == "false")
         {
-            this->type = 'B';
+            this->type = DataType::Boolean;
             this->bvalue = false;
         }
         else if (std::stod(value))
         {
-            this->type = 'D';
+            this->type = DataType::Double;
             this->dvalue = std::stod(value);
         }
         else
             throw std::logic_error("Invalid boolean value");
     }
 
-    char printType()
+    // Maybe required ?
+    // ~BooleanWrapper()
+    // {
+    //     if (block != nullptr)
+    //     {
+    //         delete block;
+    //     }
+    // }
+
+    BooleanWrapper::DataType getType()
     {
         return type;
     }
@@ -77,7 +98,7 @@ public:
 
     bool getBvalue()
     {
-        if (type == 'B')
+        if (type == DataType::Boolean)
         {
             return bvalue;
         }
@@ -86,7 +107,7 @@ public:
 
     double getDvalue()
     {
-        if (type == 'D')
+        if (type == DataType::Double)
         {
             return dvalue;
         }
@@ -95,7 +116,7 @@ public:
 
     std::string btos()
     {
-        if (type == 'B')
+        if (type == DataType::Boolean)
         {
             return this->bvalue ? "true" : "false";
         }
@@ -104,7 +125,7 @@ public:
 
     std::string dtos()
     {
-        if (type == 'D')
+        if (type == DataType::Double)
         {
             return std::to_string(this->dvalue);
         }
@@ -118,21 +139,21 @@ public:
     // assignment auto type conversion
     BooleanWrapper operator=(bool value)
     {
-        this->type = 'B';
+        this->type = DataType::Boolean;
         this->bvalue = value;
         return *this;
     }
 
     BooleanWrapper operator=(double value)
     {
-        this->type = 'D';
+        this->type = DataType::Double;
         this->dvalue = value;
         return *this;
     }
 
     BooleanWrapper operator>(BooleanWrapper other)
     {
-        if (type == 'D' && other.type == 'D')
+        if (type == DataType::Double && other.type == DataType::Double)
         {
             return BooleanWrapper((this->dvalue > other.dvalue));
         }
@@ -144,7 +165,7 @@ public:
 
     BooleanWrapper operator>=(BooleanWrapper other)
     {
-        if (type == 'D' && other.type == 'D')
+        if (type == DataType::Double && other.type == DataType::Double)
         {
             return BooleanWrapper((this->dvalue >= other.dvalue));
         }
@@ -156,7 +177,7 @@ public:
 
     BooleanWrapper operator<(BooleanWrapper other)
     {
-        if (type == 'D' && other.type == 'D')
+        if (type == DataType::Double && other.type == DataType::Double)
         {
             return BooleanWrapper((this->dvalue < other.dvalue));
         }
@@ -168,7 +189,7 @@ public:
 
     BooleanWrapper operator<=(BooleanWrapper other)
     {
-        if (type == 'D' && other.type == 'D')
+        if (type == DataType::Double && other.type == DataType::Double)
         {
             return BooleanWrapper((this->dvalue <= other.dvalue));
         }
@@ -180,7 +201,7 @@ public:
 
     BooleanWrapper operator^(BooleanWrapper other)
     {
-        if (type == 'B' && other.type == 'B')
+        if (type == DataType::Boolean && other.type == DataType::Boolean)
         {
             return BooleanWrapper(!this->bvalue != !other.bvalue);
         }
@@ -192,11 +213,11 @@ public:
 
     BooleanWrapper operator==(BooleanWrapper other)
     {
-        if (type == 'B' && other.type == 'B')
+        if (type == DataType::Boolean && other.type == DataType::Boolean)
         {
             return BooleanWrapper(this->bvalue == other.bvalue);
         }
-        else if (type == 'D' && other.type == 'D')
+        else if (type == DataType::Double && other.type == DataType::Double)
         {
             return BooleanWrapper(this->dvalue == other.dvalue);
         }
@@ -208,11 +229,11 @@ public:
 
     BooleanWrapper operator!=(BooleanWrapper other)
     {
-        if (type == 'B' && other.type == 'B')
+        if (type == DataType::Boolean && other.type == DataType::Boolean)
         {
             return BooleanWrapper(this->bvalue != other.bvalue);
         }
-        else if (type == 'D' && other.type == 'D')
+        else if (type == DataType::Double && other.type == DataType::Double)
         {
             return BooleanWrapper(this->dvalue != other.dvalue);
         }
@@ -224,11 +245,11 @@ public:
 
     BooleanWrapper operator&&(BooleanWrapper other)
     {
-        if (type == 'B' && other.type == 'B')
+        if (type == DataType::Boolean && other.type == DataType::Boolean)
         {
             return BooleanWrapper(this->bvalue && other.bvalue);
         }
-        // else if (type == 'D' && other.type == 'D')
+        // else if (type == DataType::Double && other.type == DataType::Double)
         // {
         //     return BooleanWrapper(this->dvalue && other.dvalue);
         // }
@@ -237,11 +258,11 @@ public:
 
     BooleanWrapper operator||(BooleanWrapper other)
     {
-        if (type == 'B' && other.type == 'B')
+        if (type == DataType::Boolean && other.type == DataType::Boolean)
         {
             return BooleanWrapper(this->bvalue || other.bvalue);
         }
-        // else if (type == 'D' && other.type == 'D')
+        // else if (type == DataType::Double && other.type == DataType::Double)
         // {
         //     return BooleanWrapper(this->dvalue || other.dvalue);
         // }
@@ -259,7 +280,7 @@ public:
 
     BooleanWrapper operator+(BooleanWrapper other)
     {
-        if (type == 'D' && other.type == 'D')
+        if (type == DataType::Double && other.type == DataType::Double)
         {
             return dvalue + other.dvalue;
         }
@@ -271,7 +292,7 @@ public:
 
     BooleanWrapper operator-(BooleanWrapper other)
     {
-        if (type == 'D' && other.type == 'D')
+        if (type == DataType::Double && other.type == DataType::Double)
         {
             return dvalue - other.dvalue;
         }
@@ -283,7 +304,7 @@ public:
 
     BooleanWrapper operator*(BooleanWrapper other)
     {
-        if (type == 'D' && other.type == 'D')
+        if (type == DataType::Double && other.type == DataType::Double)
         {
             return dvalue * other.dvalue;
         }
@@ -295,7 +316,7 @@ public:
 
     BooleanWrapper operator/(BooleanWrapper other)
     {
-        if (type == 'D' && other.type == 'D')
+        if (type == DataType::Double && other.type == DataType::Double)
         {
             if (other.dvalue == 0)
             {
@@ -314,7 +335,7 @@ public:
 
     BooleanWrapper operator%(BooleanWrapper other)
     {
-        if (type == 'D' && other.type == 'D')
+        if (type == DataType::Double && other.type == DataType::Double)
         {
             return fmod(dvalue, other.dvalue);
         }
@@ -326,7 +347,7 @@ public:
 
     // BooleanWrapper operator+=(double num)
     // {
-    //     if (type == 'D' && other.type == 'D')
+    //     if (type == DataType::Double && other.type == DataType::Double)
     //     {
     //         return dvalue + num;
     //     }
@@ -368,12 +389,12 @@ public:
 
     friend std::ostream &operator<<(std::ostream &os, const BooleanWrapper &bw)
     {
-        if (bw.type == 'D')
+        if (bw.type == DataType::Double)
         {
             os << bw.dvalue;
             return os;
         }
-        else if (bw.type == 'B')
+        else if (bw.type == DataType::Boolean)
         {
             os << bw.bvalue;
             return os;
@@ -386,12 +407,12 @@ public:
 
     friend std::istream &operator>>(std::istream &is, BooleanWrapper &bw)
     {
-        if (bw.type == 'D')
+        if (bw.type == DataType::Double)
         {
             is >> bw.dvalue;
             return is;
         }
-        else if (bw.type == 'B')
+        else if (bw.type == DataType::Boolean)
         {
             is >> bw.bvalue;
             return is;
