@@ -236,7 +236,18 @@ ExpressionNode *ExpressionParser::parseOperand()
     {
         std::string text = tokens[currentIndex].text;
         currentIndex++;
-        if (text == "(")
+        if (tokens[currentIndex].text == "(")
+        {
+            ExpressionNode *node = parseAssignment();
+            if (currentIndex < tokens.size() && tokens[currentIndex].text == ")")
+            {
+                currentIndex++;
+                return node;
+            }
+            if (node != nullptr)
+                delete node;
+        }
+        else if (text == "(")
         {
             ExpressionNode *node = parseAssignment();
             if (currentIndex < tokens.size() && tokens[currentIndex].text == ")")
@@ -257,7 +268,7 @@ ExpressionNode *ExpressionParser::parseOperand()
 
 bool ExpressionNode::isVariable(std::string var)
 {
-    if (var == "true" || var == "false" || var == "print" || var == "if" || var == "while" || var == "else")
+    if (var == "true" || var == "false" || var == "print" || var == "if" || var == "while" || var == "else" || var == "def" || var == "null")
     {
         return false;
     }

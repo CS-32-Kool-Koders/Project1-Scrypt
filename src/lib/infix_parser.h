@@ -19,7 +19,8 @@ public:
         Undefined,
         Boolean,
         Double,
-        Function,
+        Function_Def,
+        Function
     };
 
 private:
