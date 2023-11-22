@@ -230,49 +230,31 @@ ExpressionNode *ExpressionParser::parseOperator(std::function<ExpressionNode *()
     return left;
 }
 
-ExpressionNode* ExpressionParser::parseOperand() {
-    if (currentIndex < tokens.size()) {
+ExpressionNode *ExpressionParser::parseOperand()
+{
+    if (currentIndex < tokens.size())
+    {
         std::string text = tokens[currentIndex].text;
-
-        // Handling array literals
-        if (text == "[") {
-            currentIndex++; 
-
-            std::vector<ExpressionNode*> elements;
-            while (currentIndex < tokens.size() && tokens[currentIndex].text != "]") {
-                ExpressionNode* element = parseExpression();
-                elements.push_back(element);
-
-                // Check for comma or end of array
-                if (currentIndex < tokens.size() && tokens[currentIndex].text == ",") {
-                    currentIndex++; // Skip the comma
-                }
-            }
-
-            if (currentIndex < tokens.size() && tokens[currentIndex].text == "]") {
-                currentIndex++; // Skip the closing ']'
-                return new ArrayLiteralNode(elements);
-            }
-        }
-
-        // Handling parentheses (sub-expressions)
-        if (text == "(") {
-            currentIndex++; // Skip the opening '('
+        currentIndex++;
+        if (text == "(")
+        {
             ExpressionNode *node = parseAssignment();
-            if (currentIndex < tokens.size() && tokens[currentIndex].text == ")") {
-                currentIndex++; // Skip the closing ')'
+            if (currentIndex < tokens.size() && tokens[currentIndex].text == ")")
+            {
+                currentIndex++;
                 return node;
             }
-            if (node != nullptr) delete node;
+            
+            if (node != nullptr)
+                delete node;
         }
-
-        // Handling simple operands (e.g., numbers, variables)
-        currentIndex++;
-        return new ExpressionNode(text);
+        else
+        {
+            return new ExpressionNode(text);
+        }
     }
     return nullptr;
 }
-
 
 bool ExpressionNode::isVariable(std::string var)
 {
@@ -337,19 +319,6 @@ void ExpressionNode::getVariablesNames()
 
 BooleanWrapper ExpressionNode::computeResult()
 {
-    if (this->value == "array_literal") {  // Check if the node is an ArrayLiteralNode
-        std::vector<BooleanWrapper> arrayElements;
-        ArrayLiteralNode* arrayNode = dynamic_cast<ArrayLiteralNode*>(this);
-
-        if (arrayNode != nullptr) {
-            for (ExpressionNode* elementNode : arrayNode->elements) {
-                // Evaluate each element of the array and store the result
-                arrayElements.push_back(elementNode->computeResult());
-            }
-        }
-
-        return BooleanWrapper(arrayElements); // Return a BooleanWrapper with the array value
-    }
     // if (value == "+" || value == "-" || value == "*" || value == "/" || value == "=" ||
     //     value == "END" || value == "%" || value == "==" || value == ">" || value == ">=" ||
     //     value == "<" || value == "<=" || value == "|" || value == "^" || value == "&" || value == "!=")
@@ -541,11 +510,11 @@ void ExpressionNode::printInfix(bool newLine)
 void ExpressionNode::printResult(BooleanWrapper resultVar)
 {
     // BooleanWrapper resultVar = computeResult();
-    if (resultVar.getType() == BooleanWrapper::DataType::Boolean)
+    if (resultVar.printType() == 'B')
     {
         std::cout << resultVar.btos() << std::endl;
     }
-    else if (resultVar.getType() == BooleanWrapper::DataType::Double)
+    else if (resultVar.printType() == 'D')
     {
         std::string result = resultVar.dtos();
         if (std::stod(result) == std::floor(std::stod(result)))
