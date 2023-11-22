@@ -27,7 +27,7 @@ private:
     bool bvalue = false;
     double dvalue = 0;
     Blocks *block = nullptr;
-    std::vector<BooleanWrapper> arr;
+    std::vector<BooleanWrapper> arrayValue;
 
 public:
     BooleanWrapper()
@@ -74,10 +74,15 @@ public:
         else
             throw std::logic_error("Invalid boolean value");
     }
-    BooleanWrapper(std::vector<BooleanWrapper> value)
-    {
+     BooleanWrapper(const std::vector<BooleanWrapper>& value) {
         this->type = DataType::Array;
-        this->arr = value;
+        this->arrayValue = value;
+    }
+     std::vector<BooleanWrapper> getArrayValue() {
+        if (type == DataType::Array) {
+            return arrayValue;
+        }
+        throw std::runtime_error("Runtime error: not an array.");
     }
 
     // Maybe required ?
@@ -122,21 +127,11 @@ public:
 
     std::string btos()
     {
-        if (type == DataType::Array) {
-        std::string result = "[";
-        for (size_t i = 0; i < arr.size(); ++i) {
-            result += arr[i].btos();
-            if (i < arr.size() - 1) result += ", ";
-        }
-        result += "]";
-        return result;
-    }
         if (type == DataType::Boolean)
         {
             return this->bvalue ? "true" : "false";
         }
         throw std::runtime_error("Runtime error: condition is not a bool.");
-        
     }
 
     std::string dtos()
@@ -454,7 +449,7 @@ public:
         this->right = nullptr;
     }
 
-    ~ExpressionNode()
+    virtual ~ExpressionNode()
     {
         if (left != nullptr)
         {
@@ -526,33 +521,20 @@ private:
     ExpressionNode *parseMultiplyDivide();      // *, /, %
     ExpressionNode *parseOperand();
     ExpressionNode *parseOperator(std::function<ExpressionNode *()> parseFunction, std::vector<std::string> operators);
-    ExpressionNode *parseArrayLiteral();
-    ExpressionNode *parseArrayAssignment();
-
-    //member functions for parsing the array literals, lookups, assignments
 };
+
 class ArrayLiteralNode : public ExpressionNode {
 public:
     std::vector<ExpressionNode*> elements;
 
-    ArrayLiteralNode() : ExpressionNode("ArrayLiteral") {}
+    ArrayLiteralNode(const std::vector<ExpressionNode*>& elements) 
+        : ExpressionNode("array_literal"), elements(elements) {}
 
     ~ArrayLiteralNode() {
         for (auto element : elements) {
             delete element;
         }
     }
-
-    BooleanWrapper computeResult()  {
-        std::vector<BooleanWrapper> arrayResults;
-        for (auto& element : elements) {
-            arrayResults.push_back(element->computeResult());
-        }
-        return BooleanWrapper(arrayResults);
-    }
-};
-
-class ArrayLookupNode : public ExpressionNode {
-    public:
-    //fill in later
+    
+    // Other necessary methods...
 };

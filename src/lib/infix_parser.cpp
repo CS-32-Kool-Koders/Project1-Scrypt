@@ -230,34 +230,49 @@ ExpressionNode *ExpressionParser::parseOperator(std::function<ExpressionNode *()
     return left;
 }
 
-ExpressionNode *ExpressionParser::parseOperand()
-{
-    if (currentIndex < tokens.size())
-    {
-        
+ExpressionNode* ExpressionParser::parseOperand() {
+    if (currentIndex < tokens.size()) {
         std::string text = tokens[currentIndex].text;
-         if (text == "[") {
-            return parseArrayLiteral(); // Parse the array literal
+
+        // Handling array literals
+        if (text == "[") {
+            currentIndex++; 
+
+            std::vector<ExpressionNode*> elements;
+            while (currentIndex < tokens.size() && tokens[currentIndex].text != "]") {
+                ExpressionNode* element = parseExpression();
+                elements.push_back(element);
+
+                // Check for comma or end of array
+                if (currentIndex < tokens.size() && tokens[currentIndex].text == ",") {
+                    currentIndex++; // Skip the comma
+                }
+            }
+
+            if (currentIndex < tokens.size() && tokens[currentIndex].text == "]") {
+                currentIndex++; // Skip the closing ']'
+                return new ArrayLiteralNode(elements);
+            }
         }
-        currentIndex++;
-        if (text == "(")
-        {
+
+        // Handling parentheses (sub-expressions)
+        if (text == "(") {
+            currentIndex++; // Skip the opening '('
             ExpressionNode *node = parseAssignment();
-            if (currentIndex < tokens.size() && tokens[currentIndex].text == ")")
-            {
-                currentIndex++;
+            if (currentIndex < tokens.size() && tokens[currentIndex].text == ")") {
+                currentIndex++; // Skip the closing ')'
                 return node;
             }
-            if (node != nullptr)
-                delete node;
+            if (node != nullptr) delete node;
         }
-        else
-        {
-            return new ExpressionNode(text);
-        }
+
+        // Handling simple operands (e.g., numbers, variables)
+        currentIndex++;
+        return new ExpressionNode(text);
     }
     return nullptr;
 }
+
 
 bool ExpressionNode::isVariable(std::string var)
 {
@@ -322,6 +337,19 @@ void ExpressionNode::getVariablesNames()
 
 BooleanWrapper ExpressionNode::computeResult()
 {
+    if (this->value == "array_literal") {  // Check if the node is an ArrayLiteralNode
+        std::vector<BooleanWrapper> arrayElements;
+        ArrayLiteralNode* arrayNode = dynamic_cast<ArrayLiteralNode*>(this);
+
+        if (arrayNode != nullptr) {
+            for (ExpressionNode* elementNode : arrayNode->elements) {
+                // Evaluate each element of the array and store the result
+                arrayElements.push_back(elementNode->computeResult());
+            }
+        }
+
+        return BooleanWrapper(arrayElements); // Return a BooleanWrapper with the array value
+    }
     // if (value == "+" || value == "-" || value == "*" || value == "/" || value == "=" ||
     //     value == "END" || value == "%" || value == "==" || value == ">" || value == ">=" ||
     //     value == "<" || value == "<=" || value == "|" || value == "^" || value == "&" || value == "!=")
@@ -531,34 +559,3 @@ void ExpressionNode::printResult(BooleanWrapper resultVar)
         }
     }
 }
-ExpressionNode *ExpressionParser::parseArrayLiteral() {
-    if (currentIndex < tokens.size() && tokens[currentIndex].text == "[") {
-        currentIndex++; // Skip '['
-        ArrayLiteralNode *arrayNode = new ArrayLiteralNode();
-
-        while (currentIndex < tokens.size() && tokens[currentIndex].text != "]") {
-            arrayNode->elements.push_back(parseExpression());
-
-            if (tokens[currentIndex].text == ",") {
-                currentIndex++; // Skip ','
-            }
-        }
-
-        if (currentIndex < tokens.size() && tokens[currentIndex].text == "]") {
-            currentIndex++; // Skip ']'
-        } else {
-            // Handle missing closing ']'
-        }
-
-        return arrayNode;
-    }
-    // Handle error or other cases
-    return nullptr;
-}
-// BooleanWrapper ArrayLiteralNode::computeResult() {
-//     ArrayLiteralNode array;
-//     for (auto& child : elements) {
-//         array.addElement(child->computeResult());
-//     }
-//     return BooleanWrapper(array); // You need to modify BooleanWrapper to handle ArrayValue
-// }
