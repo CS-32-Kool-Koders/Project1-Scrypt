@@ -6,6 +6,7 @@
 #include <iomanip>
 #include <map>
 #include <functional>
+#include <memory>
 
 class Blocks;
 
