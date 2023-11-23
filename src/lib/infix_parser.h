@@ -1,5 +1,4 @@
 
-
 #pragma once
 #include <cmath>
 #include <string>
@@ -10,66 +9,90 @@
 #include <memory>
 
 class Blocks;
+
 struct Tokens;
 
 struct BooleanWrapper
 {
+public:
+    enum DataType
+    {
+        Undefined,
+        Boolean,
+        Double,
+        Function_Def,
+        Function,
+        Array
+    };
+
 private:
-    char type = '\0';
+    DataType type = DataType::Undefined;
     bool bvalue = false;
     double dvalue = 0;
     Blocks *block = nullptr;
-    std::shared_ptr<std::vector<BooleanWrapper>> array; 
-    //len, pop, push
-    
-    
+    std::shared_ptr<std::vector<BooleanWrapper>> array;
 
 public:
     BooleanWrapper(std::shared_ptr<std::vector<BooleanWrapper>> array)
     {
-        this->type = 'A';
+        this->type = DataType::Array;
         this->array = array;
     }
     BooleanWrapper()
     {
-        this->type = 'B';
+        this->type = DataType::Boolean;
         this->bvalue = false;
     }
 
     BooleanWrapper(bool value)
     {
-        this->type = 'B';
+        this->type = DataType::Boolean;
         this->bvalue = value;
     }
 
     BooleanWrapper(double value)
     {
-        this->type = 'D';
+        this->type = DataType::Double;
         this->dvalue = value;
+    }
+
+    BooleanWrapper(Blocks *value)
+    {
+        this->type = DataType::Function;
+        this->block = value;
     }
 
     BooleanWrapper(std::string value)
     {
         if (value == "true")
         {
-            this->type = 'B';
+            this->type = DataType::Boolean;
             this->bvalue = true;
         }
         else if (value == "false")
         {
-            this->type = 'B';
+            this->type = DataType::Boolean;
             this->bvalue = false;
         }
         else if (std::stod(value))
         {
-            this->type = 'D';
+            this->type = DataType::Double;
             this->dvalue = std::stod(value);
         }
         else
             throw std::logic_error("Invalid boolean value");
     }
 
-    char printType()
+    // Maybe required ?
+    // ~BooleanWrapper()
+    // {
+    //     if (block != nullptr)
+    //     {
+    //         delete block;
+    //     }
+    // }
+
+    BooleanWrapper::DataType getType()
     {
         return type;
     }
@@ -84,7 +107,7 @@ public:
 
     bool getBvalue()
     {
-        if (type == 'B')
+        if (type == DataType::Boolean)
         {
             return bvalue;
         }
@@ -93,37 +116,16 @@ public:
 
     double getDvalue()
     {
-        if (type == 'D')
+        if (type == DataType::Double)
         {
             return dvalue;
         }
         throw std::runtime_error("Runtime error: condition is not a bool.");
     }
-    std::vector<BooleanWrapper> getAvalue(){
-        if (type  == 'A')
-        {
-            return *array;
-        }
-        throw std::runtime_error("Runtime error: condition is not a bool.");
-    }
 
-    BooleanWrapper getAIndex(size_t index) {
-        if(type == 'A')
-        {
-            if(index < array->size() && size_t(index) == index)
-            {
-                return array->at(index);
-            }
-            else
-            {
-                throw std::runtime_error("");
-            }
-        }
-    }
-    
     std::string btos()
     {
-        if (type == 'B')
+        if (type == DataType::Boolean)
         {
             return this->bvalue ? "true" : "false";
         }
@@ -132,7 +134,7 @@ public:
 
     std::string dtos()
     {
-        if (type == 'D')
+        if (type == DataType::Double)
         {
             return std::to_string(this->dvalue);
         }
@@ -141,26 +143,49 @@ public:
             throw std::runtime_error("Runtime error: condition is not a bool.");
         }
     }
+    std::vector<BooleanWrapper> getArrayvalue()
+    {
+        if (type == DataType::Array)
+        {
+            return *array;
+        }
+        throw std::runtime_error("Runtime error: condition is not a bool.");
+    }
+
+    BooleanWrapper getAIndex(size_t index)
+    {
+        if (type == DataType::Array)
+        {
+            if (index < array->size() && size_t(index) == index)
+            {
+                return array->at(index);
+            }
+            else
+            {
+                throw std::runtime_error("Runtime error: index out of bounds.");
+            }
+        }
+    }
 
     // operator overloading
     // assignment auto type conversion
     BooleanWrapper operator=(bool value)
     {
-        this->type = 'B';
+        this->type = DataType::Boolean;
         this->bvalue = value;
         return *this;
     }
 
     BooleanWrapper operator=(double value)
     {
-        this->type = 'D';
+        this->type = DataType::Double;
         this->dvalue = value;
         return *this;
     }
 
     BooleanWrapper operator>(BooleanWrapper other)
     {
-        if (type == 'D' && other.type == 'D')
+        if (type == DataType::Double && other.type == DataType::Double)
         {
             return BooleanWrapper((this->dvalue > other.dvalue));
         }
@@ -172,7 +197,7 @@ public:
 
     BooleanWrapper operator>=(BooleanWrapper other)
     {
-        if (type == 'D' && other.type == 'D')
+        if (type == DataType::Double && other.type == DataType::Double)
         {
             return BooleanWrapper((this->dvalue >= other.dvalue));
         }
@@ -184,7 +209,7 @@ public:
 
     BooleanWrapper operator<(BooleanWrapper other)
     {
-        if (type == 'D' && other.type == 'D')
+        if (type == DataType::Double && other.type == DataType::Double)
         {
             return BooleanWrapper((this->dvalue < other.dvalue));
         }
@@ -196,7 +221,7 @@ public:
 
     BooleanWrapper operator<=(BooleanWrapper other)
     {
-        if (type == 'D' && other.type == 'D')
+        if (type == DataType::Double && other.type == DataType::Double)
         {
             return BooleanWrapper((this->dvalue <= other.dvalue));
         }
@@ -208,7 +233,7 @@ public:
 
     BooleanWrapper operator^(BooleanWrapper other)
     {
-        if (type == 'B' && other.type == 'B')
+        if (type == DataType::Boolean && other.type == DataType::Boolean)
         {
             return BooleanWrapper(!this->bvalue != !other.bvalue);
         }
@@ -220,11 +245,11 @@ public:
 
     BooleanWrapper operator==(BooleanWrapper other)
     {
-        if (type == 'B' && other.type == 'B')
+        if (type == DataType::Boolean && other.type == DataType::Boolean)
         {
             return BooleanWrapper(this->bvalue == other.bvalue);
         }
-        else if (type == 'D' && other.type == 'D')
+        else if (type == DataType::Double && other.type == DataType::Double)
         {
             return BooleanWrapper(this->dvalue == other.dvalue);
         }
@@ -236,11 +261,11 @@ public:
 
     BooleanWrapper operator!=(BooleanWrapper other)
     {
-        if (type == 'B' && other.type == 'B')
+        if (type == DataType::Boolean && other.type == DataType::Boolean)
         {
             return BooleanWrapper(this->bvalue != other.bvalue);
         }
-        else if (type == 'D' && other.type == 'D')
+        else if (type == DataType::Double && other.type == DataType::Double)
         {
             return BooleanWrapper(this->dvalue != other.dvalue);
         }
@@ -252,11 +277,11 @@ public:
 
     BooleanWrapper operator&&(BooleanWrapper other)
     {
-        if (type == 'B' && other.type == 'B')
+        if (type == DataType::Boolean && other.type == DataType::Boolean)
         {
             return BooleanWrapper(this->bvalue && other.bvalue);
         }
-        // else if (type == 'D' && other.type == 'D')
+        // else if (type == DataType::Double && other.type == DataType::Double)
         // {
         //     return BooleanWrapper(this->dvalue && other.dvalue);
         // }
@@ -265,11 +290,11 @@ public:
 
     BooleanWrapper operator||(BooleanWrapper other)
     {
-        if (type == 'B' && other.type == 'B')
+        if (type == DataType::Boolean && other.type == DataType::Boolean)
         {
             return BooleanWrapper(this->bvalue || other.bvalue);
         }
-        // else if (type == 'D' && other.type == 'D')
+        // else if (type == DataType::Double && other.type == DataType::Double)
         // {
         //     return BooleanWrapper(this->dvalue || other.dvalue);
         // }
@@ -287,7 +312,7 @@ public:
 
     BooleanWrapper operator+(BooleanWrapper other)
     {
-        if (type == 'D' && other.type == 'D')
+        if (type == DataType::Double && other.type == DataType::Double)
         {
             return dvalue + other.dvalue;
         }
@@ -299,7 +324,7 @@ public:
 
     BooleanWrapper operator-(BooleanWrapper other)
     {
-        if (type == 'D' && other.type == 'D')
+        if (type == DataType::Double && other.type == DataType::Double)
         {
             return dvalue - other.dvalue;
         }
@@ -311,7 +336,7 @@ public:
 
     BooleanWrapper operator*(BooleanWrapper other)
     {
-        if (type == 'D' && other.type == 'D')
+        if (type == DataType::Double && other.type == DataType::Double)
         {
             return dvalue * other.dvalue;
         }
@@ -323,7 +348,7 @@ public:
 
     BooleanWrapper operator/(BooleanWrapper other)
     {
-        if (type == 'D' && other.type == 'D')
+        if (type == DataType::Double && other.type == DataType::Double)
         {
             if (other.dvalue == 0)
             {
@@ -342,7 +367,7 @@ public:
 
     BooleanWrapper operator%(BooleanWrapper other)
     {
-        if (type == 'D' && other.type == 'D')
+        if (type == DataType::Double && other.type == DataType::Double)
         {
             return fmod(dvalue, other.dvalue);
         }
@@ -354,7 +379,7 @@ public:
 
     // BooleanWrapper operator+=(double num)
     // {
-    //     if (type == 'D' && other.type == 'D')
+    //     if (type == DataType::Double && other.type == DataType::Double)
     //     {
     //         return dvalue + num;
     //     }
@@ -396,12 +421,12 @@ public:
 
     friend std::ostream &operator<<(std::ostream &os, const BooleanWrapper &bw)
     {
-        if (bw.type == 'D')
+        if (bw.type == DataType::Double)
         {
             os << bw.dvalue;
             return os;
         }
-        else if (bw.type == 'B')
+        else if (bw.type == DataType::Boolean)
         {
             os << bw.bvalue;
             return os;
@@ -414,12 +439,12 @@ public:
 
     friend std::istream &operator>>(std::istream &is, BooleanWrapper &bw)
     {
-        if (bw.type == 'D')
+        if (bw.type == DataType::Double)
         {
             is >> bw.dvalue;
             return is;
         }
-        else if (bw.type == 'B')
+        else if (bw.type == DataType::Boolean)
         {
             is >> bw.bvalue;
             return is;
@@ -437,12 +462,18 @@ public:
     std::string value;
     ExpressionNode *left;
     ExpressionNode *right;
-
+    std::vector<BooleanWrapper> children;
     std::vector<ExpressionNode *> elements;
 
     ExpressionNode(std::string value)
     {
         this->value = value;
+        this->left = nullptr;
+        this->right = nullptr;
+    }
+    ExpressionNode(std::vector<ExpressionNode *> vec_elements)
+    {
+        this->elements = vec_elements;
         this->left = nullptr;
         this->right = nullptr;
     }
@@ -468,6 +499,29 @@ public:
     void printResult(BooleanWrapper);
     void checkParentheses(std::string tokenString);
 };
+
+// class ArrayLiteralNode : public ExpressionNode
+// {
+// public:
+//     std::vector<ExpressionNode *> elements;
+
+//     ArrayLiteralNode(const std::shared_ptr<std::vector<BooleanWrapper>> array) // shared pointer maybe in the param, idk
+//         : ExpressionNode("array_literal")
+//     {
+//         // Convert BooleanWrapper
+//         // elements =
+//     }
+
+//     ~ArrayLiteralNode()
+//     {
+//         for (auto element : elements)
+//         {
+//             delete element;
+//         }
+//     }
+
+//     // Other necessary methods...
+// };
 
 class ExpressionParser
 {
@@ -518,5 +572,6 @@ private:
     ExpressionNode *parseAdditionSubtraction(); // +, -
     ExpressionNode *parseMultiplyDivide();      // *, /, %
     ExpressionNode *parseOperand();
+    ExpressionNode *parseArray();
     ExpressionNode *parseOperator(std::function<ExpressionNode *()> parseFunction, std::vector<std::string> operators);
 };
