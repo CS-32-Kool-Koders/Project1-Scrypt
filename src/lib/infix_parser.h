@@ -550,6 +550,10 @@ public:
     }
     ExpressionNode *
     parseExpression();
+    static size_t len(const std::vector<ExpressionNode*>& array);
+    static ExpressionNode* pop(std::vector<ExpressionNode*>& array);
+    static void push(std::vector<ExpressionNode*>& array, ExpressionNode* value);
+    BooleanWrapper computeResult();
 
 private:
     /*

@@ -250,6 +250,8 @@ ExpressionNode *ExpressionParser::parseOperator(std::function<ExpressionNode *()
     return left;
 }
 
+
+
 ExpressionNode *ExpressionParser::parseOperand()
 {
     if (currentIndex < tokens.size())
@@ -333,6 +335,22 @@ ExpressionNode *ExpressionParser::parseArray()
         throw std::logic_error("Missing closing bracket for array");
     }
 }
+    static size_t len(const std::vector<ExpressionNode*>& array) {
+        return array.size();
+    }
+
+    static ExpressionNode* pop(std::vector<ExpressionNode*>& array) {
+        if (array.empty()) {
+            throw std::runtime_error("Pop from empty array");
+        }
+        ExpressionNode* value = array.back();
+        array.pop_back();
+        return value;
+    }
+
+    static void push(std::vector<ExpressionNode*>& array, ExpressionNode* value) {
+        array.push_back(value);
+    }
 
 bool ExpressionNode::isVariable(std::string var)
 {
@@ -437,6 +455,17 @@ BooleanWrapper ExpressionNode::computeResult()
         column += 4;
         BooleanWrapper rightValue = right->computeResult();
 
+        if (value == "len") {
+            return BooleanWrapper(static_cast<double>(len(elements)));
+        } else if (value == "pop") {
+            return pop(elements)->computeResult();
+        } else if (value == "push") {
+            ExpressionNode* valToPush = elements.back();
+            elements.pop_back(); 
+            push(elements, valToPush);
+            return BooleanWrapper(); 
+        }
+
         // column++;
         if (value == "+")
         {
@@ -507,6 +536,7 @@ BooleanWrapper ExpressionNode::computeResult()
         //      return true;
         //  }
     }
+
     else if (value == "")
     {
         std::vector<BooleanWrapper> vec;
