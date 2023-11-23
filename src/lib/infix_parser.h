@@ -21,7 +21,8 @@ public:
         Boolean,
         Double,
         Function_Def,
-        Function
+        Function,
+        Array
     };
 
 private:
@@ -29,8 +30,14 @@ private:
     bool bvalue = false;
     double dvalue = 0;
     Blocks *block = nullptr;
+    std::shared_ptr<std::vector<BooleanWrapper>> array;
 
 public:
+    BooleanWrapper(std::shared_ptr<std::vector<BooleanWrapper>> array)
+    {
+        this->type = DataType::Array;
+        this->array = array;
+    }
     BooleanWrapper()
     {
         this->type = DataType::Boolean;
@@ -134,6 +141,29 @@ public:
         else
         {
             throw std::runtime_error("Runtime error: condition is not a bool.");
+        }
+    }
+    std::vector<BooleanWrapper> getArrayvalue()
+    {
+        if (type == DataType::Array)
+        {
+            return *array;
+        }
+        throw std::runtime_error("Runtime error: condition is not a bool.");
+    }
+
+    BooleanWrapper getAIndex(size_t index)
+    {
+        if (type == DataType::Array)
+        {
+            if (index < array->size() && size_t(index) == index)
+            {
+                return array->at(index);
+            }
+            else
+            {
+                throw std::runtime_error("Runtime error: index out of bounds.");
+            }
         }
     }
 
@@ -432,10 +462,18 @@ public:
     std::string value;
     ExpressionNode *left;
     ExpressionNode *right;
+    std::vector<BooleanWrapper> children;
+    std::vector<ExpressionNode *> elements;
 
     ExpressionNode(std::string value)
     {
         this->value = value;
+        this->left = nullptr;
+        this->right = nullptr;
+    }
+    ExpressionNode(std::vector<ExpressionNode *> vec_elements)
+    {
+        this->elements = vec_elements;
         this->left = nullptr;
         this->right = nullptr;
     }
@@ -461,6 +499,29 @@ public:
     void printResult(BooleanWrapper);
     void checkParentheses(std::string tokenString);
 };
+
+// class ArrayLiteralNode : public ExpressionNode
+// {
+// public:
+//     std::vector<ExpressionNode *> elements;
+
+//     ArrayLiteralNode(const std::shared_ptr<std::vector<BooleanWrapper>> array) // shared pointer maybe in the param, idk
+//         : ExpressionNode("array_literal")
+//     {
+//         // Convert BooleanWrapper
+//         // elements =
+//     }
+
+//     ~ArrayLiteralNode()
+//     {
+//         for (auto element : elements)
+//         {
+//             delete element;
+//         }
+//     }
+
+//     // Other necessary methods...
+// };
 
 class ExpressionParser
 {
@@ -511,5 +572,6 @@ private:
     ExpressionNode *parseAdditionSubtraction(); // +, -
     ExpressionNode *parseMultiplyDivide();      // *, /, %
     ExpressionNode *parseOperand();
+    ExpressionNode *parseArray();
     ExpressionNode *parseOperator(std::function<ExpressionNode *()> parseFunction, std::vector<std::string> operators);
 };
