@@ -77,17 +77,33 @@ void ExpressionNode::computeInfix()
             strstrm << "[";
             if (elements.size() > 0)
             {
-                for (size_t i = 0; i < elements.size(); i++)
-                {
-                    if (i == elements.size() - 1)
-                    {
-                        strstrm << elements.at(i)->value;
-                    }
-                    else
-                    {
-                        strstrm << elements.at(i)->value << ", ";
-                    }
-                }
+                // for (size_t i = 0; i < elements.size(); i++)
+                // {
+                //     if (i == elements.size() - 1)
+                //     {
+                //         strstrm << elements.at(i)->value;
+                //     }
+                //     else
+                //     {
+                //         strstrm << elements.at(i)->value << ", ";
+                //     }
+                // }
+                // std::cout << "[";
+        for (size_t i = 0; i < elements.size(); i++)
+        {
+            if (i == elements.size() - 1 && elements.at(i))
+            {
+                strstrm << elements.at(i)->value;
+            }
+            else if (elements.at(i))
+            {
+                strstrm << elements.at(i)->value << ", ";
+            }
+            else{
+                std::cout<<"null";
+            }
+        }
+        // std::cout << "]";
             }
             strstrm << "]";
         }
@@ -607,32 +623,26 @@ void ExpressionNode::printInfix(bool newLine)
 void ExpressionNode::printResult(BooleanWrapper resultVar)
 {
     // BooleanWrapper resultVar = computeResult();
-     if (resultVar.getType() == BooleanWrapper::DataType::Array)
+    if (resultVar.getType() == BooleanWrapper::DataType::Array)
     {
         std::cout << "[";
-
-        if (!elements.empty())
+        for (size_t i = 0; i < elements.size(); i++)
         {
-            for (size_t i = 0; i < elements.size(); i++)
+            if (i == elements.size() - 1 && elements.at(i))
             {
-                if (elements.at(i) != nullptr) // Check for null pointers
-                {
-                    if (i > 0)
-                    {
-                        std::cout << ", "; // Add comma between elements
-                    }
-                    std::cout << elements.at(i)->value; // Print value
-                }
-                else
-                {
-                    std::cout << "null"; // Handle null pointers
-                }
+                strstrm << elements.at(i)->value;
+            }
+            else if (elements.at(i))
+            {
+                strstrm << elements.at(i)->value << ", ";
+            }
+            else{
+                std::cout<<"null";
             }
         }
-
         std::cout << "]";
     }
-    
+
     if (resultVar.getType() == BooleanWrapper::DataType::Boolean)
     {
         std::cout << resultVar.btos() << std::endl;
