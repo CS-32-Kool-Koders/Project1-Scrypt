@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <vector>
 #include "infix_parser.h"
@@ -71,41 +70,6 @@ void ExpressionNode::computeInfix()
             {
                 strstrm << std::stod(value);
             }
-        }
-        else if (value == "")
-        {
-            strstrm << "[";
-            if (elements.size() > 0)
-            {
-                // for (size_t i = 0; i < elements.size(); i++)
-                // {
-                //     if (i == elements.size() - 1)
-                //     {
-                //         strstrm << elements.at(i)->value;
-                //     }
-                //     else
-                //     {
-                //         strstrm << elements.at(i)->value << ", ";
-                //     }
-                // }
-                // std::cout << "[";
-        for (size_t i = 0; i < elements.size(); i++)
-        {
-            if (i == elements.size() - 1 && elements.at(i))
-            {
-                strstrm << elements.at(i)->value;
-            }
-            else if (elements.at(i))
-            {
-                strstrm << elements.at(i)->value << ", ";
-            }
-            else{
-                std::cout<<"null";
-            }
-        }
-        // std::cout << "]";
-            }
-            strstrm << "]";
         }
         else
         {
@@ -272,29 +236,7 @@ ExpressionNode *ExpressionParser::parseOperand()
     {
         std::string text = tokens[currentIndex].text;
         currentIndex++;
-        if (tokens[currentIndex].text == "(")
-        {
-            ExpressionNode *node = parseAssignment();
-            if (currentIndex < tokens.size() && tokens[currentIndex].text == ")")
-            {
-                currentIndex++;
-                return node;
-            }
-            if (node != nullptr)
-                delete node;
-        }
-        else if (text == "[")
-        {
-            ExpressionNode *node = parseArray();
-            if (currentIndex < tokens.size() && (tokens[currentIndex].text == "]" || (tokens[currentIndex].text == "END")))
-            {
-                currentIndex++;
-                return node;
-            }
-            if (node != nullptr)
-                delete node;
-        }
-        else if (text == "(")
+        if (text == "(")
         {
             ExpressionNode *node = parseAssignment();
             if (currentIndex < tokens.size() && tokens[currentIndex].text == ")")
@@ -313,46 +255,9 @@ ExpressionNode *ExpressionParser::parseOperand()
     return nullptr;
 }
 
-ExpressionNode *ExpressionParser::parseArray()
-{
-    // Parse array elements
-    std::vector<ExpressionNode *> elements;
-    while (currentIndex < tokens.size() && tokens[currentIndex].text != "]")
-    {
-        // Parse individual array elements using parseAssignment or other appropriate function
-        ExpressionNode *element = parseAssignment(); // Change this based on your needs
-        elements.push_back(element);
-
-        // Check for a comma to handle multiple elements
-        if (currentIndex < tokens.size() && tokens[currentIndex].text == ",")
-        {
-            currentIndex++; // Move to the next token after ','
-        }
-        else
-        {
-            break; // Exit the loop if no comma is found
-        }
-    }
-
-    // Check for the closing bracket
-    if (currentIndex < tokens.size() && tokens[currentIndex].text == "]")
-    {
-        currentIndex++; // Move to the next token after ']'
-        // Create an array node with the parsed elements
-        ExpressionNode *arrayNode = new ExpressionNode("");
-        arrayNode->elements = elements;
-        return arrayNode;
-    }
-    else
-    {
-        // Handle error: Missing closing bracket for the array
-        throw std::logic_error("Missing closing bracket for array");
-    }
-}
-
 bool ExpressionNode::isVariable(std::string var)
 {
-    if (var == "true" || var == "false" || var == "print" || var == "if" || var == "while" || var == "else" || var == "def" || var == "null")
+    if (var == "true" || var == "false" || var == "print" || var == "if" || var == "while" || var == "else")
     {
         return false;
     }
@@ -426,7 +331,7 @@ BooleanWrapper ExpressionNode::computeResult()
             strstrm.clear();
             throw std::logic_error("Unexpected token at line 1 column " + std::to_string(endColumn + 1) + ": END");
         }
-        if ((left == nullptr || right == nullptr))
+        if (left == nullptr || right == nullptr)
         {
             //|| (left->value == "END" || right->value == "END")
             // if(left->value == "END") {
@@ -523,18 +428,6 @@ BooleanWrapper ExpressionNode::computeResult()
         //      return true;
         //  }
     }
-    else if (value == "")
-    {
-        std::vector<BooleanWrapper> vec;
-        for (auto parser : elements)
-        {
-            vec.push_back(BooleanWrapper(parser->computeResult()));
-        }
-        // std::shared_ptr<std::vector<BooleanWrapper>> sh_vec = std::shared_ptr<std::vector<BooleanWrapper>>(vec);
-        std::shared_ptr<std::vector<BooleanWrapper>> sh_vec = std::make_shared<std::vector<BooleanWrapper>>(vec);
-
-        return sh_vec;
-    }
     else if (isVariable(value))
     {
         for (std::string var : ExpressionParser::knowsVariables)
@@ -542,14 +435,7 @@ BooleanWrapper ExpressionNode::computeResult()
             if (var == value)
             {
                 column += value.length() - 1;
-                if (ExpressionParser::variables.find(value) != ExpressionParser::variables.end())
-                {
-                    return ExpressionParser::variables[value];
-                }
-                else
-                {
-                    return BooleanWrapper();
-                }
+                return ExpressionParser::variables[value];
             }
         }
         column = 1;
@@ -623,31 +509,11 @@ void ExpressionNode::printInfix(bool newLine)
 void ExpressionNode::printResult(BooleanWrapper resultVar)
 {
     // BooleanWrapper resultVar = computeResult();
-    if (resultVar.getType() == BooleanWrapper::DataType::Array)
-    {
-        std::cout << "[";
-        for (size_t i = 0; i < elements.size(); i++)
-        {
-            if (i == elements.size() - 1 && elements.at(i))
-            {
-                strstrm << elements.at(i)->value;
-            }
-            else if (elements.at(i))
-            {
-                strstrm << elements.at(i)->value << ", ";
-            }
-            else{
-                std::cout<<"null";
-            }
-        }
-        std::cout << "]";
-    }
-
-    if (resultVar.getType() == BooleanWrapper::DataType::Boolean)
+    if (resultVar.printType() == 'B')
     {
         std::cout << resultVar.btos() << std::endl;
     }
-    else if (resultVar.getType() == BooleanWrapper::DataType::Double)
+    else if (resultVar.printType() == 'D')
     {
         std::string result = resultVar.dtos();
         if (std::stod(result) == std::floor(std::stod(result)))

@@ -153,7 +153,7 @@ This input demonstrates a simple conditional statement. Since x is 5 (from the p
 
 -  **Lexer**: Tokenizes input strings into meaningful components for parsing.
 
--  **Conditional Statements**: Includes conditional logic with `if`, `else`, and related control flow constructs. Provides the ability to execute different code paths based on Boolean conditions.
+-  **Conditional Statements**: Includes conditional logic with `if`, `else`, and related control flow constructs. {rovides the ability to execute different code paths based on Boolean conditions.
 
 ### Loops and Iteration (if applicable)
 

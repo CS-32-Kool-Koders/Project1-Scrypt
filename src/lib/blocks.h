@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <vector>
 #include <string>
@@ -7,9 +8,11 @@ struct Blocks
 {
     std::string type;
     ExpressionParser *condition;
+    std::string name; // Mainly for functions
     // Blocks *thenBlock;
     // Blocks *elseBlock;
-    std::vector<Blocks *> blocklist;
+    std::vector<Blocks *>
+        blocklist;
 
     Blocks() : condition(nullptr) {}
     ~Blocks();
