@@ -89,21 +89,22 @@ void ExpressionNode::computeInfix()
                 //     }
                 // }
                 // std::cout << "[";
-        for (size_t i = 0; i < elements.size(); i++)
-        {
-            if (i == elements.size() - 1 && elements.at(i))
-            {
-                strstrm << elements.at(i)->value;
-            }
-            else if (elements.at(i))
-            {
-                strstrm << elements.at(i)->value << ", ";
-            }
-            else{
-                std::cout<<"null";
-            }
-        }
-        // std::cout << "]";
+                for (size_t i = 0; i < elements.size(); i++)
+                {
+                    if (i == elements.size() - 1 && elements.at(i))
+                    {
+                        strstrm << elements.at(i)->value;
+                    }
+                    else if (elements.at(i))
+                    {
+                        strstrm << elements.at(i)->value << ", ";
+                    }
+                    else
+                    {
+                        std::cout << "null";
+                    }
+                }
+                // std::cout << "]";
             }
             strstrm << "]";
         }
@@ -266,8 +267,6 @@ ExpressionNode *ExpressionParser::parseOperator(std::function<ExpressionNode *()
     return left;
 }
 
-
-
 ExpressionNode *ExpressionParser::parseOperand()
 {
     if (currentIndex < tokens.size())
@@ -351,22 +350,26 @@ ExpressionNode *ExpressionParser::parseArray()
         throw std::logic_error("Missing closing bracket for array");
     }
 }
-    static size_t len(const std::vector<ExpressionNode*>& array) {
-        return array.size();
-    }
+static size_t len(const std::vector<ExpressionNode *> &array)
+{
+    return array.size();
+}
 
-    static ExpressionNode* pop(std::vector<ExpressionNode*>& array) {
-        if (array.empty()) {
-            throw std::runtime_error("Pop from empty array");
-        }
-        ExpressionNode* value = array.back();
-        array.pop_back();
-        return value;
+static ExpressionNode *pop(std::vector<ExpressionNode *> &array)
+{
+    if (array.empty())
+    {
+        throw std::runtime_error("Pop from empty array");
     }
+    ExpressionNode *value = array.back();
+    array.pop_back();
+    return value;
+}
 
-    static void push(std::vector<ExpressionNode*>& array, ExpressionNode* value) {
-        array.push_back(value);
-    }
+static void push(std::vector<ExpressionNode *> &array, ExpressionNode *value)
+{
+    array.push_back(value);
+}
 
 bool ExpressionNode::isVariable(std::string var)
 {
@@ -435,7 +438,7 @@ BooleanWrapper ExpressionNode::computeResult()
     //     value == "END" || value == "%" || value == "==" || value == ">" || value == ">=" ||
     //     value == "<" || value == "<=" || value == "|" || value == "^" || value == "&" || value == "!=")
     // {
-    if (std::find(supportedOpAndCmpWithEnd.begin(), supportedOpAndCmpWithEnd.end(), value) != supportedOpAndCmpWithEnd.end())
+    if ((std::find(supportedOpAndCmpWithEnd.begin(), supportedOpAndCmpWithEnd.end() - 1, value) != supportedOpAndCmpWithEnd.end()))
     {
         if (value == "=" && right != nullptr && (right->value == "END" || right->value == ";"))
         {
@@ -444,42 +447,75 @@ BooleanWrapper ExpressionNode::computeResult()
             strstrm.clear();
             throw std::logic_error("Unexpected token at line 1 column " + std::to_string(endColumn + 1) + ": END");
         }
-        if ((left == nullptr || right == nullptr))
-        {
-            //|| (left->value == "END" || right->value == "END")
-            // if(left->value == "END") {
-            //     std::string throw_message = "Unexpected token at line 1 column " + std::to_string(column) + ": " + value;
-            //     column = 1;
-            //     throw std::logic_error(throw_message);
-            // }
-            // std::cout << "val: " << value << std::endl;
-            strstrm.str("");
-            strstrm.clear();
-            // if ExpressionParser::line[column - 1] is E and the rest of the line is ND, then it's an END
-            if (ExpressionParser::line.length() >= column + 2 && ExpressionParser::line[column - 1] == 'E' && ExpressionParser::line[column] == 'N' && ExpressionParser::line[column + 1] == 'D')
-            {
-                std::string throw_message = "Unexpected token at line 1 column " + std::to_string(column) + ": END";
-                column = 1;
-                throw std::logic_error(throw_message);
-            }
-            std::string throw_message = "Unexpected token at line 1 column " + std::to_string(column) + ": " + ExpressionParser::line[column - 1];
-            column = 1;
-            throw std::logic_error(throw_message);
-        }
+        // if ((left == nullptr || right == nullptr) && (elements.empty()))
+        // {
+        //     //|| (left->value == "END" || right->value == "END")
+        //     // if(left->value == "END") {
+        //     //     std::string throw_message = "Unexpected token at line 1 column " + std::to_string(column) + ": " + value;
+        //     //     column = 1;
+        //     //     throw std::logic_error(throw_message);
+        //     // }
+        //     // std::cout << "val: " << value << std::endl;
+        //     strstrm.str("");
+        //     strstrm.clear();
+        //     // if ExpressionParser::line[column - 1] is E and the rest of the line is ND, then it's an END
+        //     if (ExpressionParser::line.length() >= column + 2 && ExpressionParser::line[column - 1] == 'E' && ExpressionParser::line[column] == 'N' && ExpressionParser::line[column + 1] == 'D')
+        //     {
+        //         std::string throw_message = "Unexpected token at line 1 column " + std::to_string(column) + ": END";
+        //         column = 1;
+        //         throw std::logic_error(throw_message);
+        //     }
+        //     std::string throw_message = "Unexpected token at line 1 column " + std::to_string(column) + ": " + ExpressionParser::line[column - 1];
+        //     column = 1;
+        //     throw std::logic_error(throw_message);
+        // }
         // std::cout << "i was here" << std::endl;
-        BooleanWrapper leftValue = left->computeResult();
-        column += 4;
-        BooleanWrapper rightValue = right->computeResult();
+        BooleanWrapper leftValue;
+        BooleanWrapper rightValue;
+        if (left != nullptr)
+        {
+            BooleanWrapper leftValue = left->computeResult();
+            column += 4;
+        }
+        if (right != nullptr)
+        {
+            BooleanWrapper rightValue = right->computeResult();
+        }
 
-        if (value == "len") {
+        if (value == "")
+        {
+            std::vector<BooleanWrapper> vec;
+            for (auto parser : elements)
+            {
+                if (parser != nullptr)
+                {
+                    vec.push_back(parser->computeResult());
+                }
+                else
+                {
+                    vec.push_back(BooleanWrapper());
+                }
+                // vec.push_back(BooleanWrapper(parser->computeResult()));
+            }
+            // std::shared_ptr<std::vector<BooleanWrapper>> sh_vec = std::shared_ptr<std::vector<BooleanWrapper>>(vec);
+            std::shared_ptr<std::vector<BooleanWrapper>> sh_vec = std::make_shared<std::vector<BooleanWrapper>>(vec);
+
+            return sh_vec;
+        }
+        if (value == "len")
+        {
             return BooleanWrapper(static_cast<double>(len(elements)));
-        } else if (value == "pop") {
+        }
+        else if (value == "pop")
+        {
             return pop(elements)->computeResult();
-        } else if (value == "push") {
-            ExpressionNode* valToPush = elements.back();
-            elements.pop_back(); 
+        }
+        else if (value == "push")
+        {
+            ExpressionNode *valToPush = elements.back();
+            elements.pop_back();
             push(elements, valToPush);
-            return BooleanWrapper(); 
+            return BooleanWrapper();
         }
 
         // column++;
@@ -551,6 +587,78 @@ BooleanWrapper ExpressionNode::computeResult()
         //  else if (value == "}"){
         //      return true;
         //  }
+
+        else if (isVariable(value))
+        {
+            for (std::string var : ExpressionParser::knowsVariables)
+            {
+                if (var == value)
+                {
+                    column += value.length() - 1;
+                    if (ExpressionParser::variables.find(value) != ExpressionParser::variables.end())
+                    {
+                        return ExpressionParser::variables[value];
+                    }
+                    else
+                    {
+                        return BooleanWrapper();
+                    }
+                }
+            }
+            column = 1;
+            throw std::runtime_error("Runtime error: unknown identifier " + value);
+
+            // a non initialized variable is false
+            return BooleanWrapper(false);
+        }
+        // maybe if value is a closing bracket, j continue
+        else if (value == "}")
+        {
+            return 65.42310;
+        }
+        else if (!BooleanWrapper::isBoolean(value))
+        {
+            if (value == "print" || value == "if" || value == "while" || value == "else")
+            {
+                strstrm.str("");
+                strstrm.clear();
+                std::string throw_message = "Unexpected token at line 1 column " + std::to_string(column) + ": " + value;
+                column = 1;
+                throw std::logic_error(throw_message);
+            }
+
+            std::stringstream ss(value);
+            double number;
+            ss >> std::setprecision(15) >> number;
+
+            if (ss.fail())
+            {
+                // if((value[0] >= 'a' && value[0] <= 'z') || (value[0] >= 'A' && value[0] <= 'Z') || value[0] == '_') {
+                //     for(char c : value) {
+                //         if(!(c >= 'a' && c <= 'z') && !(c >= 'A' && c <= 'Z') && c != '_' && !isdigit(c)) {
+                //                 throw("Invalid operand: " + value);
+                //         }
+
+                //     }
+                //}
+                if (value != "}" && value != ")")
+                {
+                    // std::cout << "value is " << value << std::endl;
+                    throw std::logic_error("Invalid number: " + value);
+                }
+                // else {
+                //      std::cout<<"";
+                //  }
+            }
+            column += value.length() - 1;
+            // std::cout << column << " is number " <<std::endl;
+            return BooleanWrapper(number);
+        }
+        else
+        {
+            column += value.length() - 1;
+            return BooleanWrapper(value);
+        }
     }
 
     else if (value == "")
@@ -558,7 +666,15 @@ BooleanWrapper ExpressionNode::computeResult()
         std::vector<BooleanWrapper> vec;
         for (auto parser : elements)
         {
-            vec.push_back(BooleanWrapper(parser->computeResult()));
+            if (parser != nullptr)
+            {
+                vec.push_back(BooleanWrapper(parser->computeResult()));
+            }
+            else
+            {
+                vec.push_back(BooleanWrapper());
+            }
+            // vec.push_back(BooleanWrapper(parser->computeResult()));
         }
         // std::shared_ptr<std::vector<BooleanWrapper>> sh_vec = std::shared_ptr<std::vector<BooleanWrapper>>(vec);
         std::shared_ptr<std::vector<BooleanWrapper>> sh_vec = std::make_shared<std::vector<BooleanWrapper>>(vec);
@@ -666,8 +782,9 @@ void ExpressionNode::printResult(BooleanWrapper resultVar)
             {
                 strstrm << elements.at(i)->value << ", ";
             }
-            else{
-                std::cout<<"null";
+            else
+            {
+                std::cout << "null";
             }
         }
         std::cout << "]";

@@ -314,7 +314,7 @@ public:
     {
         if (type == DataType::Double && other.type == DataType::Double)
         {
-            return dvalue + other.dvalue;
+            return BooleanWrapper(dvalue + other.dvalue);
         }
         else
         {
@@ -338,7 +338,7 @@ public:
     {
         if (type == DataType::Double && other.type == DataType::Double)
         {
-            return dvalue * other.dvalue;
+            return BooleanWrapper(dvalue * other.dvalue);
         }
         else
         {
@@ -550,9 +550,9 @@ public:
     }
     ExpressionNode *
     parseExpression();
-    static size_t len(const std::vector<ExpressionNode*>& array);
-    static ExpressionNode* pop(std::vector<ExpressionNode*>& array);
-    static void push(std::vector<ExpressionNode*>& array, ExpressionNode* value);
+    static size_t len(const std::vector<ExpressionNode *> &array);
+    static ExpressionNode *pop(std::vector<ExpressionNode *> &array);
+    static void push(std::vector<ExpressionNode *> &array, ExpressionNode *value);
     BooleanWrapper computeResult();
 
 private:
