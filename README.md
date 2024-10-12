@@ -1,5 +1,5 @@
 # Project1-Scrypt
-A simple project made with friends - a lightweight scripting language.
+A lightweight scripting language and compiler built from scratch with C++
 
 ## Introduction
 The program is a C++ application designed to perform calculations and utilize a parser and lexer for mathematical expressions. It provides functionality to parse and evaluate expressions written in both S-expressions and infix notation, and supports variable assignments and basic arithmetic operations. It also showcases the implementation of various programming language features starting from basic arithmetic operations to advanced functionalities like control flow, variables, and functions.
