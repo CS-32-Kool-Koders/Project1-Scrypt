@@ -1,4 +1,4 @@
-# Project1-Scrypt
+# Scrypt
 A lightweight scripting language and compiler built from scratch with C++
 
 ## Introduction
